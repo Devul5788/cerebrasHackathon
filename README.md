@@ -1,36 +1,242 @@
-# CerebrasApp - Full Stack Web Application
+# CerebrasApp - AI-Powered Sales Outreach Platform
 
-A modern full-stack web application built with **React + TypeScript + Tailwind CSS** frontend and **Django + Django REST Framework** backend.
+An intelligent full-stack sales outreach platform built with **React + TypeScript + Tailwind CSS** frontend and **Django + Django REST Framework** backend. This platform automates the entire sales process from company discovery to personalized email outreach.
 
-## 🚀 Features
+## 🚀 Platform Features
+
+### 🤖 **Part 1 - Interactive AI Chatbot (Profile Setup)**
+- **Company Profile Generation**: Auto-fill company details using external APIs (Clearbit, Crunchbase, LinkedIn)
+- **Product Profile Database**: AI-suggested products/services based on company profile
+- **Customer Company Discovery**: AI-powered target company identification with buying intent signals
+
+### 📧 **Part 2 - Sales Outreach Workspace**
+- **Inbox-Style UI**: Outlook/Gmail-like interface for managing prospects
+- **Contact Discovery**: Automated contact finding with role detection (decision-makers, buyers)
+- **AI Email Generation**: Personalized email pitches with tone adaptation by role
+- **Email Integration**: Direct sending through Outlook/Gmail APIs with tracking
+
+## 🛠️ Technical Stack
 
 - **Frontend**: React 18 with TypeScript and Tailwind CSS
-- **Backend**: Django 4.2 with Django REST Framework
+- **Backend**: Django 4.2 with Django REST Framework + Celery for background tasks
+- **AI Models**: GPT-based text generation, semantic search, entity recognition
+- **Integrations**: Clearbit, Crunchbase, Apollo.io, LinkedIn API, Microsoft Graph, Gmail API
+- **Database**: PostgreSQL (structured profiles), Redis (session management)
 - **Styling**: Modern, responsive design with Tailwind CSS
-- **API**: RESTful API endpoints with CORS support
-- **Type Safety**: Full TypeScript integration
-- **Real-time Data**: Frontend dynamically fetches data from Django backend
+- **Type Safety**: Full TypeScript integration across the stack
 
 ## 📁 Project Structure
 
 ```
 cerebrasHackathon/
-├── frontend/          # React + TypeScript + Tailwind CSS
+├── frontend/                    # React + TypeScript + Tailwind CSS
 │   ├── src/
-│   │   ├── services/  # API service functions
-│   │   └── ...
+│   │   ├── api/                # API services organized by Django apps
+│   │   │   ├── onboardingActions.ts      # Company & product profile setup
+│   │   │   ├── companiesActions.ts       # Company management operations  
+│   │   │   ├── contactsActions.ts        # Contact discovery & management
+│   │   │   ├── outreachActions.ts        # Email generation & campaigns
+│   │   │   ├── integrationsActions.ts    # External API integrations
+│   │   │   ├── aiServicesActions.ts      # AI/ML processing services
+│   │   │   ├── base.ts                   # Base API service class
+│   │   │   ├── types.ts                  # TypeScript interfaces
+│   │   │   └── hooks.ts                  # Custom React hooks
+│   │   ├── components/         # Organized UI components
+│   │   │   ├── ui/                       # Basic UI components
+│   │   │   │   ├── LoadingSpinner.tsx
+│   │   │   │   └── ErrorDisplay.tsx
+│   │   │   ├── layout/                   # Layout components
+│   │   │   │   └── Header.tsx
+│   │   │   ├── forms/                    # Form components
+│   │   │   │   └── DataCard.tsx
+│   │   │   ├── chatbot/                  # AI chatbot interface
+│   │   │   ├── contacts/                 # Contact management UI
+│   │   │   ├── inbox/                    # Email inbox interface
+│   │   │   └── outreach/                 # Outreach campaign UI
+│   │   ├── pages/              # Page components by user flow
+│   │   │   ├── auth/                     # Authentication pages
+│   │   │   │   ├── login/
+│   │   │   │   ├── register/
+│   │   │   │   └── profile/
+│   │   │   ├── onboarding/               # Onboarding flow pages
+│   │   │   │   ├── chatbot/              # AI chatbot interface
+│   │   │   │   ├── company-setup/        # Company profile setup
+│   │   │   │   └── product-setup/        # Product profile setup
+│   │   │   ├── workspace/                # Main workspace pages
+│   │   │   │   ├── inbox/                # Sales outreach inbox
+│   │   │   │   ├── company-research/     # Company analysis
+│   │   │   │   └── contact-discovery/    # Contact finder
+│   │   │   └── HomePage.tsx              # Landing page
+│   │   ├── routers/            # Navigation and routing
+│   │   └── assets/             # Static assets
 │   └── package.json
-├── backend/           # Django + DRF
-│   ├── api/          # API app
-│   ├── cerebras_backend/  # Main project
+├── backend/                    # Django + DRF with specialized apps
+│   ├── onboarding/            # 🤖 Onboarding app
+│   │   ├── models/            # Database models
+│   │   │   ├── __init__.py
+│   │   │   └── OnboardingStep.py         # User progress tracking
+│   │   ├── services/          # Business logic layer
+│   │   │   ├── __init__.py
+│   │   │   └── onboarding_service.py     # Onboarding flow logic
+│   │   ├── migrations/        # Database migrations
+│   │   ├── views.py           # API endpoints for profile setup
+│   │   ├── urls.py            # URL routing for onboarding
+│   │   ├── tasks.py           # Background tasks (company enrichment)
+│   │   ├── tests.py           # Unit tests
+│   │   └── admin.py           # Django admin integration
+│   ├── companies/             # 🏢 Company management app
+│   │   ├── models/            # Company profile models
+│   │   ├── services/          # Company data processing
+│   │   ├── views.py           # Company CRUD operations
+│   │   ├── tasks.py           # Company research tasks
+│   │   └── ...
+│   ├── contacts/              # 👥 Contact discovery app
+│   │   ├── models/            # Contact and role models
+│   │   ├── services/          # Contact scraping & discovery
+│   │   ├── views.py           # Contact management APIs
+│   │   ├── tasks.py           # Contact enrichment tasks
+│   │   └── ...
+│   ├── outreach/              # 📧 Email outreach app
+│   │   ├── models/            # Email templates & campaigns
+│   │   ├── services/          # Email generation & sending
+│   │   ├── views.py           # Outreach management APIs
+│   │   ├── tasks.py           # Email sending tasks
+│   │   └── ...
+│   ├── integrations/          # 🔌 External API integrations app
+│   │   ├── models/            # Integration configurations
+│   │   ├── services/          # API connectors (Clearbit, Crunchbase, etc.)
+│   │   ├── views.py           # Integration management APIs
+│   │   ├── tasks.py           # Data sync tasks
+│   │   └── ...
+│   ├── ai_services/           # 🧠 AI/ML processing app
+│   │   ├── models/            # AI model configurations
+│   │   ├── services/          # AI processing services
+│   │   ├── views.py           # AI processing APIs
+│   │   ├── tasks.py           # ML processing tasks
+│   │   └── ...
+│   ├── api/                   # 🔗 Legacy API app (to be deprecated)
+│   ├── project/               # 🚀 Main Django project
+│   │   ├── settings.py        # Django configuration
+│   │   ├── urls.py            # Main URL routing
+│   │   └── ...
 │   ├── manage.py
 │   └── requirements.txt
-├── start-app.bat     # One-click setup script (Windows)
-├── start-app.sh      # One-click setup script (Mac/Linux)
-├── start-frontend.bat # Script to start React dev server
-├── start-backend.bat  # Script to start Django dev server
+├── start-app.bat              # One-click setup script (Windows)
+├── start-app.sh               # One-click setup script (Mac/Linux)
 └── README.md
 ```
+
+## 🏗️ Architecture Overview
+
+### Frontend Architecture (React + TypeScript)
+
+The frontend is organized around the user journey and feature domains:
+
+#### **📁 API Services Layer (`/src/api/`)**
+Each API service file corresponds to a Django app, providing clean separation:
+
+- **`onboardingActions.ts`** - Handles company search, profile creation, and onboarding flow
+- **`companiesActions.ts`** - Company management, research, and analysis operations
+- **`contactsActions.ts`** - Contact discovery, role detection, and contact management
+- **`outreachActions.ts`** - Email template generation, campaign management, and sending
+- **`integrationsActions.ts`** - External API integrations (Clearbit, Crunchbase, LinkedIn)
+- **`aiServicesActions.ts`** - AI/ML processing for text generation and semantic search
+
+#### **📁 Component Organization (`/src/components/`)**
+Components are grouped by functionality rather than type:
+
+- **`ui/`** - Reusable UI primitives (buttons, modals, spinners)
+- **`layout/`** - Page layout and navigation components
+- **`forms/`** - Form components and input handling
+- **`chatbot/`** - AI chatbot interface components
+- **`contacts/`** - Contact management and display components
+- **`inbox/`** - Email inbox and threading components  
+- **`outreach/`** - Campaign creation and email composition
+
+#### **📁 Page Structure (`/src/pages/`)**
+Pages follow the user journey flow:
+
+- **`auth/`** - User authentication and profile management
+- **`onboarding/`** - Step-by-step setup process (company → products → customers)
+- **`workspace/`** - Main application workspace for sales activities
+
+### Backend Architecture (Django + DRF)
+
+The backend uses Django apps to separate business domains:
+
+#### **🤖 Onboarding App**
+**Purpose**: Manages the initial user and company setup process
+- **Models**: `OnboardingStep` (progress tracking), `CompanyProfile`, `ProductProfile`
+- **Services**: Company data enrichment, product suggestion AI, flow management
+- **Tasks**: Background company research, external API data fetching
+- **APIs**: Company search, profile CRUD, onboarding step management
+
+#### **🏢 Companies App**  
+**Purpose**: Handles company data management and research
+- **Models**: `Company`, `CompanyAnalysis`, `MarketResearch`, `SalesSignal`
+- **Services**: Company research, market analysis, competitor identification
+- **Tasks**: Periodic data updates, news monitoring, funding tracking
+- **APIs**: Company CRUD, research data, market insights
+
+#### **👥 Contacts App**
+**Purpose**: Contact discovery and relationship management
+- **Models**: `Contact`, `ContactRole`, `CompanyHierarchy`, `ContactSource`
+- **Services**: Contact scraping, role detection, org chart building
+- **Tasks**: Contact enrichment, social profile gathering, email verification
+- **APIs**: Contact discovery, role filtering, contact management
+
+#### **📧 Outreach App**
+**Purpose**: Email generation and campaign management
+- **Models**: `EmailTemplate`, `Campaign`, `EmailOutreach`, `EmailTracking`
+- **Services**: AI email generation, personalization, tone adaptation
+- **Tasks**: Email sending, delivery tracking, response monitoring
+- **APIs**: Template management, campaign creation, send tracking
+
+#### **🔌 Integrations App**
+**Purpose**: External API connections and data synchronization
+- **Models**: `APIConfig`, `DataSource`, `SyncLog`, `RateLimit`
+- **Services**: Clearbit, Crunchbase, Apollo.io, LinkedIn connectors
+- **Tasks**: Data synchronization, API rate limiting, credential management
+- **APIs**: Integration status, data refresh, API health checks
+
+#### **🧠 AI Services App**
+**Purpose**: AI/ML processing and model management
+- **Models**: `AIModel`, `ProcessingJob`, `ModelConfig`, `AIResponse`
+- **Services**: Text generation, semantic search, entity extraction
+- **Tasks**: Model inference, batch processing, model fine-tuning
+- **APIs**: AI processing requests, model status, training jobs
+
+## 🔄 User Flow & Data Pipeline
+
+### **Phase 1: Onboarding & Profile Setup**
+1. **Company Discovery** (`onboarding` app)
+   - User enters company name → AI searches external APIs → Auto-fills company details
+   - Fallback: Conversational chatbot collects missing information
+
+2. **Product Profiling** (`onboarding` app) 
+   - AI suggests products based on company profile → User selects/customizes
+   - Stores product metadata for later matching
+
+3. **Customer Discovery** (`companies` + `contacts` apps)
+   - AI identifies target companies using company + product profiles
+   - Filters by industry, size, geography, buying signals
+
+### **Phase 2: Sales Workspace & Outreach**
+4. **Company Research** (`companies` app)
+   - Automated market research and fit analysis
+   - News monitoring, funding rounds, hiring trends
+
+5. **Contact Discovery** (`contacts` app)
+   - Scrapes/APIs for decision-makers at target companies
+   - Role detection and org chart building
+
+6. **Email Generation** (`outreach` app)
+   - AI generates personalized emails using all profile data
+   - Tone adaptation based on contact role and seniority
+
+7. **Campaign Execution** (`outreach` + `integrations` apps)
+   - Direct email sending via Outlook/Gmail APIs
+   - Tracking opens, clicks, replies
 
 ## 📋 Getting Started for New Contributors
 
@@ -51,29 +257,6 @@ cerebrasHackathon/
    - Backend API: http://localhost:8000/api/
    - Django Admin: http://localhost:8000/admin/
 
-### About Git and Backend Files
-
-**Q: Why don't I see backend files in git?**
-
-**A:** The backend files ARE included in the repository! If you're not seeing them, it might be because:
-
-1. **Files haven't been committed yet** - Run `git status` to see untracked files
-2. **You're in the wrong directory** - Make sure you're in the root project directory
-3. **Files were accidentally gitignored** - Check for `.gitignore` rules
-
-To add all files to git:
-```bash
-git add .
-git commit -m "Initial commit with frontend and backend"
-git push origin main
-```
-
-The backend files are located in the `backend/` directory and include:
-- Django project files (`cerebras_backend/`)
-- API application (`api/`)
-- Database file (`db.sqlite3`)
-- Requirements file (`requirements.txt`)
-- Management commands (`manage.py`)
 
 ## 🛠️ Quick Setup (Recommended)
 
@@ -99,66 +282,51 @@ These scripts will:
 4. ✅ Start both backend and frontend servers
 5. ✅ Open both servers in separate terminal windows
 
-## 🛠️ Manual Setup Instructions
-
-### Prerequisites
-- **Python 3.8+** installed
-- **Node.js 16+** and npm installed
-
-### Backend Setup (Django)
-
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-
-2. Install Python dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Run database migrations:
-   ```bash
-   python manage.py migrate
-   ```
-
-4. Start the Django development server:
-   ```bash
-   python manage.py runserver 8000
-   ```
-
-### Frontend Setup (React)
-
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Install Node.js dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the React development server:
-   ```bash
-   npm start
-   ```
-
-## 🚀 Alternative Quick Start
-
-You can also use the individual batch files to start servers separately:
-
-1. **Start Backend**: Double-click `start-backend.bat` or run it from terminal
-2. **Start Frontend**: Double-click `start-frontend.bat` or run it from terminal
-
 ## 🔗 API Endpoints
 
-The Django backend provides the following API endpoints:
+The Django backend provides the following API endpoints organized by app:
 
-- `GET /api/hello/` - Simple hello world message
-- `GET /api/status/` - API status and version info
-- `GET /api/data/` - Sample data for frontend display
-- `POST /api/data/` - Submit data to the backend
+### **Onboarding API** (`/api/onboarding/`)
+- `GET /api/onboarding/company-search/?name=<company>` - Search for company by name
+- `POST /api/onboarding/company-profile/` - Create company profile  
+- `PUT /api/onboarding/company-profile/<id>/` - Update company profile
+- `GET /api/onboarding/product-suggestions/?company_id=<id>` - Get AI product suggestions
+- `POST /api/onboarding/product-profile/` - Create product profile
+- `GET /api/onboarding/step/?user_id=<id>` - Get current onboarding step
+- `POST /api/onboarding/complete/` - Complete onboarding process
+
+### **Companies API** (`/api/companies/`)
+- `GET /api/companies/` - List user's companies
+- `POST /api/companies/` - Create new company
+- `GET /api/companies/<id>/research/` - Get company research data
+- `GET /api/companies/<id>/analysis/` - Get market fit analysis
+- `GET /api/companies/<id>/signals/` - Get sales signals and news
+
+### **Contacts API** (`/api/contacts/`)
+- `GET /api/contacts/?company_id=<id>` - Get contacts for company
+- `POST /api/contacts/discover/` - Discover new contacts
+- `GET /api/contacts/<id>/` - Get contact details
+- `PUT /api/contacts/<id>/` - Update contact information
+- `POST /api/contacts/bulk-enrich/` - Bulk contact enrichment
+
+### **Outreach API** (`/api/outreach/`)
+- `GET /api/outreach/templates/` - List email templates
+- `POST /api/outreach/generate-email/` - Generate personalized email
+- `POST /api/outreach/campaigns/` - Create email campaign
+- `GET /api/outreach/campaigns/<id>/stats/` - Get campaign statistics
+- `POST /api/outreach/send/` - Send individual email
+
+### **Integrations API** (`/api/integrations/`)
+- `GET /api/integrations/status/` - Check integration statuses
+- `POST /api/integrations/sync/` - Trigger data synchronization
+- `GET /api/integrations/rate-limits/` - Check API rate limits
+- `POST /api/integrations/configure/` - Configure API credentials
+
+### **AI Services API** (`/api/ai-services/`)
+- `POST /api/ai-services/text-generation/` - Generate text using AI
+- `POST /api/ai-services/semantic-search/` - Perform semantic search
+- `POST /api/ai-services/entity-extraction/` - Extract entities from text
+- `GET /api/ai-services/models/` - List available AI models
 
 ## 🎨 Frontend Features
 
@@ -192,79 +360,78 @@ The Django backend provides the following API endpoints:
 
 ## 🔧 Development
 
-### Adding New API Endpoints
+### Adding New Features
 
-1. Add new views in `backend/api/views.py`
-2. Add URL patterns in `backend/api/urls.py`
-3. Update the frontend service in `frontend/src/services/apiService.ts`
+#### **Frontend Development**
+1. **New API Service**: Create corresponding service in `frontend/src/api/` matching Django app
+2. **New Components**: Add to appropriate component category (`ui/`, `forms/`, `chatbot/`, etc.)
+3. **New Pages**: Create in relevant user flow directory (`auth/`, `onboarding/`, `workspace/`)
+4. **Update Types**: Add TypeScript interfaces in `frontend/src/api/types.ts`
 
-### Customizing the Frontend
+#### **Backend Development**
+1. **New Django App**: Create with standard structure (models/, services/, views.py, urls.py)
+2. **Database Models**: Add to `app/models/` directory
+3. **Business Logic**: Implement in `app/services/` for reusability
+4. **Background Tasks**: Add to `app/tasks.py` for async processing
+5. **API Endpoints**: Define in `app/views.py` and route in `app/urls.py`
 
-- Modify `frontend/src/App.tsx` for main component changes
-- Add new components in `frontend/src/components/`
-- Customize styling with Tailwind CSS classes
+### **Adding New API Endpoints**
+
+1. **Backend**: Add new views in `backend/<app>/views.py`
+2. **URL Routing**: Add patterns in `backend/<app>/urls.py`
+3. **Frontend**: Update corresponding service in `frontend/src/api/<app>Actions.ts`
+4. **Types**: Update interfaces in `frontend/src/api/types.ts`
+
+### **Development Workflow**
+
+1. **Plan Feature**: Identify which Django app(s) and frontend components needed
+2. **Backend First**: Create models, services, and APIs
+3. **Frontend Integration**: Create/update API services and components
+4. **Test Integration**: Verify frontend-backend communication
+5. **Add Background Tasks**: For long-running operations (email sending, data processing)
+
+### **Customizing the Frontend**
+
+- **Main App**: Modify `frontend/src/App.tsx` for app-level changes
+- **New Components**: Add to appropriate category in `frontend/src/components/`
+- **New Pages**: Add to user flow directory in `frontend/src/pages/`
+- **Styling**: Use Tailwind CSS classes for consistent design
+- **Routing**: Update `frontend/src/routers/index.tsx` for new routes
 
 ## 📦 Dependencies
 
-### Frontend
-- React 18
-- TypeScript
-- Tailwind CSS
-- Axios (for API calls)
+### **Frontend Dependencies**
+- **React 18** - UI framework
+- **TypeScript** - Type safety and developer experience
+- **Tailwind CSS** - Utility-first CSS framework
+- **Axios** - HTTP client for API calls
+- **React Router** - Client-side routing
+- **React Hook Form** - Form handling and validation
 
-### Backend
-- Django 4.2
-- Django REST Framework
-- django-cors-headers
-- python-decouple
+### **Backend Dependencies**
+- **Django 4.2** - Web framework
+- **Django REST Framework** - API framework
+- **Celery** - Background task processing
+- **Redis** - Message broker and caching
+- **PostgreSQL** - Primary database (production)
+- **SQLite** - Development database
+- **django-cors-headers** - CORS handling
+- **python-decouple** - Environment configuration
+- **requests** - HTTP client for external APIs
 
-## 🤝 Contributing
+### **AI/ML Dependencies**
+- **OpenAI** - GPT models for text generation
+- **sentence-transformers** - Semantic search capabilities
+- **spaCy** - Natural language processing
+- **pandas** - Data manipulation and analysis
+- **scikit-learn** - Machine learning utilities
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes
-4. Test both frontend and backend
-5. Commit your changes: `git commit -m "Add feature"`
-6. Push to the branch: `git push origin feature-name`
-7. Submit a pull request
+### **External Integrations**
+- **Clearbit API** - Company data enrichment
+- **Crunchbase API** - Startup and funding data
+- **LinkedIn API** - Professional network data
+- **Apollo.io API** - Contact discovery
+- **Microsoft Graph API** - Outlook integration
+- **Gmail API** - Gmail integration
 
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**1. "Python/Node.js not found"**
-- Make sure Python 3.8+ and Node.js 16+ are installed
-- Ensure they're added to your system PATH
-
-**2. "Port already in use"**
-- Backend: Kill any process using port 8000 or change the port in `start-backend.bat`
-- Frontend: React will automatically suggest an alternative port
-
-**3. "pip install fails"**
-- Try using `pip3` instead of `pip`
-- On Windows, ensure you're running as Administrator if needed
-
-**4. "npm install fails"**
-- Clear npm cache: `npm cache clean --force`
-- Delete `node_modules` and `package-lock.json`, then run `npm install` again
-
-**5. "Database migration errors"**
-- Delete `db.sqlite3` file and run migrations again
-- Make sure you're in the `backend/` directory
-
-**6. "Tailwind CSS not working"**
-- Make sure you're using Tailwind CSS v3 (not v4)
-- Verify `postcss.config.js` configuration
-- Check that CSS imports are correct in `src/index.css`
-
-### Getting Help
-
-If you encounter issues:
-1. Check this troubleshooting section
-2. Look at the terminal output for specific error messages
-3. Ensure all prerequisites are installed
-4. Try the manual setup steps instead of the one-click script
-
-## 📄 License
-
-This project is open source and available under the MIT License.
+*Last updated: August 2, 2025*

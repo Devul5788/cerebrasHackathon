@@ -1,5 +1,5 @@
 """
-URL configuration for cerebras_backend project.
+URL configuration for project project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -21,4 +21,10 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include('api.urls')),
+    path("api/onboarding/", include('onboarding.urls')),
+    path("api/companies/", include('companies.urls')),
+    path("api/contacts/", include('contacts.urls')),
+    path("api/outreach/", include('outreach.urls')),
+    path("api/integrations/", include('integrations.urls')),
+    path("api/ai-services/", include('ai_services.urls')),
 ]
