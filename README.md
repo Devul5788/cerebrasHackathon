@@ -1,37 +1,33 @@
-# CRM Lead Generation & Personalized Outreach Automation
+# B2B Outreach Automation Platform
 
-This web application automates CRM lead generation and personalized outreach processes, helping businesses efficiently identify, qualify, and engage potential customers.
+This web application helps businesses identify potential customers and automate personalized outreach processes through an AI-enabled chatbot and Outlook-like inbox interface.
 
 ## Features
 
-- **Lead Generation Automation**
-  - Automatically capture leads from multiple sources
-  - Lead scoring and qualification algorithms
-  - Integration with popular CRM platforms
+- **Interactive AI Chatbot**
+  - Company profiling through conversational interface
+  - Product profiling with feature extraction
+  - Customer company generation based on profiles
   
-- **Personalized Outreach**
-  - Dynamic email template generation
-  - Personalization based on lead data and behavior
-  - Multi-channel communication (email, SMS, social media)
+- **Outlook-like Inbox Interface**
+  - Company sidebar with potential customers
+  - Detailed company information and fit analysis
+  - Web-scraped potential client listings
+  - LinkedIn integration for profile pictures and details
   
-- **Analytics & Reporting**
-  - Real-time campaign performance tracking
-  - Lead conversion analytics
-  - ROI measurement for outreach efforts
-
-- **Smart Scheduling**
-  - Optimal send time prediction
-  - Follow-up sequence automation
-  - Timezone-aware communication
+- **Role-based Email Templates**
+  - Dynamic email generation based on client role
+  - Predefined templates for different organizational levels
+  - Editable email content before sending
 
 ## Technology Stack
 
-- Frontend: React.js with Tailwind CSS
+- Frontend: Vanilla JavaScript with Tailwind CSS
 - Backend: Node.js with Express
 - Database: MongoDB
-- CRM Integration: Salesforce, HubSpot APIs
+- AI Integration: Perplexity API
 - Email Service: SendGrid/SES
-- Authentication: OAuth 2.0
+- LinkedIn Integration: LinkedIn API
 
 ## Getting Started
 
@@ -58,13 +54,28 @@ This web application automates CRM lead generation and personalized outreach pro
 
 5. Open your browser to `http://localhost:3000`
 
-## Configuration
+## Application Workflow
 
-Create a `.env` file with the following variables:
-- `CRM_API_KEY` - Your CRM platform API key
-- `EMAIL_SERVICE_API_KEY` - Your email service provider API key
-- `DATABASE_URL` - MongoDB connection string
-- `PORT` - Server port (default: 3000)
+1. **Chatbot Interface**
+   - Start by providing your company information
+   - Add product details you want to sell
+   - Generate potential customer companies
+
+2. **Inbox Interface**
+   - Browse generated customer companies in sidebar
+   - View detailed company information and fit analysis
+   - See potential clients within each company
+   - Generate and customize role-based email templates
+   - Send emails directly from the interface
+
+## API Endpoints
+
+- `/api/chatbot/company` - Create company profile
+- `/api/chatbot/product` - Create product profile
+- `/api/chatbot/generate-customers` - Generate customer companies
+- `/api/inbox/companies` - Get list of potential customer companies
+- `/api/inbox/company/:id` - Get detailed company information
+- `/api/inbox/templates/:role` - Get email template for specific role
 
 ## Contributing
 
