@@ -63,3 +63,42 @@ def ask_cerebras(question, context, model = "deepseek-r1-distill-llama-70b", tem
     except Exception as e:
         return f"Error: {str(e)}"
 
+
+def ask_perplexity(question, context, model="sonar-pro", temp=1.0):
+    """
+    Generic function to query the Perplexity API.
+    """
+    import requests
+    api_key = PERPLEXITY_API_KEY
+    if not api_key:
+        return "Error: PERPLEXITY_API_KEY not configured."
+
+    url = "https://api.perplexity.ai/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+
+    # Combine context and question for the prompt
+    prompt = f"===== CONTEXT =====\n{context}\n\n===== INSTRUCTIONS =====\n{question}\n"
+
+    payload = {
+        "model": model,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "temperature": temp
+    }
+
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+        data = response.json()
+        # Try to extract the content if present
+        try:
+            return data["choices"][0]["message"]["content"].strip()
+        except Exception:
+            return str(data)
+    except Exception as e:
+        return f"Error: {str(e)}"
+
