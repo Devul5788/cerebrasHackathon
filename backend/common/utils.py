@@ -1,5 +1,4 @@
 import logging
-import paramiko
 import os
 import sys
 import typing
