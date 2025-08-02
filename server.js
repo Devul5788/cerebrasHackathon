@@ -4,10 +4,20 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 
+// Import our modules
+const PerplexityAPIWrapper = require('./examples/perplexity_api_wrapper.js');
+const WebScraper = require('./examples/web_scraper.js');
+
+// Initialize API wrappers
+const perplexityAPI = new PerplexityAPIWrapper();
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Serve static files from the public directory
+app.use(express.static('public'));
 
 // Middleware
 app.use(cors());
