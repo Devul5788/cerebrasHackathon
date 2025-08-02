@@ -89,9 +89,14 @@ def company_profile(request):
         api_key = os.environ.get("PERPLEXITY_API_KEY")
         if not api_key:
             return JsonResponse({"error": "API key not set"}, status=500)
-        print(f"[DEBUG] Using API key: {api_key}")
-        prompt = f"Give me the website and a short description for the company '{company_name}'. Respond in JSON with keys 'website' and 'description'."
-        print(api_key == "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", "[DEBUG] API key check" + api_key)
+        prompt = (
+            f"Extract the following information about the company '{company_name}':\n"
+            "- company_name: The official name of the company\n"
+            "- website: The main website URL\n"
+            "- description: A short description of the company\n"
+            "- products: A list of up to 6 products or services the company offers (each with a 'name' and 'short_description')\n"
+            "Respond in JSON with keys: company_name, website, description, products (as a list of objects with 'name' and 'short_description')."
+        )
         payload = {
             "model": "sonar-pro",
             "messages": [{"role": "user", "content": prompt}]
