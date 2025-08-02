@@ -6,6 +6,9 @@ import requests
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 @api_view(['GET'])
@@ -83,12 +86,12 @@ def company_profile(request):
         print(f"[DEBUG] Company name: {company_name}")
         if not company_name:
             return JsonResponse({"error": "No company name provided"}, status=400)
-        # api_key = os.environ.get("PERPLEXITY_API_KEY")
-        # if not api_key:
-        #     return JsonResponse({"error": "API key not set"}, status=500)
-        # print(f"[DEBUG] API key is {api_key[:4]}...")  # Log only part of the key for security
-        api_key = "YOUR_PERPLEXITY_API_KEY"  # Replace with your actual API key
+        api_key = os.environ.get("PERPLEXITY_API_KEY")
+        if not api_key:
+            return JsonResponse({"error": "API key not set"}, status=500)
+        print(f"[DEBUG] Using API key: {api_key}")
         prompt = f"Give me the website and a short description for the company '{company_name}'. Respond in JSON with keys 'website' and 'description'."
+        print(api_key == "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", "[DEBUG] API key check" + api_key)
         payload = {
             "model": "sonar-pro",
             "messages": [{"role": "user", "content": prompt}]
