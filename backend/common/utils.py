@@ -94,11 +94,20 @@ def ask_perplexity(question, context, model="sonar-pro", temp=1.0):
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
         data = response.json()
-        # Try to extract the content if present
+        
+        # Extract just the content and citations
         try:
+            content = data['choices'][0]['message']['content']
+            citations = data.get('citations', [])
+            
+            # Return simplified response with just text and citations
+            return {
+                'content': content,
+                'citations': citations
+            }
+        except (KeyError, IndexError):
+            # If expected structure is not found, return the full data
             return data
-        except Exception:
-            return str(data)
     except Exception as e:
         return f"Error: {str(e)}"
 
