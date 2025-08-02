@@ -435,3 +435,11 @@ The Django backend provides the following API endpoints organized by app:
 - **Gmail API** - Gmail integration
 
 *Last updated: August 2, 2025*
+
+## Setup API Key
+
+in `backend/common/.env` setup:
+
+```
+PERPLEXITY_API_KEY=<your perplexity key>
+```
