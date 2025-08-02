@@ -96,7 +96,7 @@ def ask_perplexity(question, context, model="sonar-pro", temp=1.0):
         data = response.json()
         # Try to extract the content if present
         try:
-            return data["choices"][0]["message"]["content"].strip()
+            return data
         except Exception:
             return str(data)
     except Exception as e:

@@ -442,4 +442,5 @@ in `backend/common/.env` setup:
 
 ```
 PERPLEXITY_API_KEY=<your perplexity key>
+CEREBRAS_API_KEY=<your cerebras key>
 ```
