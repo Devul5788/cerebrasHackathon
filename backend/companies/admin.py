@@ -75,7 +75,7 @@ class ContactAdmin(admin.ModelAdmin):
                       'title', 'department', 'seniority_level')
         }),
         ('Contact Information', {
-            'fields': ('email', 'phone', 'linkedin_url', 'twitter_handle')
+            'fields': ('email', 'phone', 'linkedin_url', 'linkedin_profile_photo_url', 'twitter_handle')
         }),
         ('Professional Background', {
             'fields': ('tenure_at_company', 'previous_companies', 'education', 'certifications'),

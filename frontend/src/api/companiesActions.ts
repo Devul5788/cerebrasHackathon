@@ -79,6 +79,7 @@ export interface Contact {
   title: string;
   email: string;
   linkedin_url: string;
+  linkedin_profile_photo_url?: string;
   contact_priority: string;
   seniority_level: string;
   decision_maker: boolean;
@@ -210,6 +211,20 @@ export class CompaniesApiService extends ApiService {
   // Get existing report for a specific company
   async getCompanyReport(companyId: number): Promise<CustomerReportResponse> {
     return this.get(`/companies/${companyId}/report/`);
+  }
+
+  // LinkedIn integration methods
+  async updateContactLinkedInPhoto(contactId: number): Promise<{ success: boolean; message: string; profile_photo_url?: string }> {
+    return this.post(`/companies/contacts/${contactId}/linkedin-photo/`, {});
+  }
+
+  async bulkUpdateLinkedInPhotos(companyId?: number): Promise<{ success: boolean; message: string; updated_count: number }> {
+    const payload = companyId ? { company_id: companyId } : {};
+    return this.post('/companies/linkedin/bulk-update-photos/', payload);
+  }
+
+  async getLinkedInApiStatus(): Promise<{ success: boolean; linkedin_api_configured: boolean; message: string }> {
+    return this.get('/companies/linkedin/status/');
   }
 }
 

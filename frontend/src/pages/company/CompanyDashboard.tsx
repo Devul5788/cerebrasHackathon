@@ -20,6 +20,8 @@ const CompanyDashboard: React.FC = () => {
   const [sortBy, setSortBy] = useState('date_desc'); // Add sorting state
   const [companiesState, executeGetCompanies] = useApiState<CompanyListResponse>();  const [reportState, executeGenerateReport] = useApiState<CustomerReportResponse>();
   const [deleteState, executeDeleteCompany] = useApiState<{ success: boolean; message: string }>();
+  const [photoUpdateState, executePhotoUpdate] = useApiState<{ success: boolean; message: string; profile_photo_url?: string }>();
+  const [bulkPhotoUpdateState, executeBulkPhotoUpdate] = useApiState<{ success: boolean; message: string; updated_count: number }>();
   
   // Report editing state
   const [editingReport, setEditingReport] = useState<Report | null>(null);
@@ -66,6 +68,27 @@ const CompanyDashboard: React.FC = () => {
       console.error('Failed to generate report:', error);
     }
   };
+
+  const updateContactPhoto = async (contactId: number) => {
+    try {
+      await executePhotoUpdate(() => companiesApi.updateContactLinkedInPhoto(contactId));
+      // Reload companies to get updated photo URL
+      loadCompanies();
+    } catch (error) {
+      console.error('Failed to update contact photo:', error);
+    }
+  };
+
+  const bulkUpdatePhotos = async (companyId?: number) => {
+    try {
+      await executeBulkPhotoUpdate(() => companiesApi.bulkUpdateLinkedInPhotos(companyId));
+      // Reload companies to get updated photo URLs
+      loadCompanies();
+    } catch (error) {
+      console.error('Failed to bulk update photos:', error);
+    }
+  };
+  
   const deleteCompany = async (companyId: number) => {
     if (window.confirm('Are you sure you want to delete this company? This action cannot be undone.')) {
       await executeDeleteCompany(() => companiesApi.deleteCompany(companyId));
@@ -703,14 +726,48 @@ const CompanyDashboard: React.FC = () => {
                     </section>                    {/* Contacts */}
                     {selectedCompany.contacts.length > 0 && (
                       <section>
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Key Contacts</h3>
+                        <div className="flex justify-between items-center mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Key Contacts</h3>
+                          <button
+                            onClick={() => bulkUpdatePhotos(selectedCompany.id)}
+                            disabled={bulkPhotoUpdateState.loading}
+                            className="text-sm px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center gap-1"
+                            title="Update all LinkedIn profile photos for this company"
+                          >
+                            📷 Update All Photos
+                            {bulkPhotoUpdateState.loading && <span className="ml-1">...</span>}
+                          </button>
+                        </div>
                         <div className="space-y-3">
                           {selectedCompany.contacts.map((contact) => (
                             <div key={contact.id} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-800">
                               <div className="flex justify-between items-start mb-2">
-                                <div>
-                                  <h4 className="font-medium text-gray-900 dark:text-white">{contact.name}</h4>
-                                  <p className="text-sm text-gray-600 dark:text-gray-300">{contact.title}</p>
+                                <div className="flex items-center gap-3">
+                                  {/* Profile Photo */}
+                                  <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-600 flex-shrink-0">
+                                    {contact.linkedin_profile_photo_url ? (
+                                      <img 
+                                        src={contact.linkedin_profile_photo_url} 
+                                        alt={`${contact.name} profile`}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                          const target = e.target as HTMLImageElement;
+                                          target.style.display = 'none';
+                                          const sibling = target.nextElementSibling as HTMLElement;
+                                          if (sibling) sibling.style.display = 'flex';
+                                        }}
+                                      />
+                                    ) : null}
+                                    <div className={`w-full h-full flex items-center justify-center text-white bg-gradient-to-br ${
+                                      contact.linkedin_profile_photo_url ? 'hidden' : 'flex'
+                                    } from-blue-500 to-purple-600`}>
+                                      {contact.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <h4 className="font-medium text-gray-900 dark:text-white">{contact.name}</h4>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">{contact.title}</p>
+                                  </div>
                                 </div>
                                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(contact.contact_priority)}`}>
                                   {contact.contact_priority}
@@ -734,7 +791,7 @@ const CompanyDashboard: React.FC = () => {
                                   <p className="mt-1 text-gray-600 dark:text-gray-400">{contact.ai_ml_experience}</p>
                                 </div>
                                 {contact.linkedin_url && (
-                                  <div className="mt-2">
+                                  <div className="mt-2 flex items-center gap-2">
                                     <a 
                                       href={contact.linkedin_url} 
                                       target="_blank" 
@@ -743,6 +800,13 @@ const CompanyDashboard: React.FC = () => {
                                     >
                                       LinkedIn Profile →
                                     </a>
+                                    <button
+                                      onClick={() => updateContactPhoto(contact.id)}
+                                      className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-800"
+                                      title="Update profile photo from LinkedIn"
+                                    >
+                                      📷 Update Photo
+                                    </button>
                                   </div>
                                 )}
                               </div>

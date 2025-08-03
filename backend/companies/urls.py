@@ -8,7 +8,10 @@ from .views import (
     reports_list,
     report_detail,
     report_update,
-    report_delete
+    report_delete,
+    update_contact_linkedin_photo,
+    bulk_update_linkedin_photos,
+    linkedin_api_status
 )
 
 app_name = 'companies'
@@ -33,4 +36,9 @@ urlpatterns = [
     path('reports/<int:report_id>/', report_detail, name='report-detail'),
     path('reports/<int:report_id>/update/', report_update, name='report-update'),
     path('reports/<int:report_id>/delete/', report_delete, name='report-delete'),
+    
+    # LinkedIn integration endpoints
+    path('contacts/<int:contact_id>/linkedin-photo/', update_contact_linkedin_photo, name='update-contact-linkedin-photo'),
+    path('linkedin/bulk-update-photos/', bulk_update_linkedin_photos, name='bulk-update-linkedin-photos'),
+    path('linkedin/status/', linkedin_api_status, name='linkedin-api-status'),
 ]

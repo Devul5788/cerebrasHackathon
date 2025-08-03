@@ -36,6 +36,7 @@ class Contact(models.Model):
     email = models.EmailField(validators=[EmailValidator()], blank=True, null=True)
     phone = models.CharField(max_length=50, blank=True, null=True)
     linkedin_url = models.URLField(blank=True, null=True)
+    linkedin_profile_photo_url = models.URLField(blank=True, null=True)
     twitter_handle = models.CharField(max_length=50, blank=True, null=True)
     # Professional Background
     tenure_at_company = models.CharField(max_length=50, blank=True, null=True)  # e.g., "2 years"

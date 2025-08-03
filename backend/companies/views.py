@@ -4,8 +4,9 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 import logging
 
-from .models import Company, Report
+from .models import Company, Report, Contact
 from .services.research_service import CompanyResearchService
+from .services.linkedin_integration import ContactLinkedInService
 
 logger = logging.getLogger(__name__)
 
@@ -171,6 +172,7 @@ def company_list(request):
                     'title': contact.title,
                     'email': contact.email,
                     'linkedin_url': contact.linkedin_url,
+                    'linkedin_profile_photo_url': contact.linkedin_profile_photo_url,
                     'contact_priority': contact.contact_priority,
                     'seniority_level': contact.seniority_level,
                     'decision_maker': contact.decision_maker,
@@ -639,4 +641,88 @@ def company_report(request, company_id):
         logger.error(f"Failed to get company report {company_id}: {e}")
         return JsonResponse({
             'error': f'Failed to get company report: {str(e)}'
+        }, status=500)
+
+
+@api_view(['POST'])
+def update_contact_linkedin_photo(request, contact_id):
+    """
+    Update LinkedIn profile photo for a specific contact
+    """
+    try:
+        contact = get_object_or_404(Contact, id=contact_id)
+        linkedin_service = ContactLinkedInService()
+        
+        if linkedin_service.update_contact_profile_photo(contact):
+            return JsonResponse({
+                'success': True,
+                'message': f'Updated profile photo for {contact.get_full_name()}',
+                'profile_photo_url': contact.linkedin_profile_photo_url
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': f'Could not fetch profile photo for {contact.get_full_name()}'
+            })
+            
+    except Exception as e:
+        logger.error(f"Failed to update contact LinkedIn photo {contact_id}: {e}")
+        return JsonResponse({
+            'error': f'Failed to update LinkedIn photo: {str(e)}'
+        }, status=500)
+
+
+@api_view(['POST'])
+def bulk_update_linkedin_photos(request):
+    """
+    Bulk update LinkedIn profile photos for all contacts
+    """
+    try:
+        company_id = request.data.get('company_id')
+        linkedin_service = ContactLinkedInService()
+        
+        if company_id:
+            # Update photos for contacts of a specific company
+            company = get_object_or_404(Company, id=company_id)
+            contacts_queryset = company.contacts.all()
+            message_prefix = f"for company {company.name}"
+        else:
+            # Update photos for all contacts
+            contacts_queryset = Contact.objects.all()
+            message_prefix = "for all contacts"
+        
+        updated_count = linkedin_service.bulk_update_profile_photos(contacts_queryset)
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'Updated {updated_count} profile photos {message_prefix}',
+            'updated_count': updated_count
+        })
+        
+    except Exception as e:
+        logger.error(f"Failed to bulk update LinkedIn photos: {e}")
+        return JsonResponse({
+            'error': f'Failed to bulk update LinkedIn photos: {str(e)}'
+        }, status=500)
+
+
+@api_view(['GET'])
+def linkedin_api_status(request):
+    """
+    Check LinkedIn API configuration status
+    """
+    try:
+        linkedin_service = ContactLinkedInService()
+        is_valid = linkedin_service.validate_linkedin_api()
+        
+        return JsonResponse({
+            'success': True,
+            'linkedin_api_configured': is_valid,
+            'message': 'LinkedIn API is properly configured' if is_valid else 'LinkedIn API not configured or invalid'
+        })
+        
+    except Exception as e:
+        logger.error(f"Failed to check LinkedIn API status: {e}")
+        return JsonResponse({
+            'error': f'Failed to check LinkedIn API status: {str(e)}'
         }, status=500)
