@@ -23,7 +23,7 @@ def api_status(request):
     return Response({
         'status': 'online',
         'version': '1.0.0',
-        'message': 'CerebrasApp API is running successfully'
+        'message': 'NexLead API is running successfully'
     })
 
 

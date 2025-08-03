@@ -1,4 +1,4 @@
-# CerebrasApp - AI-Powered Sales Outreach Platform
+# NexLead - AI-Powered Sales Outreach Platform
 
 An intelligent full-stack sales outreach platform built with **React + TypeScript + Tailwind CSS** frontend and **Django + Django REST Framework** backend. This platform automates the entire sales process from company discovery to personalized email outreach.
 

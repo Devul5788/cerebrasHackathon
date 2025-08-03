@@ -1,6 +1,6 @@
 @echo off
 echo ================================================
-echo    CerebrasApp - Full Stack Application Setup
+echo    NexLead - Full Stack Application Setup
 echo ================================================
 echo.
 

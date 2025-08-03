@@ -11,7 +11,7 @@ const Layout: React.FC = () => {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <h1 className="text-xl font-bold text-gray-900">
-                  CerebrasApp
+                  NexLead
                 </h1>
               </div>              <div className="ml-10 flex items-baseline space-x-4">
                 <NavLink
@@ -24,10 +24,10 @@ const Layout: React.FC = () => {
                     }`
                   }
                 >
-                  Home
+                  🏠 Home
                 </NavLink>
                 <NavLink
-                  to="/status"
+                  to="/chatbot"
                   className={({ isActive }) =>
                     `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive
@@ -36,10 +36,10 @@ const Layout: React.FC = () => {
                     }`
                   }
                 >
-                  API Status
+                  🤖 Chatbot
                 </NavLink>
                 <NavLink
-                  to="/about"
+                  to="/customer-manager"
                   className={({ isActive }) =>
                     `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive
@@ -48,7 +48,7 @@ const Layout: React.FC = () => {
                     }`
                   }
                 >
-                  About
+                  👥 Customer Manager
                 </NavLink>
               </div>
             </div>

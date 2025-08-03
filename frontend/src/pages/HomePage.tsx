@@ -59,7 +59,7 @@ const HomePage: React.FC = () => {
     <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
       <div className="bg-white rounded-lg shadow-md p-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">
-          🚀 CerebrasApp - AI-Powered Sales Outreach Platform
+          🚀 NexLead - AI-Powered Sales Outreach Platform
         </h1>
         
         <div className="prose max-w-none">
