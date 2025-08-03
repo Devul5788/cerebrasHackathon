@@ -19,8 +19,8 @@ def main():
     if not PERPLEXITY_API_KEY:
         print("PERPLEXITY_API_KEY not configured.")
     else:
-        question = "What is the capital of France?"
-        context = "You are a helpful assistant. Output in plain text."
+        question = "What are cerebras's products offerings and give me a list of possible customers that cerebras gtm team can target for each product. Try to give as many possible customers as possible."
+        context = "You are an expert at providing information about Cerebras products."
         result = ask_perplexity(question, context)
         print("Perplexity Result:", json.dumps(result, indent=2))
 

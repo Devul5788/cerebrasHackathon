@@ -1,6 +1,90 @@
 # CerebrasApp - AI-Powered Sales Outreach Platform
 
-An intelligent full-stack sales outreach platform built with **React + TypeScript + Tailwind CSS** frontend and **Django + Django REST Framework** backend. This platform automates the entire sales process from company discovery to personalized email outreach.
+An intelligent full-stack sales outreach platform built with **React + TypeScript + Tailwind CSS** frontend and **Django + Django REST Framework** backend. This platform automates the entire sales process from company discovery to personalized email outreach using Cerebras' cutting-edge AI infrastructure capabilities.
+
+## 🧠 Cerebras AI Solutions Integration
+
+This platform is designed to help sales teams identify and engage prospects for Cerebras' comprehensive AI computing solutions:
+
+### 🚀 **Cerebras Product Portfolio**
+
+#### **1. Cerebras AI Inference**
+- **Category**: AI Inference Solution
+- **Key Features**: 
+  - Real-time, low-latency performance for generative AI
+  - High throughput for concurrent users
+  - Native hardware acceleration for sparse models
+  - Eliminates external memory bottlenecks
+- **Use Cases**: Interactive AI applications, chatbots, live translation, AI co-pilots
+- **Target Customers**: Enterprise API endpoints, real-time applications
+
+#### **2. Cerebras Condor Galaxy**
+- **Category**: AI Supercomputer Cloud Service (36 ExaFLOPs total capacity)
+- **Key Features**:
+  - Federated network of AI supercomputers
+  - Supports models with 600B+ parameters
+  - Cloud pay-per-use model
+  - Reduces infrastructure complexity
+- **Use Cases**: Training massive AI models, enterprise research labs
+- **Target Customers**: AI startups, research institutions, large enterprises
+
+#### **3. Cerebras Inference API**
+- **Category**: Cloud-based Inference Access
+- **Key Features**:
+  - OpenAI API compatibility for seamless migration
+  - Ultra-high token generation rates
+  - Developer-friendly integration
+- **Use Cases**: Real-time AI responses, code generation, summarization
+- **Target Customers**: Developers, software companies, AI-powered applications
+
+#### **4. Cerebras Model Hosting / AI Model Studio**
+- **Category**: Managed Model Training & Hosting Service
+- **Key Features**:
+  - Dedicated cluster training and hosting
+  - Simplified distributed computing
+  - Pay-per-model or dedicated access
+- **Use Cases**: Custom model development, rapid iteration, secure training
+- **Target Customers**: Enterprises with proprietary models, research teams
+
+#### **5. Cerebras Datacenter Rental**
+- **Category**: Dedicated AI Compute Infrastructure
+- **Key Features**:
+  - Private cloud environment with CS-3 systems
+  - Full model and data ownership
+  - Sustained high-performance computing
+- **Use Cases**: Continuous AI workloads, data privacy requirements
+- **Target Customers**: Large enterprises, government agencies, research institutions
+
+#### **6. Cerebras Datacenter Sales (On-Premises)**
+- **Category**: AI Supercomputer System Sales
+- **Key Features**:
+  - CS-3 systems for on-premises deployment
+  - Complete infrastructure control
+  - Rapid deployment and integration
+- **Use Cases**: Private AI clouds, HPC environments, specialized research
+- **Target Customers**: Pharmaceutical companies, national labs, energy companies
+
+### 🎯 **Target Industries & Use Cases**
+
+#### **Technology & AI Companies**
+- **Current Customers**: Perplexity, Mistral AI, Meta, Andrew Ng (DeepLearning.AI)
+- **Use Cases**: LLM training, inference acceleration, model hosting
+- **Value Proposition**: Faster training times, reduced costs, architectural diversity
+
+#### **Financial Services**
+- **Target Companies**: JPMorgan Chase, Goldman Sachs, BlackRock
+- **Use Cases**: Fraud detection, risk modeling, trading algorithms
+- **Value Proposition**: Real-time processing, regulatory compliance, secure infrastructure
+
+#### **Healthcare & Biotech**
+- **Current Customers**: Mayo Clinic, Memorial Sloan Kettering
+- **Use Cases**: Medical imaging, genomics, drug discovery
+- **Value Proposition**: Accelerated research cycles, complex modeling capabilities
+
+#### **Enterprise & Cloud Providers**
+- **Target Companies**: IBM, Microsoft, Google, Amazon
+- **Use Cases**: Large-scale model training, cloud service acceleration
+- **Value Proposition**: Performance gains, differentiated AI offerings
 
 ## 🚀 Platform Features
 
@@ -8,12 +92,21 @@ An intelligent full-stack sales outreach platform built with **React + TypeScrip
 - **Company Profile Generation**: Auto-fill company details using external APIs (Clearbit, Crunchbase, LinkedIn)
 - **Product Profile Database**: AI-suggested products/services based on company profile
 - **Customer Company Discovery**: AI-powered target company identification with buying intent signals
+- **Cerebras Fit Analysis**: Automated assessment of customer fit for specific Cerebras solutions
 
 ### 📧 **Part 2 - Sales Outreach Workspace**
 - **Inbox-Style UI**: Outlook/Gmail-like interface for managing prospects
 - **Contact Discovery**: Automated contact finding with role detection (decision-makers, buyers)
-- **AI Email Generation**: Personalized email pitches with tone adaptation by role
+- **AI Email Generation**: Personalized email pitches with Cerebras solution recommendations
 - **Email Integration**: Direct sending through Outlook/Gmail APIs with tracking
+- **Customer Reporting**: Comprehensive reports combining Cerebras offerings with customer data
+
+### 🎯 **Cerebras-Specific Intelligence**
+- **Product Matching**: Automatically matches prospects to optimal Cerebras solutions
+- **Technical Fit Scoring**: AI-powered scoring (1-10) based on customer AI/ML infrastructure
+- **Value Proposition Generation**: Custom value props leveraging Cerebras offerings data
+- **Use Case Identification**: Maps customer needs to specific Cerebras capabilities
+- **Competitive Analysis**: Positions Cerebras solutions against current customer infrastructure
 
 ## 🛠️ Technical Stack
 
@@ -220,23 +313,28 @@ The backend uses Django apps to separate business domains:
 3. **Customer Discovery** (`companies` + `contacts` apps)
    - AI identifies target companies using company + product profiles
    - Filters by industry, size, geography, buying signals
+   - **Cerebras Integration**: Matches prospects to Cerebras offerings using `company_offerings.json`
 
 ### **Phase 2: Sales Workspace & Outreach**
 4. **Company Research** (`companies` app)
-   - Automated market research and fit analysis
+   - Automated market research and fit analysis using Perplexity API
+   - **Cerebras Fit Analysis**: AI scores customer fit (1-10) for each Cerebras solution
    - News monitoring, funding rounds, hiring trends
 
 5. **Contact Discovery** (`contacts` app)
    - Scrapes/APIs for decision-makers at target companies
    - Role detection and org chart building
+   - **Enhanced Email Generation**: Professional email formats (firstname.lastname@company.com)
 
 6. **Email Generation** (`outreach` app)
-   - AI generates personalized emails using all profile data
+   - AI generates personalized emails using Cerebras solution data
+   - **Solution-Specific Messaging**: Tailored value propositions per Cerebras product
    - Tone adaptation based on contact role and seniority
 
 7. **Campaign Execution** (`outreach` + `integrations` apps)
    - Direct email sending via Outlook/Gmail APIs
    - Tracking opens, clicks, replies
+   - **Customer Reporting**: Comprehensive reports combining all data sources
 
 ## 📋 Getting Started for New Contributors
 
@@ -296,10 +394,11 @@ The Django backend provides the following API endpoints organized by app:
 - `POST /api/onboarding/complete/` - Complete onboarding process
 
 ### **Companies API** (`/api/companies/`)
-- `GET /api/companies/` - List user's companies
-- `POST /api/companies/` - Create new company
+- `GET /api/companies/` - List companies with Cerebras fit scores and recommendations
+- `POST /api/companies/research/` - Research companies using Perplexity + Cerebras analysis
+- `POST /api/companies/customer-report/` - Generate comprehensive customer reports
 - `GET /api/companies/<id>/research/` - Get company research data
-- `GET /api/companies/<id>/analysis/` - Get market fit analysis
+- `GET /api/companies/<id>/analysis/` - Get Cerebras fit analysis
 - `GET /api/companies/<id>/signals/` - Get sales signals and news
 
 ### **Contacts API** (`/api/contacts/`)

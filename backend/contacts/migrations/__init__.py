@@ -1,1 +1,0 @@
-﻿# Django migrations package

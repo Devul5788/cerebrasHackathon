@@ -23,8 +23,5 @@ urlpatterns = [
     path("api/", include('api.urls')),
     path("api/onboarding/", include('onboarding.urls')),
     path("api/companies/", include('companies.urls')),
-    path("api/contacts/", include('contacts.urls')),
     path("api/outreach/", include('outreach.urls')),
-    path("api/integrations/", include('integrations.urls')),
-    path("api/ai-services/", include('ai_services.urls')),
 ]
