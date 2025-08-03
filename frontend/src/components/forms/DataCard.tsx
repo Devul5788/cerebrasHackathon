@@ -32,16 +32,16 @@ const DataCard: React.FC<DataCardProps> = ({ data }) => {
   };
 
   return (
-    <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 hover:shadow-md transition-shadow duration-200">
+    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
       <div className="flex items-start space-x-4">
         <div className="flex-shrink-0">
           {getIconElement(data.icon)}
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
             {data.title}
           </h3>
-          <p className="text-gray-600 text-sm leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
             {data.description}
           </p>
         </div>

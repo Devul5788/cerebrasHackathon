@@ -1,86 +1,147 @@
 {
-  "Cerebras AI Inference": {
+  "Cerebras Systems, Inc. - Cerebras AI Inference": {
     "Category": "AI Inference Solution",
-    "Description": "Cerebras offers a high-performance inference solution that leverages the CS-3 system's unique architecture. By fitting entire large models onto the Wafer-Scale Engine, it eliminates latency bottlenecks from off-chip memory access, delivering industry-leading low latency and high throughput for demanding AI models, especially LLMs. Its architecture natively supports dynamic and unstructured sparsity for accelerated computations.",
+    "Description": "A high-performance inference solution leveraging the CS-3 system's architecture to deliver ultra-low latency and high throughput for advanced AI models, especially LLMs.",
     "Key Features": [
       "Real-time, low-latency performance for generative AI",
-      "High throughput for concurrent users",
-      "Native hardware acceleration for sparse models",
-      "Eliminates external memory bottlenecks",
-      "Simplified deployment for large models",
-      "Enables interactive applications"
+      "High throughput for many concurrent users",
+      "Native acceleration for sparse models",
+      "Eliminates external memory bottlenecks"
     ],
     "Usecase": [
-      "Powering real-time, interactive AI applications such as generative AI chatbots, live translation services, and AI co-pilots",
-      "Critical for enterprise-grade API endpoints serving large language models where response time is key for user experience"
+      "Powering interactive AI apps such as chatbots, live translation, and AI co-pilots",
+      "Critical for real-time enterprise-grade API endpoints serving large language models"
     ],
     "Current Customers": [
-      "Customers of the CS-3 system and Condor Galaxy cloud service (e.g., G42, various research institutions, enterprise clients, Perplexity for their Sonar search model, LiveKit, Audivi AI, Tavus, Vellum)"
+      "G42",
+      "Perplexity (for Sonar search model)",
+      "LiveKit",
+      "Audivi AI",
+      "Tavus",
+      "Vellum"
     ]
   },
-  "Cerebras Condor Galaxy": {
+  "Cerebras Systems, Inc. - Cerebras Condor Galaxy": {
     "Category": "AI Supercomputer Cloud Service",
-    "Description": "Condor Galaxy is a network of interconnected AI supercomputers, developed in partnership with G42, providing cloud-based access to Cerebras' CS-3 systems. With a planned total capacity of 36 ExaFLOPs of AI compute across nine supercomputers (e.g., Condor Galaxy 1 offering 4 ExaFLOPs), it allows customers to train cutting-edge generative AI models without owning and managing physical infrastructure. This service democratizes access to massive-scale AI compute.",
+    "Description": "A federated network of AI supercomputers, offering cloud-based access to massive compute (up to 36 ExaFLOPs planned) for training, tuning, and inference on frontier models without owning hardware.",
     "Key Features": [
       "Federated network of AI supercomputers",
-      "Allows training of models with 600 billion parameters and up",
-      "Cloud service model for pay-per-use access",
-      "Reduces complexity of building and managing large-scale AI infrastructure"
+      "Cloud service with pay-per-use access",
+      "Supports models up to 600B+ parameters",
+      "Simplifies large-scale AI infrastructure management"
     ],
     "Usecase": [
-      "Provides on-demand access to one of the world's largest AI supercomputing networks for organizations needing to train, fine-tune, or run inference on massive AI models",
-      "Ideal for AI startups, enterprise research labs, and academic institutions that want to avoid upfront hardware costs and complexity"
+      "On-demand training, tuning, and inference on massive AI models",
+      "Ideal for AI startups, enterprise research labs, and academia"
     ],
     "Current Customers": [
-      "G42 (Strategic Partner), Mayo Clinic, Cirrascale, various enterprise, startup, and research clients"
+      "G42",
+      "Mayo Clinic",
+      "Cirrascale"
     ]
   },
-  "Cerebras Inference API": {
-    "Category": "Cloud-based Inference Access",
-    "Description": "Cerebras offers a direct API endpoint for its high-speed AI inference capabilities, allowing developers and businesses to integrate Cerebras' performance into their applications. This API is designed for ease of use and often offers OpenAI API compatibility for seamless migration. It provides access to various leading open models with exceptionally high token generation rates.",
-    "Applications": [
-      "Integrating real-time, high-speed AI responses into existing software and platforms (e.g., chatbots, code generation, summarization)",
-      "Building interactive AI agents that require rapid, multi-step reasoning",
-      "Developing applications that demand ultra-low latency for user experience, such as live translation or real-time co-pilots"
-    ],
-    "Customers": [
-      "Developers and enterprises seeking to leverage Cerebras' inference speed without direct hardware ownership. This includes companies like Perplexity (for their search model), Mistral AI (for their chatbot Le Chat), and those utilizing it via AWS Marketplace. Andrew Ng (DeepLearning.AI) and Meta (for Llama API) have also publicly acknowledged its value"
-    ]
-  },
-  "Cerebras Model Hosting / AI Model Studio": {
+  "Cerebras Systems, Inc. - Cerebras Model Hosting / AI Model Studio": {
     "Category": "Managed Model Training & Hosting Service",
-    "Description": "Cerebras provides a service, often in partnership with cloud providers like Cirrascale (known as the Cerebras AI Model Studio), where companies can host, train, and fine-tune their large language models on dedicated Cerebras clusters. This simplifies the process by abstracting away the complexities of distributed computing and infrastructure management, offering a 'pay-per-model' or dedicated cluster approach.",
-    "Applications": [
-      "Companies that want to train and fine-tune proprietary or custom AI models quickly and efficiently, without the overhead of managing hardware",
-      "Organizations that need to iterate rapidly on model development and achieve deterministic performance for large-scale AI projects",
-      "Researchers and enterprises that require secure, dedicated access to powerful AI compute for their specific datasets and model architectures"
+    "Description": "A managed model hosting and training platform—often in partnership with cloud providers—allowing enterprises to train, fine-tune, and deploy LLMs/HPC models on dedicated clusters, with a simplified pay-per-model or dedicated cluster model.\nThink like a big boy, act like a smoll toy",
+    "Key Features": [
+      "Rapid, managed model training and tuning",
+      "Abstracts away infrastructure and scaling complexitydfd",
+      "Secure, dedicated compute resourcesasdfasdf"
     ],
-    "Customers": [
-      "Enterprises and research institutions focusing on developing and deploying their own state-of-the-art models. This includes partners like Cirrascale, and organizations leveraging Cerebras' AI Model Services, such as Mayo Clinic (for genomic AI), Aleph Alpha (for sovereign AI models), and AlphaSense (for financial and market data insights)"
+    "Usecase": [
+      "Training proprietary LLMs efficientlyasdf",
+      "Enterprises and researchers iterating AI models at scaleasdfasdff"
+    ],
+    "Current Customers": [
+      "Cirrascale",
+      "Mayo Clinic (genomics)",
+      "Aleph Alpha",
+      "AlphaSense"
     ]
   },
-  "Cerebras Datacenter Rental": {
-    "Category": "Dedicated AI Compute Infrastructure Rental",
-    "Description": "Cerebras allows organizations to rent dedicated compute capacity within their datacenters, equipped with CS-3 systems. This provides a private cloud environment for customers who require sustained, high-performance AI compute without the capital expenditure of purchasing and maintaining their own hardware. It offers full model and data ownership for the tenant.",
-    "Applications": [
-      "Organizations with significant and continuous AI workloads (training or inference) that prefer a dedicated environment over shared cloud services",
-      "Companies with strict data privacy or security requirements that necessitate isolated infrastructure",
-      "Large-scale research projects or enterprise deployments that benefit from consistent, predictable performance over extended periods"
+  "Cerebras Systems, Inc. - asdf": {
+    "Category": "asdf",
+    "Description": "asdfasdfasdfasdf",
+    "Key Features": [
+      "easdfasdfasdfasdf"
     ],
-    "Customers": [
-      "Large enterprises, government agencies, and research institutions with substantial and ongoing AI computing needs, often requiring a sovereign or highly controlled environment. Specific customer details for direct datacenter rentals are less publicly disclosed but generally fall within the high-end enterprise and government sectors that would also utilize Cerebras' on-premises hardware solutions"
+    "Usecase": [
+      "asdfasdf"
+    ],
+    "Current Customers": []
+  },
+  "Google Maps": {
+    "Category": "Mapping and Navigation Application",
+    "Description": "A web-based and mobile mapping service providing satellite imagery, street maps, Street View, real-time traffic updates, and route planning for various transportation modes.",
+    "Key Features": [
+      "Satellite and street map visualization",
+      "chinpokomon",
+      "Real-time traffic and congestion updates",
+      "Street View panoramic imagery",
+      "Multi-modal route planning (driving, walking, cycling, public transport)",
+      "Local business search and reviews",
+      "Offline maps functionality",
+      "ChinChinpokopokomonmon"
+    ],
+    "Usecase": [
+      "Personal and business navigation",
+      "Location-based business discovery",
+      "Logistics and delivery optimization",
+      "Travel planning and tourism",
+      "Commute time estimation",
+      "Very small penis, so smol"
+    ],
+    "Current Customers": [
+      "General public users worldwide",
+      "Businesses integrating Maps API",
+      "Ride-sharing and logistics companies"
     ]
   },
-  "Cerebras Datacenter Sales (On-Premises Hardware Systems)": {
-    "Category": "AI Supercomputer System Sales",
-    "Description": "Cerebras sells its CS-3 systems directly to customers who wish to deploy their own AI supercomputers on-premises within their existing datacenters. These systems are designed for rapid deployment and seamless integration into existing infrastructure, offering unmatched performance and efficiency for large-scale AI workloads with minimal footprint.",
-    "Applications": [
-      "Organizations that require complete control over their AI infrastructure for reasons of security, privacy, or intellectual property",
-      "Enterprises building their own private AI clouds or high-performance computing (HPC) environments",
-      "Research institutions and national labs conducting advanced AI research that benefits from owning and customizing the underlying hardware"
+  "Google LLC - Google Maps": {
+    "Category": "Mapping and Navigation Application",
+    "Description": "A web-based and mobile mapping service providing satellite imagery, street maps, Street View, real-time traffic updates, and route planning for various transportation modes.",
+    "Key Features": [
+      "Satellite and street map visualization",
+      "chinpokomon",
+      "Real-time traffic and congestion updates",
+      "Street View panoramic imagery",
+      "Multi-modal route planning (driving, walking, cycling, public transport)",
+      "Local business search and reviews",
+      "Offline maps functionality",
+      "ChinChinpokopokomonmon"
     ],
-    "Customers": [
-      "Major pharmaceutical companies (e.g., GlaxoSmithKline, AstraZeneca), government research labs (e.g., Argonne National Lab, National Center for Supercomputing Applications (NCSA)), and energy companies (e.g., TotalEnergies). These customers typically have specialized needs for AI in areas like drug discovery, scientific computing, and complex simulations"
+    "Usecase": [
+      "Personal and business navigation",
+      "Location-based business discovery",
+      "Logistics and delivery optimization",
+      "Travel planning and tourism",
+      "Commute time estimation",
+      "Very small penis, so smol"
+    ],
+    "Current Customers": [
+      "General public users worldwide",
+      "Businesses integrating Maps API",
+      "Ride-sharing and logistics companies"
     ]
+  },
+  "Google LLC - Chinpokomon go": {
+    "Category": "hellasdf",
+    "Description": "alskdfjasdf",
+    "Key Features": [
+      "asdf",
+      "asdf",
+      "asdf",
+      "asdfoijio",
+      ";osaidfas",
+      "askljds",
+      "342"
+    ],
+    "Usecase": [
+      "asdf1",
+      "1230923",
+      "12312312",
+      "a a09874  ##$! "
+    ],
+    "Current Customers": []
   }
 }

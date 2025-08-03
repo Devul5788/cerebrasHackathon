@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { useApiState } from '../api/hooks';
+import { useApiState } from '../../api/hooks';
 import { 
   companiesApi, 
   Company, 
   CompanyListResponse, 
   CustomerReportResponse,
   Report
-} from '../api/companiesActions';
+} from '../../api/companiesActions';
 
 const CompanyDashboard: React.FC = () => {
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);  const [filters, setFilters] = useState({

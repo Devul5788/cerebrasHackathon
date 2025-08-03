@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useApiState } from '../api/hooks';
-import { companiesApi, CompanyResearchResponse, CompanyResult } from '../api/companiesActions';
+import { useApiState } from '../../api/hooks';
+import { companiesApi, CompanyResearchResponse, CompanyResult } from '../../api/companiesActions';
 
 interface ResearchFormData {
   mode: 'single' | 'batch' | 'auto';
