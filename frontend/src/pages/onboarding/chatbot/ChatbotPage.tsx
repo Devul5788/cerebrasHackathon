@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
+interface ProductProfile {
+  name: string;
+  category: string;
+  description: string;
+  key_features: string[];
+  use_cases: string[];
+  current_customers?: string[];
+}
+
 interface Message {
   text: string;
   isBot: boolean;
@@ -16,6 +25,7 @@ interface CompanyProfile {
   founded?: string;
   found?: boolean;
   logo_url?: string;
+  products?: ProductProfile[];
 }
 
 const ChatbotPage: React.FC = () => {
@@ -24,21 +34,50 @@ const ChatbotPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [companyProfile, setCompanyProfile] = useState<CompanyProfile | null>(null);
   const [isManualEntry, setIsManualEntry] = useState(false);
+  const [showProductSelection, setShowProductSelection] = useState(false);
+  const [productSuggestions, setProductSuggestions] = useState<ProductProfile[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<ProductProfile[]>([]);
 
   const sendMessage = async (text: string) => {
     if (!text.trim()) return;
 
-    // If user confirms the profile is complete
-    if (text.toLowerCase() === 'done' || text.toLowerCase() === 'yes') {
+    if (text.toLowerCase() === 'yes' && companyProfile) {
+      // Move to product selection after company profile confirmation
+      try {
+        const response = await fetch('http://localhost:8000/api/onboarding/chat/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            step: 'product_suggestions',
+            company_data: companyProfile
+          }),
+        });
+
+        const data = await response.json();
+        setProductSuggestions(data.product_suggestions || []);
+        setShowProductSelection(true);
+        setMessages(prev => [...prev, {
+          text: data.message,
+          isBot: true
+        }]);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+      return;
+    }
+
+    if (text.toLowerCase() === 'done') {
       setLoading(true);
       try {
         const response = await fetch('http://localhost:8000/api/onboarding/chat/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            message: text,
             step: 'done',
-            company_data: companyProfile
+            company_data: {
+              ...companyProfile,
+              products: selectedProducts
+            }
           }),
         });
 
@@ -51,13 +90,8 @@ const ChatbotPage: React.FC = () => {
         setTimeout(() => {
           window.close();
         }, 3000);
-
       } catch (error) {
         console.error('Error:', error);
-        setMessages(prev => [...prev, {
-          text: "Sorry, I encountered an error saving your profile.",
-          isBot: true
-        }]);
       }
       setLoading(false);
       return;
@@ -108,6 +142,12 @@ const ChatbotPage: React.FC = () => {
 
       if (data.company_data) {
         setCompanyProfile(data.company_data);
+      }
+
+      // New logic to handle product suggestions
+      if (data.product_suggestions) {
+        setProductSuggestions(data.product_suggestions);
+        setShowProductSelection(true);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -236,49 +276,96 @@ const ChatbotPage: React.FC = () => {
                   </tbody>
                 </table>
               </div>
-              <form
-                className="space-y-4"
-                onSubmit={e => e.preventDefault()}
-              >
-                <div>
-                  <label className="block font-semibold mb-1" htmlFor="website">Website:</label>
-                  <input
-                    id="website"
-                    type="url"
-                    className="w-full p-2 border rounded"
-                    value={companyProfile.website}
-                    onChange={e =>
-                      setCompanyProfile(profile =>
-                        profile ? { ...profile, website: e.target.value } : null
-                      )
-                    }
-                    placeholder="Company website"
-                  />
+
+              {showProductSelection ? (
+                <div className="mt-6">
+                  <h3 className="text-xl font-semibold mb-4">Products & Services</h3>
+                  <div className="space-y-4">
+                    {productSuggestions.map((product, index) => (
+                      <div key={index} className="p-4 border rounded">
+                        <div className="flex items-start gap-2">
+                          <input
+                            type="checkbox"
+                            id={`product-${index}`}
+                            checked={selectedProducts.some(p => p.name === product.name)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedProducts([...selectedProducts, product]);
+                              } else {
+                                setSelectedProducts(selectedProducts.filter(p => p.name !== product.name));
+                              }
+                            }}
+                          />
+                          <div>
+                            <label htmlFor={`product-${index}`} className="font-semibold">{product.name}</label>
+                            <p className="text-sm text-gray-600">{product.description}</p>
+                            <div className="mt-2">
+                              <div className="text-sm font-medium">Key Features:</div>
+                              <ul className="list-disc list-inside text-sm text-gray-600">
+                                {product.key_features.map((feature, i) => (
+                                  <li key={i}>{feature}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      onClick={() => sendMessage('done')}
+                      className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    >
+                      Complete Profile
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <label className="block font-semibold mb-1" htmlFor="description">Description:</label>
-                  <textarea
-                    id="description"
-                    className="w-full p-2 border rounded"
-                    value={companyProfile.description}
-                    onChange={e =>
-                      setCompanyProfile(profile =>
-                        profile ? { ...profile, description: e.target.value } : null
-                      )
-                    }
-                    placeholder="Brief company description"
-                    rows={3}
-                  />
-                </div>
-                <div className="flex justify-end">
-                  <button
-                    onClick={() => sendMessage('done')}
-                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                  >
-                    Done
-                  </button>
-                </div>
-              </form>
+              ) : (
+                <form
+                  className="space-y-4"
+                  onSubmit={e => e.preventDefault()}
+                >
+                  <div>
+                    <label className="block font-semibold mb-1" htmlFor="website">Website:</label>
+                    <input
+                      id="website"
+                      type="url"
+                      className="w-full p-2 border rounded"
+                      value={companyProfile.website}
+                      onChange={e =>
+                        setCompanyProfile(profile =>
+                          profile ? { ...profile, website: e.target.value } : null
+                        )
+                      }
+                      placeholder="Company website"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold mb-1" htmlFor="description">Description:</label>
+                    <textarea
+                      id="description"
+                      className="w-full p-2 border rounded"
+                      value={companyProfile.description}
+                      onChange={e =>
+                        setCompanyProfile(profile =>
+                          profile ? { ...profile, description: e.target.value } : null
+                        )
+                      }
+                      placeholder="Brief company description"
+                      rows={3}
+                    />
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => sendMessage('yes')}
+                      className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    >
+                      Next: Add Products
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           ) : (
             <p className="text-gray-500">No company profile yet. Please provide your company information in the chat.</p>

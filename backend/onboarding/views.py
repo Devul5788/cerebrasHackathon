@@ -42,7 +42,7 @@ class ChatbotView(APIView):
                             "Is this correct?"
                         ),
                         'suggestions': ['Yes', "No, I'll enter manually"],
-                        'step': 'final',
+                        'step': 'product_suggestions',
                         'company_data': company_data
                     })
                 else:
@@ -58,15 +58,58 @@ class ChatbotView(APIView):
                     'step': 'manual_entry'
                 })
             
-        elif step == 'done':
-            # Store the company data in the database or process it further
+        elif step == 'product_suggestions':
             company_data = request.data.get('company_data')
-            print("DEBUG: Company profile submitted:", company_data)  # Debug print
+            research_prompt = f"""Based on this company information:
+            Name: {company_data.get('name')}
+            Description: {company_data.get('description')}
+            Industry: {company_data.get('industry')}
+            
+            List their main products/services in this JSON format:
+            {{
+                "suggested_products": [
+                    {{
+                        "name": "Product Name",
+                        "category": "Product Category",
+                        "description": "Brief description",
+                        "key_features": ["feature 1", "feature 2"],
+                        "use_cases": ["use case 1", "use case 2"],
+                        "current_customers": ["customer 1", "customer 2"]
+                    }}
+                ]
+            }}"""
+            
+            result = ask_perplexity(research_prompt, context=open('samples/chatbot_output.json').read())
+            try:
+                product_suggestions = json.loads(result['choices'][0]['message']['content'])
+                return Response({
+                    'message': "I found these products/services. Please select which ones apply to your company:",
+                    'suggestions': [],
+                    'step': 'product_selection',
+                    'product_suggestions': product_suggestions['suggested_products']
+                })
+            except Exception as e:
+                return Response({
+                    'message': "Let's add your products manually. What's your main product or service?",
+                    'suggestions': [],
+                    'step': 'manual_product_entry'
+                })
+
+        elif step == 'done':
+            # Update to include products
+            company_data = request.data.get('company_data')
+            selected_products = request.data.get('selected_products', [])
+            
+            # Store both company and product data
+            print("DEBUG: Company profile and products submitted:", {
+                **company_data,
+                'products': selected_products
+            })
+            
             return Response({
-                'message': "Great! Your company profile has been saved. You can now close this window.",
+                'message': "Great! Your company and product profiles have been saved. You can now close this window.",
                 'suggestions': [],
-                'step': 'complete',
-                'company_data': company_data
+                'step': 'complete'
             })
 
         return Response({
