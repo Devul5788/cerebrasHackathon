@@ -26,7 +26,6 @@ const CompanyDashboard: React.FC = () => {
   const [reportContent, setReportContent] = useState<string>('');
   const [reportTitle, setReportTitle] = useState<string>('');  useEffect(() => {
     loadCompanies();
-    loadComprehensiveReport(); // Check for existing comprehensive report
   }, []);
 
   const loadComprehensiveReport = async () => {
@@ -156,13 +155,12 @@ const CompanyDashboard: React.FC = () => {
     setReportContent('');
     setReportTitle('');
   };
-
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {
-      case 'high': return 'text-red-600 bg-red-100';
-      case 'medium': return 'text-yellow-600 bg-yellow-100';
-      case 'low': return 'text-green-600 bg-green-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'high': return 'text-red-700 bg-red-100 dark:text-red-200 dark:bg-red-900';
+      case 'medium': return 'text-yellow-700 bg-yellow-100 dark:text-yellow-200 dark:bg-yellow-900';
+      case 'low': return 'text-green-700 bg-green-100 dark:text-green-200 dark:bg-green-900';
+      default: return 'text-gray-600 bg-gray-100 dark:text-gray-300 dark:bg-gray-700';
     }
   };
 
@@ -191,16 +189,19 @@ const CompanyDashboard: React.FC = () => {
       default:
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     }
-  });
-  // Enhanced styles for ReactMarkdown rendering
+  });  // Enhanced styles for ReactMarkdown rendering with dark mode support
   const markdownStyles = `
     .markdown-content h1 { 
       font-size: 1.875rem; 
       font-weight: bold; 
       margin: 1.5rem 0 1rem 0; 
-      color: #1f2937; 
+      color: #1f2937;
       border-bottom: 2px solid #e5e7eb; 
       padding-bottom: 0.5rem; 
+    }
+    .dark .markdown-content h1 { 
+      color: #f9fafb;
+      border-bottom-color: #4b5563; 
     }
     .markdown-content h2 { 
       font-size: 1.5rem; 
@@ -210,11 +211,18 @@ const CompanyDashboard: React.FC = () => {
       border-bottom: 1px solid #e5e7eb; 
       padding-bottom: 0.25rem; 
     }
+    .dark .markdown-content h2 { 
+      color: #e5e7eb;
+      border-bottom-color: #4b5563; 
+    }
     .markdown-content h3 { 
       font-size: 1.25rem; 
       font-weight: 600; 
       margin: 1rem 0 0.5rem 0; 
       color: #4b5563; 
+    }
+    .dark .markdown-content h3 { 
+      color: #d1d5db; 
     }
     .markdown-content h4 { 
       font-size: 1.125rem; 
@@ -222,15 +230,24 @@ const CompanyDashboard: React.FC = () => {
       margin: 0.75rem 0 0.5rem 0; 
       color: #6b7280; 
     }
+    .dark .markdown-content h4 { 
+      color: #9ca3af; 
+    }
     .markdown-content p { 
       margin: 0.75rem 0; 
       line-height: 1.6; 
       color: #374151;
     }
+    .dark .markdown-content p { 
+      color: #d1d5db;
+    }
     .markdown-content ul, .markdown-content ol { 
       margin: 0.75rem 0; 
       padding-left: 1.5rem; 
       color: #374151;
+    }
+    .dark .markdown-content ul, .dark .markdown-content ol { 
+      color: #d1d5db;
     }
     .markdown-content li { 
       margin: 0.25rem 0; 
@@ -239,6 +256,9 @@ const CompanyDashboard: React.FC = () => {
     .markdown-content strong, .markdown-content b { 
       font-weight: 600; 
       color: #1f2937;
+    }
+    .dark .markdown-content strong, .dark .markdown-content b { 
+      color: #f9fafb;
     }
     .markdown-content em, .markdown-content i { 
       font-style: italic; 
@@ -251,6 +271,10 @@ const CompanyDashboard: React.FC = () => {
       font-size: 0.875rem;
       color: #1f2937;
     }
+    .dark .markdown-content code { 
+      background-color: #374151; 
+      color: #e5e7eb;
+    }
     .markdown-content pre { 
       background-color: #f8fafc; 
       padding: 1rem; 
@@ -258,6 +282,10 @@ const CompanyDashboard: React.FC = () => {
       overflow-x: auto; 
       border: 1px solid #e2e8f0;
       margin: 1rem 0;
+    }
+    .dark .markdown-content pre { 
+      background-color: #1f2937; 
+      border-color: #4b5563;
     }
     .markdown-content pre code { 
       background: none; 
@@ -274,6 +302,11 @@ const CompanyDashboard: React.FC = () => {
       padding: 1rem;
       border-radius: 0 0.5rem 0.5rem 0;
     }
+    .dark .markdown-content blockquote { 
+      background-color: #1f2937; 
+      color: #9ca3af;
+      border-left-color: #60a5fa;
+    }
     .markdown-content table { 
       width: 100%; 
       border-collapse: collapse; 
@@ -284,27 +317,35 @@ const CompanyDashboard: React.FC = () => {
       border: 1px solid #e5e7eb; 
       text-align: left; 
     }
+    .dark .markdown-content th, .dark .markdown-content td { 
+      border-color: #4b5563;
+    }
     .markdown-content th { 
       background-color: #f9fafb; 
       font-weight: 600; 
+    }
+    .dark .markdown-content th { 
+      background-color: #374151; 
     }
     .markdown-content hr { 
       border: none; 
       border-top: 2px solid #e5e7eb; 
       margin: 2rem 0; 
     }
+    .dark .markdown-content hr { 
+      border-top-color: #4b5563; 
+    }
   `;
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <style dangerouslySetInnerHTML={{ __html: markdownStyles }} />
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Company Dashboard</h1>
-              <p className="text-gray-600">Manage and analyze your researched companies</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Company Dashboard</h1>
+              <p className="text-gray-600 dark:text-gray-300">Manage and analyze your researched companies</p>
             </div>            <div className="flex space-x-4">
               <button
                 onClick={() => generateReport()}
@@ -324,15 +365,14 @@ const CompanyDashboard: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8 h-[calc(100vh-12rem)]">
           {/* Left Sidebar - Company List */}
-          <div className="w-1/3 bg-white rounded-lg shadow-sm border flex flex-col">            {/* Filters */}
-            <div className="p-4 border-b bg-gray-50 rounded-t-lg">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Companies ({sortedCompanies.length})</h2>
-              <div className="space-y-3">
+          <div className="w-1/3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col">            {/* Filters */}
+            <div className="p-4 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 rounded-t-lg">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Companies ({sortedCompanies.length})</h2>              <div className="space-y-3">
                 <div className="flex gap-2">
                   <select
                     value={filters.priority}
                     onChange={(e) => setFilters({ ...filters, priority: e.target.value })}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     aria-label="Filter by priority"
                   >
                     <option value="">All Priorities</option>
@@ -343,7 +383,7 @@ const CompanyDashboard: React.FC = () => {
                   <select
                     value={filters.min_fit_score}
                     onChange={(e) => setFilters({ ...filters, min_fit_score: e.target.value })}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     aria-label="Filter by minimum fit score"
                   >
                     <option value="">Min Fit Score</option>
@@ -358,13 +398,13 @@ const CompanyDashboard: React.FC = () => {
                     placeholder="Industry"
                     value={filters.industry}
                     onChange={(e) => setFilters({ ...filters, industry: e.target.value })}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                     aria-label="Filter by industry"
                   />
                   <select
                     value={filters.has_contacts}
                     onChange={(e) => setFilters({ ...filters, has_contacts: e.target.value })}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     aria-label="Filter by contact availability"
                   >
                     <option value="">All Contacts</option>
@@ -376,7 +416,7 @@ const CompanyDashboard: React.FC = () => {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     aria-label="Sort companies by"
                   >
                     <option value="date_desc">Newest First</option>
@@ -401,35 +441,33 @@ const CompanyDashboard: React.FC = () => {
             <div className="flex-1 overflow-y-auto">
               {companiesState.loading ? (
                 <div className="flex items-center justify-center h-32">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                </div>              ) : sortedCompanies.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>                </div>              ) : sortedCompanies.length === 0 ? (
+                <div className="p-8 text-center text-gray-500 dark:text-gray-400">
                   <p>No companies found</p>
                   <p className="text-sm mt-2">Try adjusting your filters or research some companies first</p>
                 </div>
-              ) : (                <div className="divide-y">
+              ) : (                <div className="divide-y divide-gray-200 dark:divide-gray-600">
                   {sortedCompanies.map((company) => (
                     <div
                       key={company.id}
-                      className={`p-4 hover:bg-gray-50 transition-colors ${
-                        selectedCompany?.id === company.id ? 'bg-blue-50 border-r-4 border-blue-500' : ''
+                      className={`p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                        selectedCompany?.id === company.id ? 'bg-blue-50 dark:bg-blue-900 border-r-4 border-blue-500' : ''
                       }`}
-                    >                      <div 
+                    ><div 
                         onClick={() => {
                           setSelectedCompany(company);
                           // Load existing report for this company
                           loadCompanyReport(company.id);
                         }}
                         className="cursor-pointer"
-                      >
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-medium text-gray-900 truncate">{company.name}</h3>
+                      >                        <div className="flex justify-between items-start mb-2">
+                          <h3 className="font-medium text-gray-900 dark:text-white truncate">{company.name}</h3>
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(company.outreach_priority)}`}>
                             {company.outreach_priority}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600 mb-2 truncate">{company.industry}</p>
-                        <p className="text-xs text-gray-500 mb-2">
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-2 truncate">{company.industry}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
                           Researched: {new Date(company.created_at).toLocaleDateString()}
                         </p>
                         <div className="flex justify-between items-center">
@@ -437,20 +475,19 @@ const CompanyDashboard: React.FC = () => {
                             <span className={`text-sm font-medium ${getFitScoreColor(company.cerebras_fit_score)}`}>
                               {company.cerebras_fit_score}/10
                             </span>
-                            <span className="text-xs text-gray-500">•</span>
-                            <span className="text-xs text-gray-500">{company.contacts_count} contacts</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">•</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">{company.contacts_count} contacts</span>
                           </div>
-                          <span className="text-xs text-gray-500">{company.outreach_readiness}</span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">{company.outreach_readiness}</span>
                         </div>
                       </div>
-                      <div className="mt-3 flex justify-end">
-                        <button
+                      <div className="mt-3 flex justify-end">                        <button
                           onClick={(e) => {
                             e.stopPropagation();
                             deleteCompany(company.id);
                           }}
                           disabled={deleteState.loading}
-                          className="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1 rounded hover:bg-red-50 disabled:opacity-50"
+                          className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900 disabled:opacity-50"
                         >
                           {deleteState.loading ? 'Deleting...' : 'Delete'}
                         </button>
@@ -460,18 +497,16 @@ const CompanyDashboard: React.FC = () => {
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Right Panel - Company Details */}
-          <div className="flex-1 bg-white rounded-lg shadow-sm border">
+          </div>          {/* Right Panel - Company Details */}
+          <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
             {selectedCompany ? (
               <div className="h-full flex flex-col">
                 {/* Company Header */}
-                <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+                <div className="p-6 border-b border-gray-200 dark:border-gray-600 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900">{selectedCompany.name}</h2>
-                      <p className="text-gray-600">{selectedCompany.website}</p>
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{selectedCompany.name}</h2>
+                      <p className="text-gray-600 dark:text-gray-300">{selectedCompany.website}</p>
                     </div>
                     <div className="flex gap-2">
                       <button
@@ -486,25 +521,26 @@ const CompanyDashboard: React.FC = () => {
                       </button>
                     </div>
                   </div>
-                  
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-white rounded-lg p-3 shadow-sm">
-                      <div className="text-sm text-gray-600">Fit Score</div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-white dark:bg-gray-700 rounded-lg p-3 shadow-sm">
+                      <div className="text-sm text-gray-600 dark:text-gray-300">Fit Score</div>
                       <div className={`text-xl font-bold ${getFitScoreColor(selectedCompany.cerebras_fit_score)}`}>
                         {selectedCompany.cerebras_fit_score}/10
                       </div>
-                    </div>
-                    <div className="bg-white rounded-lg p-3 shadow-sm">
-                      <div className="text-sm text-gray-600">Readiness</div>
-                      <div className="text-xl font-bold text-blue-600">{selectedCompany.outreach_readiness}</div>
-                    </div>
-                    <div className="bg-white rounded-lg p-3 shadow-sm">
-                      <div className="text-sm text-gray-600">Contacts</div>
-                      <div className="text-xl font-bold text-green-600">{selectedCompany.contacts_count}</div>
-                    </div>
-                    <div className="bg-white rounded-lg p-3 shadow-sm">
-                      <div className="text-sm text-gray-600">Priority</div>
-                      <div className={`text-xl font-bold ${getPriorityColor(selectedCompany.outreach_priority).split(' ')[0]}`}>
+                    </div>                    <div className="bg-white dark:bg-gray-700 rounded-lg p-3 shadow-sm">
+                      <div className="text-sm text-gray-600 dark:text-gray-300">Readiness</div>
+                      <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{selectedCompany.outreach_readiness}</div>
+                    </div>                    <div className="bg-white dark:bg-gray-700 rounded-lg p-3 shadow-sm">
+                      <div className="text-sm text-gray-600 dark:text-gray-300">Contacts</div>
+                      <div className="text-xl font-bold text-green-600 dark:text-green-400">{selectedCompany.contacts_count}</div>
+                    </div>                    <div className="bg-white dark:bg-gray-700 rounded-lg p-3 shadow-sm">
+                      <div className="text-sm text-gray-600 dark:text-gray-300">Priority</div>
+                      <div className={`text-xl font-bold ${
+                        selectedCompany.outreach_priority.toLowerCase() === 'high' ? 'text-red-600 dark:text-red-400' :
+                        selectedCompany.outreach_priority.toLowerCase() === 'medium' ? 'text-yellow-600 dark:text-yellow-400' :
+                        selectedCompany.outreach_priority.toLowerCase() === 'low' ? 'text-green-600 dark:text-green-400' :
+                        'text-gray-600 dark:text-gray-400'
+                      }`}>
                         {selectedCompany.outreach_priority}
                       </div>
                     </div>
@@ -515,55 +551,52 @@ const CompanyDashboard: React.FC = () => {
                 <div className="flex-1 overflow-y-auto p-6">
                   <div className="space-y-8">                    {/* Basic Information */}
                     <section>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Overview</h3>
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <p className="text-gray-700 mb-4">{selectedCompany.description}</p>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Company Overview</h3>
+                      <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <p className="text-gray-700 dark:text-gray-300 mb-4">{selectedCompany.description}</p>
                         <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div><span className="font-medium">Industry:</span> {selectedCompany.industry}</div>
-                          <div><span className="font-medium">Sector:</span> {selectedCompany.sector}</div>
-                          <div><span className="font-medium">Founded:</span> {selectedCompany.founded_year}</div>
-                          <div><span className="font-medium">Employees:</span> {selectedCompany.employee_count}</div>
-                          <div><span className="font-medium">Location:</span> {selectedCompany.headquarters_location}</div>
-                          <div><span className="font-medium">Revenue:</span> {selectedCompany.revenue}</div>
-                          <div><span className="font-medium">IPO Status:</span> {selectedCompany.ipo_status}</div>
-                          <div><span className="font-medium">Total Funding:</span> {selectedCompany.total_funding || 'N/A'}</div>
-                          <div><span className="font-medium">Business Model:</span> {selectedCompany.business_model}</div>
-                          <div><span className="font-medium">Employee Count (Exact):</span> {selectedCompany.employee_count_exact || 'N/A'}</div>
-                          <div><span className="font-medium">Research Quality Score:</span> {selectedCompany.research_quality_score}/10</div>
-                          <div><span className="font-medium">Data Science Team Size:</span> {selectedCompany.data_science_team_size || 'N/A'}</div>
+                          <div><span className="font-medium text-gray-900 dark:text-gray-100">Industry:</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.industry}</span></div>
+                          <div><span className="font-medium text-gray-900 dark:text-gray-100">Sector:</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.sector}</span></div>
+                          <div><span className="font-medium text-gray-900 dark:text-gray-100">Founded:</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.founded_year}</span></div>
+                          <div><span className="font-medium text-gray-900 dark:text-gray-100">Employees:</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.employee_count}</span></div>
+                          <div><span className="font-medium text-gray-900 dark:text-gray-100">Location:</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.headquarters_location}</span></div>                          <div><span className="font-medium text-gray-900 dark:text-gray-100">Revenue:</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.revenue}</span></div>
+                          <div><span className="font-medium text-gray-900 dark:text-gray-100">IPO Status:</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.ipo_status}</span></div>
+                          <div><span className="font-medium text-gray-900 dark:text-gray-100">Total Funding:</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.total_funding || 'N/A'}</span></div>
+                          <div><span className="font-medium text-gray-900 dark:text-gray-100">Business Model:</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.business_model}</span></div>
+                          <div><span className="font-medium text-gray-900 dark:text-gray-100">Employee Count (Exact):</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.employee_count_exact || 'N/A'}</span></div>
+                          <div><span className="font-medium text-gray-900 dark:text-gray-100">Research Quality Score:</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.research_quality_score}/10</span></div>
+                          <div><span className="font-medium text-gray-900 dark:text-gray-100">Data Science Team Size:</span> <span className="text-gray-700 dark:text-gray-300">{selectedCompany.data_science_team_size || 'N/A'}</span></div>
                         </div>
                       </div>
-                    </section>
-
-                    {/* Key Products & Technologies */}
+                    </section>                    {/* Key Products & Technologies */}
                     <section>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Products & Technologies</h3>
-                      <div className="bg-purple-50 rounded-lg p-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Products & Technologies</h3>
+                      <div className="bg-purple-50 dark:bg-purple-900 rounded-lg p-4">
                         <div className="mb-4">
-                          <span className="font-medium text-purple-900">Key Products:</span>
+                          <span className="font-medium text-purple-900 dark:text-purple-200">Key Products:</span>
                           <div className="flex flex-wrap gap-2 mt-2">
                             {selectedCompany.key_products.map((product, index) => (
-                              <span key={index} className="bg-purple-200 text-purple-800 px-2 py-1 rounded-full text-xs">
+                              <span key={index} className="bg-purple-200 dark:bg-purple-700 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full text-xs">
                                 {product}
                               </span>
                             ))}
                           </div>
                         </div>
                         <div className="mb-4">
-                          <span className="font-medium text-purple-900">Key Technologies:</span>
+                          <span className="font-medium text-purple-900 dark:text-purple-200">Key Technologies:</span>
                           <div className="flex flex-wrap gap-2 mt-2">
                             {selectedCompany.key_technologies.map((tech, index) => (
-                              <span key={index} className="bg-purple-300 text-purple-800 px-2 py-1 rounded-full text-xs">
+                              <span key={index} className="bg-purple-300 dark:bg-purple-600 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full text-xs">
                                 {tech}
                               </span>
                             ))}
                           </div>
                         </div>
                         <div>
-                          <span className="font-medium text-purple-900">Competitors:</span>
+                          <span className="font-medium text-purple-900 dark:text-purple-200">Competitors:</span>
                           <div className="flex flex-wrap gap-2 mt-2">
                             {selectedCompany.competitors.map((competitor, index) => (
-                              <span key={index} className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs">
+                              <span key={index} className="bg-purple-100 dark:bg-purple-800 text-purple-700 dark:text-purple-300 px-2 py-1 rounded-full text-xs">
                                 {competitor}
                               </span>
                             ))}
@@ -572,29 +605,29 @@ const CompanyDashboard: React.FC = () => {
                       </div>
                     </section>                    {/* Cerebras Analysis */}
                     <section>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Cerebras Analysis</h3>
-                      <div className="bg-blue-50 rounded-lg p-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Cerebras Analysis</h3>
+                      <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
                         <div className="mb-4">
-                          <span className="font-medium text-blue-900">Recommended Product:</span>
-                          <span className="text-blue-700 ml-2">{selectedCompany.recommended_cerebras_product}</span>
+                          <span className="font-medium text-blue-900 dark:text-blue-200">Recommended Product:</span>
+                          <span className="text-blue-700 dark:text-blue-300 ml-2">{selectedCompany.recommended_cerebras_product}</span>
                         </div>
                         <div className="mb-4">
-                          <span className="font-medium text-blue-900">Value Proposition:</span>
-                          <p className="text-blue-700 mt-1">{selectedCompany.cerebras_value_proposition}</p>
+                          <span className="font-medium text-blue-900 dark:text-blue-200">Value Proposition:</span>
+                          <p className="text-blue-700 dark:text-blue-300 mt-1">{selectedCompany.cerebras_value_proposition}</p>
                         </div>
                         <div className="mb-4">
-                          <span className="font-medium text-blue-900">Implementation Timeline:</span>
-                          <span className="text-blue-700 ml-2">{selectedCompany.implementation_timeline}</span>
+                          <span className="font-medium text-blue-900 dark:text-blue-200">Implementation Timeline:</span>
+                          <span className="text-blue-700 dark:text-blue-300 ml-2">{selectedCompany.implementation_timeline}</span>
                         </div>
                         <div className="mb-4">
-                          <span className="font-medium text-blue-900">Estimated Budget:</span>
-                          <span className="text-blue-700 ml-2">{selectedCompany.estimated_budget_range || 'To be determined'}</span>
+                          <span className="font-medium text-blue-900 dark:text-blue-200">Estimated Budget:</span>
+                          <span className="text-blue-700 dark:text-blue-300 ml-2">{selectedCompany.estimated_budget_range || 'To be determined'}</span>
                         </div>
                         <div>
-                          <span className="font-medium text-blue-900">Potential Use Cases:</span>
+                          <span className="font-medium text-blue-900 dark:text-blue-200">Potential Use Cases:</span>
                           <div className="flex flex-wrap gap-2 mt-2">
                             {selectedCompany.potential_use_cases.map((useCase, index) => (
-                              <span key={index} className="bg-blue-200 text-blue-800 px-2 py-1 rounded-full text-xs">
+                              <span key={index} className="bg-blue-200 dark:bg-blue-700 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full text-xs">
                                 {useCase}
                               </span>
                             ))}
@@ -603,52 +636,50 @@ const CompanyDashboard: React.FC = () => {
                       </div>
                     </section>                    {/* AI/ML Information */}
                     <section>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">AI/ML Profile</h3>
-                      <div className="bg-green-50 rounded-lg p-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">AI/ML Profile</h3>
+                      <div className="bg-green-50 dark:bg-green-900 rounded-lg p-4">
                         <div className="mb-4">
-                          <span className="font-medium text-green-900">Current Usage:</span>
-                          <p className="text-green-700 mt-1">{selectedCompany.ai_ml_usage}</p>
+                          <span className="font-medium text-green-900 dark:text-green-200">Current Usage:</span>
+                          <p className="text-green-700 dark:text-green-300 mt-1">{selectedCompany.ai_ml_usage}</p>
                         </div>
                         <div className="mb-4">
-                          <span className="font-medium text-green-900">Infrastructure:</span>
-                          <p className="text-green-700 mt-1">{selectedCompany.current_ai_infrastructure}</p>
+                          <span className="font-medium text-green-900 dark:text-green-200">Infrastructure:</span>
+                          <p className="text-green-700 dark:text-green-300 mt-1">{selectedCompany.current_ai_infrastructure}</p>
                         </div>
                         <div className="mb-4">
-                          <span className="font-medium text-green-900">AI Initiatives:</span>
+                          <span className="font-medium text-green-900 dark:text-green-200">AI Initiatives:</span>
                           <div className="flex flex-wrap gap-2 mt-2">
                             {selectedCompany.ai_initiatives.map((initiative, index) => (
-                              <span key={index} className="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs">
+                              <span key={index} className="bg-green-200 dark:bg-green-700 text-green-800 dark:text-green-200 px-2 py-1 rounded-full text-xs">
                                 {initiative}
                               </span>
                             ))}
                           </div>
                         </div>
                         <div className="mb-4">
-                          <span className="font-medium text-green-900">ML Use Cases:</span>
+                          <span className="font-medium text-green-900 dark:text-green-200">ML Use Cases:</span>
                           <div className="flex flex-wrap gap-2 mt-2">
                             {selectedCompany.ml_use_cases.map((useCase, index) => (
-                              <span key={index} className="bg-green-300 text-green-800 px-2 py-1 rounded-full text-xs">
+                              <span key={index} className="bg-green-300 dark:bg-green-600 text-green-800 dark:text-green-200 px-2 py-1 rounded-full text-xs">
                                 {useCase}
                               </span>
                             ))}
                           </div>
                         </div>
                         <div>
-                          <span className="font-medium text-green-900">Data Science Team Size:</span>
-                          <span className="text-green-700 ml-2">{selectedCompany.data_science_team_size || 'Not specified'}</span>
+                          <span className="font-medium text-green-900 dark:text-green-200">Data Science Team Size:</span>
+                          <span className="text-green-700 dark:text-green-300 ml-2">{selectedCompany.data_science_team_size || 'Not specified'}</span>
                         </div>
                       </div>
-                    </section>
-
-                    {/* Research Information */}
+                    </section>                    {/* Research Information */}
                     <section>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Research Information</h3>
-                      <div className="bg-orange-50 rounded-lg p-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Research Information</h3>
+                      <div className="bg-orange-50 dark:bg-orange-900 rounded-lg p-4">
                         <div className="mb-4">
-                          <span className="font-medium text-orange-900">Research Sources:</span>
+                          <span className="font-medium text-orange-900 dark:text-orange-200">Research Sources:</span>
                           <div className="flex flex-wrap gap-2 mt-2">
                             {selectedCompany.research_sources.map((source, index) => (
-                              <span key={index} className="bg-orange-200 text-orange-800 px-2 py-1 rounded-full text-xs">
+                              <span key={index} className="bg-orange-200 dark:bg-orange-700 text-orange-800 dark:text-orange-200 px-2 py-1 rounded-full text-xs">
                                 {source}
                               </span>
                             ))}
@@ -656,14 +687,14 @@ const CompanyDashboard: React.FC = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div>
-                            <span className="font-medium text-orange-900">Created:</span>
-                            <span className="text-orange-700 ml-2">
+                            <span className="font-medium text-orange-900 dark:text-orange-200">Created:</span>
+                            <span className="text-orange-700 dark:text-orange-300 ml-2">
                               {new Date(selectedCompany.created_at).toLocaleDateString()}
                             </span>
                           </div>
                           <div>
-                            <span className="font-medium text-orange-900">Updated:</span>
-                            <span className="text-orange-700 ml-2">
+                            <span className="font-medium text-orange-900 dark:text-orange-200">Updated:</span>
+                            <span className="text-orange-700 dark:text-orange-300 ml-2">
                               {new Date(selectedCompany.updated_at).toLocaleDateString()}
                             </span>
                           </div>
@@ -672,20 +703,20 @@ const CompanyDashboard: React.FC = () => {
                     </section>                    {/* Contacts */}
                     {selectedCompany.contacts.length > 0 && (
                       <section>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Key Contacts</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Key Contacts</h3>
                         <div className="space-y-3">
                           {selectedCompany.contacts.map((contact) => (
-                            <div key={contact.id} className="border rounded-lg p-4">
+                            <div key={contact.id} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-800">
                               <div className="flex justify-between items-start mb-2">
                                 <div>
-                                  <h4 className="font-medium text-gray-900">{contact.name}</h4>
-                                  <p className="text-sm text-gray-600">{contact.title}</p>
+                                  <h4 className="font-medium text-gray-900 dark:text-white">{contact.name}</h4>
+                                  <p className="text-sm text-gray-600 dark:text-gray-300">{contact.title}</p>
                                 </div>
                                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(contact.contact_priority)}`}>
                                   {contact.contact_priority}
                                 </span>
                               </div>
-                              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-2">
+                              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-300 mb-2">
                                 <div>Email: {contact.email}</div>
                                 <div>Seniority: {contact.seniority_level}</div>
                                 <div>Decision Maker: {contact.decision_maker ? 'Yes' : 'No'}</div>
@@ -695,12 +726,12 @@ const CompanyDashboard: React.FC = () => {
                               </div>
                               <div className="text-sm">
                                 <div className="mb-2">
-                                  <span className="font-medium text-gray-700">Personalization Score:</span>
-                                  <span className="ml-2">{contact.personalization_score}</span>
+                                  <span className="font-medium text-gray-700 dark:text-gray-300">Personalization Score:</span>
+                                  <span className="ml-2 text-gray-600 dark:text-gray-400">{contact.personalization_score}</span>
                                 </div>
                                 <div>
-                                  <span className="font-medium text-gray-700">AI/ML Experience:</span>
-                                  <p className="mt-1 text-gray-600">{contact.ai_ml_experience}</p>
+                                  <span className="font-medium text-gray-700 dark:text-gray-300">AI/ML Experience:</span>
+                                  <p className="mt-1 text-gray-600 dark:text-gray-400">{contact.ai_ml_experience}</p>
                                 </div>
                                 {contact.linkedin_url && (
                                   <div className="mt-2">
@@ -708,7 +739,7 @@ const CompanyDashboard: React.FC = () => {
                                       href={contact.linkedin_url} 
                                       target="_blank" 
                                       rel="noopener noreferrer"
-                                      className="text-blue-600 hover:text-blue-800 text-sm"
+                                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm"
                                     >
                                       LinkedIn Profile →
                                     </a>
@@ -723,8 +754,9 @@ const CompanyDashboard: React.FC = () => {
                     {reportState.data && reportState.data.company_id === selectedCompany.id && (
                       <section>
                         <div className="flex justify-between items-center mb-4">
-                          <h3 className="text-lg font-semibold text-gray-900">AI-Generated Customer Analysis Report</h3>
-                          <button                            onClick={() => {
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">AI-Generated Customer Analysis Report</h3>
+                          <button
+                            onClick={() => {
                               if (reportState.data?.report_id) {
                                 // Extract content properly from report data
                                 const reportData: Report = {
@@ -742,12 +774,12 @@ const CompanyDashboard: React.FC = () => {
                                 startEditingReport(reportData);
                               }
                             }}
-                            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium"
                           >
                             Edit Report
                           </button>
                         </div>
-                        <div className="bg-yellow-50 rounded-lg p-6 border border-yellow-200">
+                        <div className="bg-yellow-50 dark:bg-yellow-900 rounded-lg p-6 border border-yellow-200 dark:border-yellow-700">
                           <div className="prose prose-sm max-w-none">
                             {typeof reportState.data.report === 'string' ? (
                               <div className="markdown-content">
@@ -758,12 +790,12 @@ const CompanyDashboard: React.FC = () => {
                             ) : typeof reportState.data.report === 'object' ? (
                               <div className="space-y-4">
                                 {reportState.data.report.company_name && (
-                                  <div className="border-b pb-2">
-                                    <h4 className="text-lg font-semibold text-gray-900">Company: {reportState.data.report.company_name}</h4>
+                                  <div className="border-b border-yellow-300 dark:border-yellow-600 pb-2">
+                                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Company: {reportState.data.report.company_name}</h4>
                                   </div>
                                 )}
                                 {reportState.data.report.generated_at && (
-                                  <div className="text-sm text-gray-600">
+                                  <div className="text-sm text-gray-600 dark:text-gray-300">
                                     <span className="font-medium">Generated:</span> {new Date(reportState.data.report.generated_at).toLocaleString()}
                                   </div>
                                 )}
@@ -775,18 +807,18 @@ const CompanyDashboard: React.FC = () => {
                                   </div>
                                 )}
                                 {reportState.data.report.data_sources && reportState.data.report.data_sources.length > 0 && (
-                                  <div className="mt-4 pt-4 border-t">
-                                    <span className="font-semibold text-gray-900">Data Sources:</span>
+                                  <div className="mt-4 pt-4 border-t border-yellow-300 dark:border-yellow-600">
+                                    <span className="font-semibold text-gray-900 dark:text-white">Data Sources:</span>
                                     <ul className="list-disc list-inside mt-2 space-y-1">
                                       {reportState.data.report.data_sources.map((source: string, index: number) => (
-                                        <li key={index} className="text-gray-700">{source}</li>
+                                        <li key={index} className="text-gray-700 dark:text-gray-300">{source}</li>
                                       ))}
                                     </ul>
                                   </div>
                                 )}
                               </div>
                             ) : (
-                              <p className="text-gray-600">Report data is not in expected format</p>
+                              <p className="text-gray-600 dark:text-gray-400">Report data is not in expected format</p>
                             )}
                           </div>
                         </div>
@@ -794,12 +826,11 @@ const CompanyDashboard: React.FC = () => {
                     )}
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="h-full flex items-center justify-center text-gray-500">
+              </div>            ) : (
+              <div className="h-full flex items-center justify-center text-gray-500 dark:text-gray-400">
                 <div className="text-center">
                   <div className="text-6xl mb-4">📧</div>
-                  <h3 className="text-xl font-medium mb-2">Select a Company</h3>
+                  <h3 className="text-xl font-medium mb-2 text-gray-900 dark:text-white">Select a Company</h3>
                   <p>Choose a company from the list to view detailed information and generate reports</p>
                 </div>
               </div>
@@ -808,30 +839,34 @@ const CompanyDashboard: React.FC = () => {
         </div>        {/* Comprehensive Report Modal/Section */}
         {reportState.data && reportState.data.comprehensive_report && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg max-w-6xl w-full h-[90vh] flex flex-col shadow-2xl">
+            <div className="bg-white dark:bg-gray-800 rounded-lg max-w-6xl w-full h-[90vh] flex flex-col shadow-2xl border border-gray-200 dark:border-gray-600">
               {/* Header - Fixed */}
-              <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50 flex-shrink-0">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-600 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 flex-shrink-0">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-2xl font-bold text-gray-900">📊 Comprehensive Customer Analysis Report</h3>
-                  <div className="flex gap-2">                    <button                      onClick={() => {
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">📊 Comprehensive Customer Analysis Report</h3>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
                         if (reportState.data?.report_id) {
-                          // Extract the markdown content from the comprehensive report
                           let content = '';
-                          if (reportState.data.comprehensive_report) {
-                            if (typeof reportState.data.comprehensive_report === 'string') {
-                              content = reportState.data.comprehensive_report;
-                            } else if (reportState.data.comprehensive_report.report_content) {
-                              content = reportState.data.comprehensive_report.report_content;
+                  
+                          const compReport = reportState.data.comprehensive_report;
+                          if (compReport) {
+                            if (typeof compReport === 'string') {
+                              content = compReport;
+                            } else if (compReport.report_content) {
+                              content = compReport.report_content;
                             } else {
-                              content = JSON.stringify(reportState.data.comprehensive_report, null, 2);
+                              content = JSON.stringify(compReport, null, 2);
                             }
                           }
-                          
+                  
                           const reportData: Report = {
                             id: reportState.data.report_id,
                             title: 'Comprehensive Customer Analysis Report',
                             report_type: 'comprehensive',
-                            content: content,
+                            content,
                             metadata: {},
                             company_id: undefined,
                             company_name: undefined,
@@ -839,27 +874,35 @@ const CompanyDashboard: React.FC = () => {
                             last_edited_at: new Date().toISOString(),
                             is_edited: false
                           };
+                  
                           startEditingReport(reportData);
                         }
                       }}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium transition-colors"
                     >
                       Edit Report
                     </button>
+                  
                     <button
-                      onClick={() => executeGenerateReport(() => Promise.resolve({ 
-                        success: true, 
-                        report: undefined, 
-                        company_id: undefined, 
-                        comprehensive_report: undefined 
-                      } as CustomerReportResponse))}
-                      className="text-gray-500 hover:text-gray-700 text-2xl font-bold hover:bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
+                      type="button"
+                      onClick={() =>
+                        executeGenerateReport(() =>
+                          Promise.resolve({
+                            success: true,
+                            report: undefined,
+                            company_id: undefined,
+                            comprehensive_report: undefined
+                          } as CustomerReportResponse)
+                        )
+                      }
+                      className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full w-8 h-8 flex items-center justify-center transition-colors"
                     >
                       ✕
                     </button>
                   </div>
+                  
                 </div>
-                <p className="text-gray-600 mt-2">Detailed strategic analysis and engagement recommendations</p>
+                <p className="text-gray-600 dark:text-gray-300 mt-2">Detailed strategic analysis and engagement recommendations</p>
               </div>
               
               {/* Content - Scrollable */}
@@ -878,13 +921,13 @@ const CompanyDashboard: React.FC = () => {
                           {reportState.data.comprehensive_report.report_content}
                         </ReactMarkdown>
                       </div>
-                    ) : (
+                      ) : (
                     <div className="space-y-8">                      {/* Generated At */}
                       {reportState.data.comprehensive_report.generated_at && (
-                        <div className="bg-blue-50 rounded-lg p-4 border-l-4 border-blue-400">
+                        <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4 border-l-4 border-blue-400 dark:border-blue-600">
                           <div className="flex items-center">
-                            <span className="text-blue-800 font-semibold mr-2">📅 Generated:</span>
-                            <span className="text-blue-700">
+                            <span className="text-blue-800 dark:text-blue-200 font-semibold mr-2">📅 Generated:</span>
+                            <span className="text-blue-700 dark:text-blue-300">
                               {(() => {
                                 try {
                                   // Handle case where date might have extra quotes
@@ -904,61 +947,54 @@ const CompanyDashboard: React.FC = () => {
                         </div>
                       )}{/* Pipeline Metrics Overview */}
                       {reportState.data.comprehensive_report.pipeline_metrics && (
-                        <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 border border-blue-200 shadow-lg">
-                          <div className="text-center mb-8">
-                            <h4 className="text-3xl font-bold text-gray-900 mb-2 flex items-center justify-center">
+                        <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900 dark:via-indigo-900 dark:to-purple-900 rounded-2xl p-8 border border-blue-200 dark:border-blue-700 shadow-lg">                          <div className="text-center mb-8">
+                            <h4 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center justify-center">
                               <span className="text-4xl mr-3">📊</span>
                               Sales Pipeline Overview
                             </h4>
-                            <p className="text-gray-600 text-lg">Your complete customer opportunity analysis</p>
+                            <p className="text-gray-600 dark:text-gray-300 text-lg">Your complete customer opportunity analysis</p>
                           </div>
                           
                           {/* Main Metrics Cards */}
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                            <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-lg transition-shadow border border-gray-100">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">                            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md hover:shadow-lg transition-shadow border border-gray-100 dark:border-gray-600">
                               <div className="text-3xl mb-2">🏢</div>
-                              <div className="text-3xl font-bold text-blue-600 mb-1">
+                              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">
                                 {reportState.data.comprehensive_report.pipeline_metrics.total_companies}
                               </div>
-                              <div className="text-sm font-medium text-gray-700">Total Companies</div>
-                              <div className="text-xs text-gray-500 mt-1">In Pipeline</div>
+                              <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Total Companies</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">In Pipeline</div>
                             </div>
-                            
-                            <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-lg transition-shadow border border-green-100 relative overflow-hidden">
-                              <div className="absolute top-0 right-0 w-16 h-16 bg-green-100 rounded-full -mr-8 -mt-8"></div>
+                              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md hover:shadow-lg transition-shadow border border-green-100 dark:border-green-800 relative overflow-hidden">
+                              <div className="absolute top-0 right-0 w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full -mr-8 -mt-8"></div>
                               <div className="text-3xl mb-2">🎯</div>
-                              <div className="text-3xl font-bold text-green-600 mb-1">
+                              <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">
                                 {reportState.data.comprehensive_report.pipeline_metrics.high_fit_companies}
                               </div>
-                              <div className="text-sm font-medium text-gray-700">High Fit</div>
-                              <div className="text-xs text-green-600 mt-1 font-medium">Priority Targets</div>
+                              <div className="text-sm font-medium text-gray-700 dark:text-gray-300">High Fit</div>
+                              <div className="text-xs text-green-600 dark:text-green-400 mt-1 font-medium">Priority Targets</div>
                             </div>
-                            
-                            <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-lg transition-shadow border border-yellow-100 relative overflow-hidden">
-                              <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-full -mr-8 -mt-8"></div>
+                              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md hover:shadow-lg transition-shadow border border-yellow-100 dark:border-yellow-800 relative overflow-hidden">
+                              <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full -mr-8 -mt-8"></div>
                               <div className="text-3xl mb-2">⚡</div>
-                              <div className="text-3xl font-bold text-yellow-600 mb-1">
+                              <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mb-1">
                                 {reportState.data.comprehensive_report.pipeline_metrics.medium_fit_companies}
                               </div>
-                              <div className="text-sm font-medium text-gray-700">Medium Fit</div>
-                              <div className="text-xs text-yellow-600 mt-1 font-medium">Good Prospects</div>
+                              <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Medium Fit</div>
+                              <div className="text-xs text-yellow-600 dark:text-yellow-400 mt-1 font-medium">Good Prospects</div>
                             </div>
-                            
-                            <div className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-lg transition-shadow border border-gray-100 relative overflow-hidden">
-                              <div className="absolute top-0 right-0 w-16 h-16 bg-gray-100 rounded-full -mr-8 -mt-8"></div>
+                              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 text-center shadow-md hover:shadow-lg transition-shadow border border-gray-100 dark:border-gray-600 relative overflow-hidden">
+                              <div className="absolute top-0 right-0 w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full -mr-8 -mt-8"></div>
                               <div className="text-3xl mb-2">📋</div>
-                              <div className="text-3xl font-bold text-gray-600 mb-1">
+                              <div className="text-3xl font-bold text-gray-600 dark:text-gray-400 mb-1">
                                 {reportState.data.comprehensive_report.pipeline_metrics.low_fit_companies}
                               </div>
-                              <div className="text-sm font-medium text-gray-700">Low Fit</div>
-                              <div className="text-xs text-gray-500 mt-1 font-medium">Future Potential</div>
+                              <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Low Fit</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">Future Potential</div>
                             </div>
-                          </div>
-
-                          {/* Pipeline Health Indicator */}
-                          <div className="bg-white rounded-xl p-6 mb-8 border border-gray-100 shadow-md">
+                          </div>                          {/* Pipeline Health Indicator */}
+                          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-8 border border-gray-100 dark:border-gray-600 shadow-md">
                             <div className="flex items-center justify-between mb-4">
-                              <h5 className="text-lg font-semibold text-gray-800 flex items-center">
+                              <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center">
                                 <span className="text-xl mr-2">💪</span>
                                 Pipeline Health Score
                               </h5>
@@ -968,90 +1004,86 @@ const CompanyDashboard: React.FC = () => {
                                   return (
                                     <>
                                       <div className={`text-2xl font-bold ${
-                                        healthScore >= 70 ? 'text-green-600' : 
-                                        healthScore >= 50 ? 'text-yellow-600' : 'text-red-600'
+                                        healthScore >= 70 ? 'text-green-600 dark:text-green-400' : 
+                                        healthScore >= 50 ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'
                                       }`}>
                                         {healthScore}%
                                       </div>
-                                      <div className="text-sm text-gray-500">High-Quality Leads</div>
+                                      <div className="text-sm text-gray-500 dark:text-gray-400">High-Quality Leads</div>
                                     </>
                                   );
                                 })()}
                               </div>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-3">
+                            </div><div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                               <div 
                                 className={`h-3 rounded-full transition-all duration-500 ${
                                   Math.round((reportState.data.comprehensive_report.pipeline_metrics.high_fit_companies / reportState.data.comprehensive_report.pipeline_metrics.total_companies) * 100) >= 70 ? 'bg-green-500' : 
                                   Math.round((reportState.data.comprehensive_report.pipeline_metrics.high_fit_companies / reportState.data.comprehensive_report.pipeline_metrics.total_companies) * 100) >= 50 ? 'bg-yellow-500' : 'bg-red-500'
                                 }`}
-                                style={{ 
-                                  width: `${Math.round((reportState.data.comprehensive_report.pipeline_metrics.high_fit_companies / reportState.data.comprehensive_report.pipeline_metrics.total_companies) * 100)}%` 
+                                style={{
+                                  width: `${Math.round((reportState.data.comprehensive_report.pipeline_metrics.high_fit_companies / reportState.data.comprehensive_report.pipeline_metrics.total_companies) * 100)}%`
                                 }}
                               ></div>
                             </div>
                           </div>                          {/* Industry Breakdown */}
                           {reportState.data.comprehensive_report.pipeline_metrics.industry_breakdown && (
-                            <div className="mb-8">
-                              <div className="text-center mb-6">
-                                <h5 className="text-2xl font-bold text-gray-800 mb-2 flex items-center justify-center">
+                            <div className="mb-8">                              <div className="text-center mb-6">
+                                <h5 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2 flex items-center justify-center">
                                   <span className="text-2xl mr-2">🏭</span>
                                   Industry Breakdown
                                 </h5>
-                                <p className="text-gray-600">Distribution of opportunities across different sectors</p>
+                                <p className="text-gray-600 dark:text-gray-300">Distribution of opportunities across different sectors</p>
                               </div>
-                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                {Object.entries(reportState.data.comprehensive_report.pipeline_metrics.industry_breakdown).map(([industry, data]: [string, any]) => (
-                                  <div key={industry} className="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">                                {Object.entries(reportState.data.comprehensive_report.pipeline_metrics.industry_breakdown).map(([industry, data]: [string, any]) => (
+                                  <div key={industry} className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-600 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
                                     <div className="flex justify-between items-center mb-4">
                                       <div>
-                                        <h6 className="font-bold text-lg text-gray-900 mb-1">{industry}</h6>
+                                        <h6 className="font-bold text-lg text-gray-900 dark:text-white mb-1">{industry}</h6>
                                         <div className="flex items-center space-x-4 text-sm">
-                                          <span className="flex items-center text-blue-600">
-                                            <span className="w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
+                                          <span className="flex items-center text-blue-600 dark:text-blue-400">
+                                            <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full mr-1"></span>
                                             <strong>{data.count}</strong> Companies
                                           </span>
-                                          <span className="flex items-center text-green-600">
-                                            <span className="w-2 h-2 bg-green-600 rounded-full mr-1"></span>
+                                          <span className="flex items-center text-green-600 dark:text-green-400">
+                                            <span className="w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full mr-1"></span>
                                             <strong>{data.avg_fit_score?.toFixed(1) || 'N/A'}</strong> Avg Fit
                                           </span>
                                         </div>
                                       </div>
                                       <div className="text-right">
                                         <div className={`text-2xl font-bold ${
-                                          data.avg_fit_score >= 8 ? 'text-green-600' :
-                                          data.avg_fit_score >= 6 ? 'text-yellow-600' :
-                                          'text-red-600'
+                                          data.avg_fit_score >= 8 ? 'text-green-600 dark:text-green-400' :
+                                          data.avg_fit_score >= 6 ? 'text-yellow-600 dark:text-yellow-400' :
+                                          'text-red-600 dark:text-red-400'
                                         }`}>
                                           {data.avg_fit_score?.toFixed(1) || 'N/A'}
                                         </div>
-                                        <div className="text-xs text-gray-500">Fit Score</div>
+                                        <div className="text-xs text-gray-500 dark:text-gray-400">Fit Score</div>
                                       </div>
                                     </div>
                                     
-                                    {data.companies && data.companies.length > 0 && (
-                                      <div className="space-y-3">
-                                        <div className="border-t border-gray-100 pt-3">
-                                          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Key Companies</div>
+                                    {data.companies && data.companies.length > 0 && (                                      <div>
+                                        <div className="border-t border-gray-100 dark:border-gray-600 pt-3">
+                                          <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Key Companies</div>
                                         </div>
                                         {data.companies.slice(0, 3).map((company: any, idx: number) => (
-                                          <div key={idx} className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-3 flex justify-between items-center hover:from-blue-50 hover:to-indigo-50 transition-colors">
+                                          <div key={idx} className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 rounded-lg p-3 flex justify-between items-center hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-800 dark:hover:to-indigo-800 transition-colors">
                                             <div className="flex-1">
-                                              <div className="font-semibold text-gray-900 text-sm">{company.name}</div>
-                                              <div className="text-xs text-gray-600">{company.employee_count}</div>
+                                              <div className="font-semibold text-gray-900 dark:text-white text-sm">{company.name}</div>
+                                              <div className="text-xs text-gray-600 dark:text-gray-300">{company.employee_count}</div>
                                             </div>
                                             <div className="flex items-center space-x-2 ml-3">
                                               <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                                                company.fit_score >= 8 ? 'bg-green-100 text-green-800' :
-                                                company.fit_score >= 6 ? 'bg-yellow-100 text-yellow-800' :
-                                                'bg-red-100 text-red-800'
+                                                company.fit_score >= 8 ? 'bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200' :
+                                                company.fit_score >= 6 ? 'bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200' :
+                                                'bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200'
                                               }`}>
                                                 {company.fit_score}/10
                                               </span>
                                               <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                                                company.priority === 'high' ? 'bg-red-100 text-red-800' :
-                                                company.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                                'bg-green-100 text-green-800'
+                                                company.priority === 'high' ? 'bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200' :
+                                                company.priority === 'medium' ? 'bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200' :
+                                                'bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200'
                                               }`}>
                                                 {company.priority?.toUpperCase()}
                                               </span>
@@ -1060,7 +1092,7 @@ const CompanyDashboard: React.FC = () => {
                                         ))}
                                         {data.companies.length > 3 && (
                                           <div className="text-center py-2">
-                                            <span className="text-sm text-gray-500 italic bg-gray-50 px-3 py-1 rounded-full">
+                                            <span className="text-sm text-gray-500 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-700 px-3 py-1 rounded-full">
                                               +{data.companies.length - 3} more companies
                                             </span>
                                           </div>
@@ -1073,63 +1105,60 @@ const CompanyDashboard: React.FC = () => {
                             </div>
                           )}                          {/* Product Breakdown */}
                           {reportState.data.comprehensive_report.pipeline_metrics.product_breakdown && (
-                            <div>
-                              <div className="text-center mb-6">
-                                <h5 className="text-2xl font-bold text-gray-800 mb-2 flex items-center justify-center">
+                            <div>                              <div className="text-center mb-6">
+                                <h5 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2 flex items-center justify-center">
                                   <span className="text-2xl mr-2">🚀</span>
                                   Product Recommendations
                                 </h5>
-                                <p className="text-gray-600">Cerebras product fit analysis across your pipeline</p>
+                                <p className="text-gray-600 dark:text-gray-300">Cerebras product fit analysis across your pipeline</p>
                               </div>
-                              <div className="space-y-6">
-                                {Object.entries(reportState.data.comprehensive_report.pipeline_metrics.product_breakdown).map(([product, data]: [string, any]) => (
-                                  <div key={product} className="bg-white rounded-xl p-6 border-l-4 border-blue-500 shadow-lg hover:shadow-xl transition-all duration-300">
+                              <div className="space-y-6">                                {Object.entries(reportState.data.comprehensive_report.pipeline_metrics.product_breakdown).map(([product, data]: [string, any]) => (
+                                  <div key={product} className="bg-white dark:bg-gray-800 rounded-xl p-6 border-l-4 border-blue-500 dark:border-blue-400 shadow-lg hover:shadow-xl transition-all duration-300">
                                     <div className="flex justify-between items-center mb-4">
                                       <div>
-                                        <h6 className="font-bold text-xl text-blue-900 mb-1">{product}</h6>
+                                        <h6 className="font-bold text-xl text-blue-900 dark:text-blue-200 mb-1">{product}</h6>
                                         <div className="flex items-center space-x-4 text-sm">
-                                          <span className="flex items-center text-gray-600">
-                                            <span className="w-2 h-2 bg-blue-500 rounded-full mr-1"></span>
+                                          <span className="flex items-center text-gray-600 dark:text-gray-300">
+                                            <span className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full mr-1"></span>
                                             <strong>{data.count}</strong> Companies
                                           </span>
-                                          <span className="flex items-center text-blue-600">
-                                            <span className="w-2 h-2 bg-blue-600 rounded-full mr-1"></span>
+                                          <span className="flex items-center text-blue-600 dark:text-blue-400">
+                                            <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full mr-1"></span>
                                             <strong>{data.avg_fit_score?.toFixed(1) || 'N/A'}</strong> Avg Fit
                                           </span>
                                         </div>
                                       </div>
                                       <div className="text-right">
                                         <div className={`text-3xl font-bold ${
-                                          data.avg_fit_score >= 8 ? 'text-green-600' :
-                                          data.avg_fit_score >= 6 ? 'text-yellow-600' :
-                                          'text-red-600'
+                                          data.avg_fit_score >= 8 ? 'text-green-600 dark:text-green-400' :
+                                          data.avg_fit_score >= 6 ? 'text-yellow-600 dark:text-yellow-400' :
+                                          'text-red-600 dark:text-red-400'
                                         }`}>
                                           {data.avg_fit_score?.toFixed(1) || 'N/A'}
                                         </div>
-                                        <div className="text-xs text-gray-500">Average Fit</div>
+                                        <div className="text-xs text-gray-500 dark:text-gray-400">Average Fit</div>
                                       </div>
                                     </div>
                                     
-                                    {data.companies && data.companies.length > 0 && (
-                                      <div>
-                                        <div className="border-t border-blue-100 pt-4 mb-4">
-                                          <div className="text-xs font-semibold text-blue-700 uppercase tracking-wider mb-3">Target Companies</div>
+                                    {data.companies && data.companies.length > 0 && (                                      <div>
+                                        <div className="border-t border-blue-100 dark:border-blue-700 pt-4 mb-4">
+                                          <div className="text-xs font-semibold text-blue-700 dark:text-blue-300 uppercase tracking-wider mb-3">Target Companies</div>
                                         </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                                           {data.companies.slice(0, 6).map((company: any, idx: number) => (
-                                            <div key={idx} className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100 hover:border-blue-300 transition-all duration-200 hover:scale-105">
-                                              <div className="font-semibold text-blue-900 text-sm mb-1">{company.name}</div>
-                                              <div className="text-xs text-blue-700 mb-2">{company.industry}</div>
+                                            <div key={idx} className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-800 dark:to-indigo-800 rounded-lg p-4 border border-blue-100 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-200 hover:scale-105">
+                                              <div className="font-semibold text-blue-900 dark:text-blue-200 text-sm mb-1">{company.name}</div>
+                                              <div className="text-xs text-blue-700 dark:text-blue-300 mb-2">{company.industry}</div>
                                               <div className="flex justify-between items-center">
                                                 <span className={`px-2 py-1 rounded-full text-xs font-bold ${
-                                                  company.fit_score >= 8 ? 'bg-green-100 text-green-800' :
-                                                  company.fit_score >= 6 ? 'bg-yellow-100 text-yellow-800' :
-                                                  'bg-red-100 text-red-800'
+                                                  company.fit_score >= 8 ? 'bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200' :
+                                                  company.fit_score >= 6 ? 'bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200' :
+                                                  'bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200'
                                                 }`}>
                                                   Fit: {company.fit_score}/10
                                                 </span>
                                                 {company.budget_range && (
-                                                  <span className="text-xs text-blue-600 font-medium">💰 Budget Available</span>
+                                                  <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">💰 Budget Available</span>
                                                 )}
                                               </div>
                                             </div>
@@ -1137,7 +1166,7 @@ const CompanyDashboard: React.FC = () => {
                                         </div>
                                         {data.companies.length > 6 && (
                                           <div className="text-center mt-4">
-                                            <span className="text-sm text-blue-600 italic bg-blue-50 px-4 py-2 rounded-full border border-blue-200">
+                                            <span className="text-sm text-blue-600 dark:text-blue-400 italic bg-blue-50 dark:bg-blue-800 px-4 py-2 rounded-full border border-blue-200 dark:border-blue-600">
                                               +{data.companies.length - 6} more companies interested in {product}
                                             </span>
                                           </div>
@@ -1150,86 +1179,84 @@ const CompanyDashboard: React.FC = () => {
                             </div>
                           )}
                         </div>
-                      )}
-
-                      {/* Top Opportunities */}
+                      )}                      {/* Top Opportunities */}
                       {reportState.data.comprehensive_report.top_opportunities && (
-                        <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-6 border">
-                          <h4 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                        <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900 dark:to-indigo-900 rounded-lg p-6 border border-purple-200 dark:border-purple-700">
+                          <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                             🎯 Top Opportunities
                           </h4>
                           <div className="space-y-4">
                             {Array.isArray(reportState.data.comprehensive_report.top_opportunities) ? (
                               reportState.data.comprehensive_report.top_opportunities.slice(0, 5).map((opportunity: any, index: number) => (
-                                <div key={index} className="bg-white rounded-lg p-6 border-l-4 border-purple-400 shadow-sm">
+                                <div key={index} className="bg-white dark:bg-gray-800 rounded-lg p-6 border-l-4 border-purple-400 dark:border-purple-500 shadow-sm">
                                   <div className="flex justify-between items-start mb-4">
                                     <div>
-                                      <h5 className="text-xl font-bold text-gray-900">{opportunity.name}</h5>
-                                      <p className="text-gray-600">{opportunity.industry}</p>
+                                      <h5 className="text-xl font-bold text-gray-900 dark:text-white">{opportunity.name}</h5>
+                                      <p className="text-gray-600 dark:text-gray-300">{opportunity.industry}</p>
                                       <a href={opportunity.website} target="_blank" rel="noopener noreferrer" 
-                                         className="text-blue-600 hover:text-blue-800 text-sm">
+                                         className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm">
                                         {opportunity.website} →
                                       </a>
                                     </div>
                                     <div className="text-right">
                                       <div className={`text-2xl font-bold ${
-                                        opportunity.cerebras_fit_score >= 8 ? 'text-green-600' :
-                                        opportunity.cerebras_fit_score >= 6 ? 'text-yellow-600' :
-                                        'text-red-600'
+                                        opportunity.cerebras_fit_score >= 8 ? 'text-green-600 dark:text-green-400' :
+                                        opportunity.cerebras_fit_score >= 6 ? 'text-yellow-600 dark:text-yellow-400' :
+                                        'text-red-600 dark:text-red-400'
                                       }`}>
                                         {opportunity.cerebras_fit_score}/10
                                       </div>
-                                      <div className="text-sm text-gray-500">Fit Score</div>
+                                      <div className="text-sm text-gray-500 dark:text-gray-400">Fit Score</div>
                                     </div>
                                   </div>
                                   
                                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                                     <div>
-                                      <div className="text-sm text-gray-600">Employees</div>
-                                      <div className="font-semibold">{opportunity.employee_count}</div>
+                                      <div className="text-sm text-gray-600 dark:text-gray-400">Employees</div>
+                                      <div className="font-semibold text-gray-900 dark:text-white">{opportunity.employee_count}</div>
                                     </div>
                                     <div>
-                                      <div className="text-sm text-gray-600">Revenue</div>
-                                      <div className="font-semibold">{opportunity.revenue}</div>
+                                      <div className="text-sm text-gray-600 dark:text-gray-400">Revenue</div>
+                                      <div className="font-semibold text-gray-900 dark:text-white">{opportunity.revenue}</div>
                                     </div>
                                     <div>
-                                      <div className="text-sm text-gray-600">Readiness</div>
-                                      <div className="font-semibold text-green-600">{opportunity.outreach_readiness}%</div>
+                                      <div className="text-sm text-gray-600 dark:text-gray-400">Readiness</div>
+                                      <div className="font-semibold text-green-600 dark:text-green-400">{opportunity.outreach_readiness}%</div>
                                     </div>
                                     <div>
-                                      <div className="text-sm text-gray-600">Contacts</div>
-                                      <div className="font-semibold">{opportunity.contacts_count}</div>
+                                      <div className="text-sm text-gray-600 dark:text-gray-400">Contacts</div>
+                                      <div className="font-semibold text-gray-900 dark:text-white">{opportunity.contacts_count}</div>
                                     </div>
                                   </div>
 
                                   <div className="space-y-3">
                                     <div>
-                                      <span className="font-semibold text-purple-900">Recommended Product:</span>
-                                      <span className="ml-2 px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
+                                      <span className="font-semibold text-purple-900 dark:text-purple-200">Recommended Product:</span>
+                                      <span className="ml-2 px-3 py-1 bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 rounded-full text-sm">
                                         {opportunity.recommended_cerebras_product}
                                       </span>
                                     </div>
                                     
                                     {opportunity.estimated_budget_range && (
                                       <div>
-                                        <span className="font-semibold text-purple-900">Budget Range:</span>
-                                        <span className="ml-2 text-purple-700">{opportunity.estimated_budget_range}</span>
+                                        <span className="font-semibold text-purple-900 dark:text-purple-200">Budget Range:</span>
+                                        <span className="ml-2 text-purple-700 dark:text-purple-300">{opportunity.estimated_budget_range}</span>
                                       </div>
                                     )}
                                     
                                     <div>
-                                      <span className="font-semibold text-purple-900">Implementation:</span>
-                                      <span className="ml-2 text-purple-700">{opportunity.implementation_timeline}</span>
+                                      <span className="font-semibold text-purple-900 dark:text-purple-200">Implementation:</span>
+                                      <span className="ml-2 text-purple-700 dark:text-purple-300">{opportunity.implementation_timeline}</span>
                                     </div>
                                     
                                     <div>
-                                      <span className="font-semibold text-purple-900">AI/ML Usage:</span>
-                                      <p className="text-purple-700 mt-1">{opportunity.ai_ml_usage}</p>
+                                      <span className="font-semibold text-purple-900 dark:text-purple-200">AI/ML Usage:</span>
+                                      <p className="text-purple-700 dark:text-purple-300 mt-1">{opportunity.ai_ml_usage}</p>
                                     </div>
                                     
                                     <div>
-                                      <span className="font-semibold text-purple-900">Value Proposition:</span>
-                                      <p className="text-purple-700 mt-1">{opportunity.value_proposition}</p>
+                                      <span className="font-semibold text-purple-900 dark:text-purple-200">Value Proposition:</span>
+                                      <p className="text-purple-700 dark:text-purple-300 mt-1">{opportunity.value_proposition}</p>
                                     </div>
                                   </div>
                                 </div>
@@ -1254,13 +1281,12 @@ const CompanyDashboard: React.FC = () => {
                       )}
 
                       {/* Any other sections as markdown */}
-                      {Object.entries(reportState.data.comprehensive_report).map(([key, value]) => {
-                        if (key === 'generated_at' || key === 'pipeline_metrics' || key === 'top_opportunities') {
+                      {Object.entries(reportState.data.comprehensive_report).map(([key, value]) => {                        if (key === 'generated_at' || key === 'pipeline_metrics' || key === 'top_opportunities') {
                           return null; // Already handled above
                         }
                         return (
-                          <div key={key} className="bg-gray-50 rounded-lg p-6 border">
-                            <h4 className="text-xl font-bold text-gray-900 mb-4 capitalize border-b pb-2">
+                          <div key={key} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-600">
+                            <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 capitalize border-b border-gray-200 dark:border-gray-600 pb-2">
                               {key.replace(/_/g, ' ')}
                             </h4>
                             <div>
@@ -1273,7 +1299,7 @@ const CompanyDashboard: React.FC = () => {
                               ) : Array.isArray(value) ? (
                                 <ul className="list-disc list-inside space-y-2">
                                   {value.map((item: any, index: number) => (
-                                    <li key={index} className="text-gray-700">
+                                    <li key={index} className="text-gray-700 dark:text-gray-300">
                                       {typeof item === 'string' ? item : JSON.stringify(item)}
                                     </li>
                                   ))}
@@ -1299,14 +1325,13 @@ const CompanyDashboard: React.FC = () => {
                       </div>
                     </div>
                   )}                </div>
-              </div>
-              
-              {/* Footer - Fixed */}
-              <div className="p-6 border-t bg-gray-50 flex justify-between items-center flex-shrink-0">
-                <div className="text-sm text-gray-600">
+              </div>              {/* Footer - Fixed */}
+              <div className="p-6 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 flex justify-between items-center flex-shrink-0">
+                <div className="text-sm text-gray-600 dark:text-gray-300">
                   Use this comprehensive analysis to inform your sales strategy and customer engagement approach.
                 </div>
-                <button                  onClick={() => {
+                <button
+                  onClick={() => {
                     const element = document.createElement('a');
                     const content = reportState.data?.comprehensive_report?.report_content || 
                                   (typeof reportState.data?.comprehensive_report === 'string' 
@@ -1319,22 +1344,21 @@ const CompanyDashboard: React.FC = () => {
                     element.click();
                     document.body.removeChild(element);
                   }}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md hover:shadow-lg"
+                  className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors font-medium shadow-md hover:shadow-lg flex items-center gap-2"
                 >
-                  📥 Download Report
+                  <span>📥</span>
+                  <span>Download Report</span>
                 </button>
               </div>
             </div>          </div>
-        )}
-
-        {/* Report Editing Modal */}
+        )}        {/* Report Editing Modal */}
         {editingReport && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg max-w-6xl w-full h-[90vh] flex flex-col shadow-2xl">
+            <div className="bg-white dark:bg-gray-800 rounded-lg max-w-6xl w-full h-[90vh] flex flex-col shadow-2xl border border-gray-200 dark:border-gray-600">
               {/* Header */}
-              <div className="p-6 border-b bg-gradient-to-r from-green-50 to-blue-50 flex-shrink-0">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-600 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900 dark:to-blue-900 flex-shrink-0">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-2xl font-bold text-gray-900">✏️ Edit Report</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">✏️ Edit Report</h3>
                   <div className="flex gap-2">
                     <button
                       onClick={saveReport}
@@ -1353,51 +1377,50 @@ const CompanyDashboard: React.FC = () => {
                 
                 {/* Title Editor */}
                 <div className="mt-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Report Title</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Report Title</label>
                   <input
                     type="text"
                     value={reportTitle}
                     onChange={(e) => setReportTitle(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     placeholder="Enter report title..."
                   />
                 </div>
-              </div>
-              
-              {/* Content Editor */}
-              <div className="flex-1 p-6 overflow-hidden">
-                <div className="h-full flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Report Content (Markdown)</label>
-                  <div className="flex-1 grid grid-cols-2 gap-4 h-full">
-                    {/* Editor */}
-                    <div className="flex flex-col">
-                      <div className="text-sm text-gray-500 mb-2">Editor</div>
-                      <textarea
+              </div>                {/* Content Editor */}
+              <div className="flex-1 p-6 flex flex-col min-h-0">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Report Content (Markdown)</label>
+                <div className="flex-1 grid grid-cols-2 gap-4 min-h-0">                    {/* Editor */}
+                    <div className="flex flex-col min-h-0">
+                      <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">Editor</div>                      <textarea
                         value={reportContent}
                         onChange={(e) => setReportContent(e.target.value)}
-                        className="flex-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent font-mono text-sm resize-none"
+                        onWheel={(e) => {
+                          e.stopPropagation();
+                          const target = e.currentTarget;
+                          target.scrollTop += e.deltaY;
+                        }}
+                        className="flex-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent font-mono text-sm resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 overflow-y-auto"
                         placeholder="Enter your report content in Markdown format..."
+                        style={{ minHeight: '400px' }}
                       />
                     </div>
                     
                     {/* Preview */}
-                    <div className="flex flex-col">
-                      <div className="text-sm text-gray-500 mb-2">Preview</div>
-                      <div className="flex-1 border border-gray-300 rounded-md p-3 overflow-y-auto bg-gray-50">
+                    <div className="flex flex-col min-h-0">
+                      <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">Preview</div>
+                      <div className="flex-1 border border-gray-300 dark:border-gray-600 rounded-md p-3 overflow-y-auto bg-gray-50 dark:bg-gray-700 min-h-0">
                         <div className="markdown-content">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {reportContent || '*No content to preview*'}
-                          </ReactMarkdown>
-                        </div>
+                          </ReactMarkdown>                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
               
               {/* Footer */}
-              <div className="p-6 border-t bg-gray-50 flex justify-between items-center flex-shrink-0">
-                <div className="text-sm text-gray-600">
+              <div className="p-6 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 flex justify-between items-center flex-shrink-0">
+                <div className="text-sm text-gray-600 dark:text-gray-300">
                   <span className="font-medium">Report Type:</span> {editingReport.report_type}
                   {editingReport.company_name && (
                     <>
@@ -1405,7 +1428,7 @@ const CompanyDashboard: React.FC = () => {
                       <span className="font-medium">Company:</span> {editingReport.company_name}
                     </>
                   )}
-                </div>                <div className="text-sm text-gray-500">
+                </div>                <div className="text-sm text-gray-500 dark:text-gray-400">
                   Use Markdown syntax for formatting. Changes are saved to the database.
                 </div>
               </div>

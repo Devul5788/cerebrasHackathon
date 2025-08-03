@@ -48,26 +48,25 @@ const CompanyResearch: React.FC = () => {
 
     const { data } = researchState;
     
-    if (data.results) {
-      // Batch or auto-discovery results
+    if (data.results) {      // Batch or auto-discovery results
       return (
-        <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
             Research Results ({data.results.length} companies)
           </h3>
           <div className="space-y-4">
             {data.results.map((company: CompanyResult, index: number) => (
-              <div key={company.company_id || index} className="border rounded-lg p-4 hover:bg-gray-50">
+              <div key={company.company_id || index} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-medium text-gray-900">{company.company_name}</h4>
-                    <p className="text-sm text-gray-600">Recommended: {company.recommended_product}</p>
+                    <h4 className="font-medium text-gray-900 dark:text-white">{company.company_name}</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Recommended: {company.recommended_product}</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-medium text-blue-600">
+                    <div className="text-sm font-medium text-blue-600 dark:text-blue-400">
                       Fit Score: {company.fit_score}/10
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 dark:text-gray-300">
                       Readiness: {company.outreach_readiness}
                     </div>
                   </div>
@@ -80,19 +79,19 @@ const CompanyResearch: React.FC = () => {
     } else {
       // Single company result
       return (
-        <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Research Complete</h3>
-          <div className="border rounded-lg p-4">
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Research Complete</h3>
+          <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
             <div className="flex justify-between items-start">
               <div>
-                <h4 className="font-medium text-gray-900">{data.company_name}</h4>
-                <p className="text-sm text-gray-600">Recommended: {data.recommended_product}</p>
+                <h4 className="font-medium text-gray-900 dark:text-white">{data.company_name}</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-300">Recommended: {data.recommended_product}</p>
               </div>
               <div className="text-right">
-                <div className="text-sm font-medium text-blue-600">
+                <div className="text-sm font-medium text-blue-600 dark:text-blue-400">
                   Fit Score: {data.fit_score}/10
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-gray-300">
                   Readiness: {data.outreach_readiness}
                 </div>
               </div>
@@ -102,59 +101,55 @@ const CompanyResearch: React.FC = () => {
       );
     }
   };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8 transition-colors">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Company Research Hub
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Discover and analyze potential customers using AI-powered research. 
             Choose your research method below.
           </p>
         </div>
 
         {/* Research Form */}
-        <div className="bg-white rounded-xl shadow-xl p-8">
-          <form onSubmit={handleSubmit}>
-            {/* Mode Selection */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
+          <form onSubmit={handleSubmit}>            {/* Mode Selection */}
             <div className="mb-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Research Mode</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Research Mode</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, mode: 'single' })}
                   className={`p-6 rounded-lg border-2 transition-all ${
                     formData.mode === 'single'
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100'
                   }`}
                 >
                   <div className="text-center">
                     <div className="text-2xl mb-2">🎯</div>
                     <h3 className="font-medium">Single Company</h3>
-                    <p className="text-sm text-gray-600 mt-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
                       Research one specific company
                     </p>
                   </div>
-                </button>
-
-                <button
+                </button>                <button
                   type="button"
                   onClick={() => setFormData({ ...formData, mode: 'batch' })}
                   className={`p-6 rounded-lg border-2 transition-all ${
                     formData.mode === 'batch'
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100'
                   }`}
                 >
                   <div className="text-center">
                     <div className="text-2xl mb-2">📊</div>
                     <h3 className="font-medium">Batch Research</h3>
-                    <p className="text-sm text-gray-600 mt-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
                       Research multiple companies at once
                     </p>
                   </div>
@@ -165,14 +160,14 @@ const CompanyResearch: React.FC = () => {
                   onClick={() => setFormData({ ...formData, mode: 'auto' })}
                   className={`p-6 rounded-lg border-2 transition-all ${
                     formData.mode === 'auto'
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100'
                   }`}
                 >
                   <div className="text-center">
                     <div className="text-2xl mb-2">🤖</div>
                     <h3 className="font-medium">Auto-Discovery</h3>
-                    <p className="text-sm text-gray-600 mt-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
                       Find potential customers automatically
                     </p>
                   </div>
@@ -181,10 +176,9 @@ const CompanyResearch: React.FC = () => {
             </div>
 
             {/* Input Fields */}
-            <div className="space-y-6">
-              {formData.mode === 'single' && (
+            <div className="space-y-6">              {formData.mode === 'single' && (
                 <div>
-                  <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Company Name
                   </label>
                   <input
@@ -193,14 +187,14 @@ const CompanyResearch: React.FC = () => {
                     value={formData.companyName}
                     onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                     placeholder="Enter company name (e.g., Microsoft, Google, Tesla)"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                   />
                 </div>
               )}
 
               {formData.mode === 'batch' && (
                 <div>
-                  <label htmlFor="companyNames" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="companyNames" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Company Names (one per line)
                   </label>
                   <textarea
@@ -209,14 +203,14 @@ const CompanyResearch: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, companyNames: e.target.value })}
                     placeholder="Microsoft&#10;Google&#10;Tesla&#10;Amazon"
                     rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                   />
                 </div>
               )}
 
               {formData.mode === 'auto' && (
                 <div>
-                  <label htmlFor="maxCustomers" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="maxCustomers" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Maximum Customers to Discover
                   </label>
                   <input
@@ -226,9 +220,9 @@ const CompanyResearch: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, maxCustomers: parseInt(e.target.value) || 10 })}
                     min="1"
                     max="100"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   />
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
                     AI will automatically discover potential customers based on Cerebras offerings
                   </p>
                 </div>
@@ -252,19 +246,17 @@ const CompanyResearch: React.FC = () => {
                 )}
               </button>
             </div>
-          </form>
-
-          {/* Error Display */}
+          </form>          {/* Error Display */}
           {researchState.error && (
-            <div className="mt-6 bg-red-50 border border-red-200 rounded-lg p-4">
-              <p className="text-red-700">{researchState.error}</p>
+            <div className="mt-6 bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg p-4">
+              <p className="text-red-700 dark:text-red-300">{researchState.error}</p>
             </div>
           )}
 
           {/* Success Message */}
           {researchState.data && (
-            <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">
-              <p className="text-green-700">{researchState.data.message}</p>
+            <div className="mt-6 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg p-4">
+              <p className="text-green-700 dark:text-green-300">{researchState.data.message}</p>
             </div>
           )}
 

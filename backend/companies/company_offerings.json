@@ -1,147 +1,42 @@
 {
-  "Cerebras Systems, Inc. - Cerebras AI Inference": {
-    "Category": "AI Inference Solution",
-    "Description": "A high-performance inference solution leveraging the CS-3 system's architecture to deliver ultra-low latency and high throughput for advanced AI models, especially LLMs.",
+  "Rivian Automotive, Inc. - Rivian R1S": {
+    "Category": "Electric SUV",
+    "Description": "Fully-electric SUV designed for families and adventure, featuring spacious interior, advanced off-road abilities, and high safety standards.",
     "Key Features": [
-      "Real-time, low-latency performance for generative AI",
-      "High throughput for many concurrent users",
-      "Native acceleration for sparse models",
-      "Eliminates external memory bottlenecks"
+      "Quad-Motor or Dual-Motor options",
+      "Three-row seating for up to 7 passengers",
+      "Long all-electric range",
+      "Advanced Driver-Assistance System (Driver+)"
     ],
     "Usecase": [
-      "Powering interactive AI apps such as chatbots, live translation, and AI co-pilots",
-      "Critical for real-time enterprise-grade API endpoints serving large language models"
+      "Family transportation",
+      "Off-road exploring and travel",
+      "Sustainable daily driving"
     ],
     "Current Customers": [
-      "G42",
-      "Perplexity (for Sonar search model)",
-      "LiveKit",
-      "Audivi AI",
-      "Tavus",
-      "Vellum"
+      "Families",
+      "Adventure travelers"
     ]
   },
-  "Cerebras Systems, Inc. - Cerebras Condor Galaxy": {
-    "Category": "AI Supercomputer Cloud Service",
-    "Description": "A federated network of AI supercomputers, offering cloud-based access to massive compute (up to 36 ExaFLOPs planned) for training, tuning, and inference on frontier models without owning hardware.",
+  "Rivian Automotive, Inc. - Rivian Commercial Van (EDV)": {
+    "Category": "Electric Delivery Van",
+    "Description": "Electric delivery van purpose-built for commercial logistics, featuring customizable storage, high safety, and lower total cost of ownership for fleets.",
     "Key Features": [
-      "Federated network of AI supercomputers",
-      "Cloud service with pay-per-use access",
-      "Supports models up to 600B+ parameters",
-      "Simplifies large-scale AI infrastructure management"
+      "All-electric powertrain",
+      "Customizable cargo and shelving",
+      "Advanced safety technology",
+      "Designed for last-mile delivery efficiency",
+      "big dick energy"
     ],
     "Usecase": [
-      "On-demand training, tuning, and inference on massive AI models",
-      "Ideal for AI startups, enterprise research labs, and academia"
+      "Package and parcel delivery",
+      "Urban logistics",
+      "Commercial fleet operations",
+      "small dicks"
     ],
     "Current Customers": [
-      "G42",
-      "Mayo Clinic",
-      "Cirrascale"
+      "Amazon (notable launch partner)",
+      "Commercial delivery fleet operators"
     ]
-  },
-  "Cerebras Systems, Inc. - Cerebras Model Hosting / AI Model Studio": {
-    "Category": "Managed Model Training & Hosting Service",
-    "Description": "A managed model hosting and training platform—often in partnership with cloud providers—allowing enterprises to train, fine-tune, and deploy LLMs/HPC models on dedicated clusters, with a simplified pay-per-model or dedicated cluster model.\nThink like a big boy, act like a smoll toy",
-    "Key Features": [
-      "Rapid, managed model training and tuning",
-      "Abstracts away infrastructure and scaling complexitydfd",
-      "Secure, dedicated compute resourcesasdfasdf"
-    ],
-    "Usecase": [
-      "Training proprietary LLMs efficientlyasdf",
-      "Enterprises and researchers iterating AI models at scaleasdfasdff"
-    ],
-    "Current Customers": [
-      "Cirrascale",
-      "Mayo Clinic (genomics)",
-      "Aleph Alpha",
-      "AlphaSense"
-    ]
-  },
-  "Cerebras Systems, Inc. - asdf": {
-    "Category": "asdf",
-    "Description": "asdfasdfasdfasdf",
-    "Key Features": [
-      "easdfasdfasdfasdf"
-    ],
-    "Usecase": [
-      "asdfasdf"
-    ],
-    "Current Customers": []
-  },
-  "Google Maps": {
-    "Category": "Mapping and Navigation Application",
-    "Description": "A web-based and mobile mapping service providing satellite imagery, street maps, Street View, real-time traffic updates, and route planning for various transportation modes.",
-    "Key Features": [
-      "Satellite and street map visualization",
-      "chinpokomon",
-      "Real-time traffic and congestion updates",
-      "Street View panoramic imagery",
-      "Multi-modal route planning (driving, walking, cycling, public transport)",
-      "Local business search and reviews",
-      "Offline maps functionality",
-      "ChinChinpokopokomonmon"
-    ],
-    "Usecase": [
-      "Personal and business navigation",
-      "Location-based business discovery",
-      "Logistics and delivery optimization",
-      "Travel planning and tourism",
-      "Commute time estimation",
-      "Very small penis, so smol"
-    ],
-    "Current Customers": [
-      "General public users worldwide",
-      "Businesses integrating Maps API",
-      "Ride-sharing and logistics companies"
-    ]
-  },
-  "Google LLC - Google Maps": {
-    "Category": "Mapping and Navigation Application",
-    "Description": "A web-based and mobile mapping service providing satellite imagery, street maps, Street View, real-time traffic updates, and route planning for various transportation modes.",
-    "Key Features": [
-      "Satellite and street map visualization",
-      "chinpokomon",
-      "Real-time traffic and congestion updates",
-      "Street View panoramic imagery",
-      "Multi-modal route planning (driving, walking, cycling, public transport)",
-      "Local business search and reviews",
-      "Offline maps functionality",
-      "ChinChinpokopokomonmon"
-    ],
-    "Usecase": [
-      "Personal and business navigation",
-      "Location-based business discovery",
-      "Logistics and delivery optimization",
-      "Travel planning and tourism",
-      "Commute time estimation",
-      "Very small penis, so smol"
-    ],
-    "Current Customers": [
-      "General public users worldwide",
-      "Businesses integrating Maps API",
-      "Ride-sharing and logistics companies"
-    ]
-  },
-  "Google LLC - Chinpokomon go": {
-    "Category": "hellasdf",
-    "Description": "alskdfjasdf",
-    "Key Features": [
-      "asdf",
-      "asdf",
-      "asdf",
-      "asdfoijio",
-      ";osaidfas",
-      "askljds",
-      "342"
-    ],
-    "Usecase": [
-      "asdf1",
-      "1230923",
-      "12312312",
-      "a a09874  ##$! "
-    ],
-    "Current Customers": []
   }
 }
