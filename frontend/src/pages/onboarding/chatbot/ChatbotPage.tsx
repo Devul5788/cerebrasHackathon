@@ -410,16 +410,16 @@ const ChatbotPage: React.FC = () => {
     <div className="max-w-7xl mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         {/* Chat section */}
-        <div className="md:col-span-4 bg-white rounded-lg shadow p-5 flex flex-col h-[600px]">
+        <div className="md:col-span-4 bg-white dark:bg-gray-800 rounded-lg shadow p-5 flex flex-col h-[600px]">
           <div className="flex-1 overflow-y-auto mb-4 pr-2">
             {messages.map((msg, index) => (
               <div key={index} className={`mb-4 ${msg.isBot ? '' : 'text-right'}`}>
                 <div className={`inline-block max-w-[80%] p-3 rounded-lg ${
-                  msg.isBot ? 'bg-blue-100 text-left' : 'bg-green-100 text-right'
+                  msg.isBot ? 'bg-blue-100 dark:bg-blue-900 text-left' : 'bg-green-100 dark:bg-green-900 text-right'
                 }`}>
-                  <p className="whitespace-pre-line">
+                  <p className="whitespace-pre-line text-gray-900 dark:text-gray-100">
                     {msg.text}
-                    {currentTypingIndex === index && <span className="animate-pulse">|</span>}
+                    {currentTypingIndex === index && <span className="animate-pulse text-gray-900 dark:text-gray-100">|</span>}
                   </p>
                   {msg.suggestions && (
                     <div className="mt-2 flex flex-wrap gap-2">
@@ -431,7 +431,7 @@ const ChatbotPage: React.FC = () => {
                             // Refocus input after clicking suggestion
                             setTimeout(() => inputRef.current?.focus(), 150);
                           }}
-                          className="px-3 py-1 text-sm bg-white rounded-full border border-gray-200 hover:bg-gray-100"
+                          className="px-3 py-1 text-sm bg-white dark:bg-gray-700 rounded-full border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100"
                         >
                           {suggestion}
                         </button>
@@ -443,12 +443,12 @@ const ChatbotPage: React.FC = () => {
             ))}
             {loading && (
               <div className="flex items-center space-x-2 mb-4">
-                <div className="inline-block p-3 bg-blue-100 rounded-lg">
+                <div className="inline-block p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                    <span className="text-sm text-gray-600 ml-2">Searching...</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300 ml-2">Searching...</span>
                   </div>
                 </div>
               </div>
@@ -468,7 +468,7 @@ const ChatbotPage: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 p-2 border rounded"
+              className="flex-1 p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               disabled={loading}
               autoFocus
             />
@@ -483,7 +483,7 @@ const ChatbotPage: React.FC = () => {
         </div>
 
         {/* Company Profile section */}
-        <div className="md:col-span-8 bg-white rounded-lg shadow p-4">
+        <div className="md:col-span-8 bg-white dark:bg-gray-800 rounded-lg shadow p-4">
           {companyProfile ? (
             <div>
               <div className="flex items-center gap-4 mb-2">

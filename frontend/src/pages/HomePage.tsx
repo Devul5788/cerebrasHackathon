@@ -57,13 +57,13 @@ const HomePage: React.FC = () => {
 
   return (
     <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
           🚀 NexLead - AI-Powered Sales Outreach Platform
         </h1>
         
         <div className="prose max-w-none">
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
             Welcome to your intelligent sales outreach platform. This application helps you discover companies, 
             find contacts, and generate personalized email campaigns using AI.
           </p>
@@ -71,7 +71,7 @@ const HomePage: React.FC = () => {
           {/* Getting Started Section */}
           <div className="mb-12">
             <div 
-              className="bg-gradient-to-r from-blue-500 to-purple-600 p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              className="bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-600 dark:to-purple-700 p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
               onClick={() => navigate('/chatbot')}
             >
               <div className="flex items-center justify-center mb-6">
@@ -81,61 +81,61 @@ const HomePage: React.FC = () => {
               </div>
               <div className="text-center text-white">
                 <h2 className="text-2xl font-bold mb-3">Get Started</h2>
-                <p className="text-blue-100 text-lg">Begin your AI-powered sales journey with interactive profile setup and company discovery</p>
+                <p className="text-blue-100 dark:text-blue-200 text-lg">Begin your AI-powered sales journey with interactive profile setup and company discovery</p>
               </div>
             </div>
           </div>
 
           {/* Platform Features */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Platform Features</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">Platform Features</h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-200 shadow-sm">
+              <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 p-6 rounded-xl border border-green-200 dark:border-green-700 shadow-sm">
                 <div className="w-14 h-14 bg-green-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
                   <span className="text-2xl">🏢</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Company Research</h3>
-                <p className="text-gray-700 leading-relaxed">Automated market research, competitor analysis, and buying signal detection to identify the best prospects.</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Company Research</h3>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Automated market research, competitor analysis, and buying signal detection to identify the best prospects.</p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border border-purple-200 shadow-sm">
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 p-6 rounded-xl border border-purple-200 dark:border-purple-700 shadow-sm">
                 <div className="w-14 h-14 bg-purple-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
                   <span className="text-2xl">👥</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Contact Discovery</h3>
-                <p className="text-gray-700 leading-relaxed">Find decision-makers and key contacts with role detection and organizational chart building.</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Contact Discovery</h3>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Find decision-makers and key contacts with role detection and organizational chart building.</p>
               </div>
 
-              <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl border border-orange-200 shadow-sm">
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900 dark:to-orange-800 p-6 rounded-xl border border-orange-200 dark:border-orange-700 shadow-sm">
                 <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
                   <span className="text-2xl">📧</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Email Generation</h3>
-                <p className="text-gray-700 leading-relaxed">AI-powered personalized email campaigns with tone adaptation based on contact role and context.</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Email Generation</h3>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">AI-powered personalized email campaigns with tone adaptation based on contact role and context.</p>
               </div>
 
-              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl border border-indigo-200 shadow-sm">
+              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900 dark:to-indigo-800 p-6 rounded-xl border border-indigo-200 dark:border-indigo-700 shadow-sm">
                 <div className="w-14 h-14 bg-indigo-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
                   <span className="text-2xl">📊</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Inbox Workspace</h3>
-                <p className="text-gray-700 leading-relaxed">Outlook/Gmail-like interface for managing prospects and tracking campaign performance.</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Inbox Workspace</h3>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Outlook/Gmail-like interface for managing prospects and tracking campaign performance.</p>
               </div>
 
-              <div className="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border border-red-200 shadow-sm">
+              <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900 dark:to-red-800 p-6 rounded-xl border border-red-200 dark:border-red-700 shadow-sm">
                 <div className="w-14 h-14 bg-red-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
                   <span className="text-2xl">🔌</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Integrations</h3>
-                <p className="text-gray-700 leading-relaxed">Seamless connections with Clearbit, Crunchbase, LinkedIn, Outlook, and Gmail APIs.</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Integrations</h3>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Seamless connections with Clearbit, Crunchbase, LinkedIn, Outlook, and Gmail APIs.</p>
               </div>
 
-              <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-6 rounded-xl border border-teal-200 shadow-sm">
+              <div className="bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900 dark:to-teal-800 p-6 rounded-xl border border-teal-200 dark:border-teal-700 shadow-sm">
                 <div className="w-14 h-14 bg-teal-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
                   <span className="text-2xl">🤖</span>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">AI Intelligence</h3>
-                <p className="text-gray-700 leading-relaxed">Advanced AI algorithms to optimize outreach strategies and maximize conversion rates.</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">AI Intelligence</h3>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">Advanced AI algorithms to optimize outreach strategies and maximize conversion rates.</p>
               </div>
             </div>
           </div>
