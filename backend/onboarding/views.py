@@ -36,10 +36,7 @@ class ChatbotView(APIView):
                 if company_data.get('found'):
                     return Response({
                         'message': (
-                            "I found this information:\n"
-                            f"Website: {company_data.get('website', 'N/A')}\n"
-                            f"Description: {company_data.get('description', 'N/A')}\n\n"
-                            "Is this correct?"
+                            "I found some information about this company. Is this correct?"
                         ),
                         'suggestions': ['Yes', "No, I'll enter manually"],
                         'step': 'product_suggestions',

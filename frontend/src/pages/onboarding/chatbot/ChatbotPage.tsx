@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 
 interface ProductProfile {
@@ -9,6 +9,7 @@ interface ProductProfile {
   use_cases: string[];
   current_customers?: string[];
 }
+
 
 interface Message {
   text: string;
@@ -30,11 +31,13 @@ interface CompanyProfile {
 }
 
 const ChatbotPage: React.FC = () => {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [companyProfile, setCompanyProfile] = useState<CompanyProfile | null>(null);
   const [isManualEntry, setIsManualEntry] = useState(false);
+  const [currentTypingIndex, setCurrentTypingIndex] = useState<number | null>(null);
   const [showProductSelection, setShowProductSelection] = useState(false);
   const [productSuggestions, setProductSuggestions] = useState<ProductProfile[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<ProductProfile[]>([]);
@@ -65,6 +68,9 @@ const ChatbotPage: React.FC = () => {
     if (!text.trim()) return;
 
     if (text.toLowerCase() === 'yes' && companyProfile) {
+      // Add user's "Yes" message first
+      setMessages(prev => [...prev, { text, isBot: false }]);
+      
       // Move to product selection after company profile confirmation
       setLoading(true);
       try {
@@ -80,10 +86,29 @@ const ChatbotPage: React.FC = () => {
         const data = await response.json();
         setProductSuggestions(data.product_suggestions || []);
         setShowProductSelection(true);
+        
+        // Add bot response with typing effect
+        const newMessageIndex = messages.length + 1;
         setMessages(prev => [...prev, {
-          text: data.message,
+          text: "",
           isBot: true
         }]);
+        setCurrentTypingIndex(newMessageIndex);
+        
+        let index = 0;
+        const timer = setInterval(() => {
+          if (index < data.message.length) {
+            setMessages(prev => prev.map((msg, i) => 
+              i === newMessageIndex 
+                ? { ...msg, text: data.message.substring(0, index + 1) }
+                : msg
+            ));
+            index++;
+          } else {
+            clearInterval(timer);
+            setCurrentTypingIndex(null);
+          }
+        }, 30);
       } catch (error) {
         console.error('Error:', error);
         setMessages(prev => [...prev, {
@@ -97,6 +122,9 @@ const ChatbotPage: React.FC = () => {
     }
 
     if (text.toLowerCase() === 'done') {
+      // Add user's "done" message first
+      setMessages(prev => [...prev, { text, isBot: false }]);
+      
       setLoading(true);
       try {
         const response = await fetch('http://localhost:8000/api/onboarding/chat/', {
@@ -112,10 +140,29 @@ const ChatbotPage: React.FC = () => {
         });
 
         const data = await response.json();
+        
+        // Add bot response with typing effect
+        const newMessageIndex = messages.length + 1;
         setMessages(prev => [...prev, {
-          text: data.message,
+          text: "",
           isBot: true
         }]);
+        setCurrentTypingIndex(newMessageIndex);
+        
+        let index = 0;
+        const timer = setInterval(() => {
+          if (index < data.message.length) {
+            setMessages(prev => prev.map((msg, i) => 
+              i === newMessageIndex 
+                ? { ...msg, text: data.message.substring(0, index + 1) }
+                : msg
+            ));
+            index++;
+          } else {
+            clearInterval(timer);
+            setCurrentTypingIndex(null);
+          }
+        }, 30);
 
         setTimeout(() => {
           window.close();
@@ -127,7 +174,6 @@ const ChatbotPage: React.FC = () => {
       return;
     }
 
-    setMessages(prev => [...prev, { text, isBot: false }]);
     setInput('');
     setLoading(true);
 
@@ -151,6 +197,10 @@ const ChatbotPage: React.FC = () => {
       return;
     }
 
+    // Add user message first
+    const newUserMessage = { text, isBot: false };
+    setMessages(prev => [...prev, newUserMessage]);
+    
     try {
       const response = await fetch('http://localhost:8000/api/onboarding/chat/', {
         method: 'POST',
@@ -164,11 +214,29 @@ const ChatbotPage: React.FC = () => {
         setIsManualEntry(true);
       }
 
+      // Add bot message with typing effect
+      const newMessageIndex = messages.length + 1; // +1 because we just added the user message
       setMessages(prev => [...prev, {
-        text: data.message,
+        text: "",
         isBot: true,
         suggestions: data.suggestions
       }]);
+      setCurrentTypingIndex(newMessageIndex);
+
+      let index = 0;
+      const timer = setInterval(() => {
+        if (index < data.message.length) {
+          setMessages(prev => prev.map((msg, i) => 
+            i === newMessageIndex 
+              ? { ...msg, text: data.message.substring(0, index + 1) }
+              : msg
+          ));
+          index++;
+        } else {
+          clearInterval(timer);
+          setCurrentTypingIndex(null);
+        }
+      }, 30);
 
       if (data.company_data) {
         setCompanyProfile(data.company_data);
@@ -190,11 +258,38 @@ const ChatbotPage: React.FC = () => {
     }
   };
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Initial welcome message
+  useEffect(() => {
+    const welcomeMessage = "Welcome! I'll help you set up your company profile. What's your company's name?";
     setMessages([{
-      text: "Welcome! I'll help you set up your company profile. What's your company's name?",
+      text: "",
       isBot: true
     }]);
+    setCurrentTypingIndex(0);
+
+    let index = 0;
+    const timer = setInterval(() => {
+      if (index < welcomeMessage.length) {
+        setMessages(prev => [{
+          text: welcomeMessage.substring(0, index + 1),
+          isBot: true
+        }]);
+        index++;
+      } else {
+        clearInterval(timer);
+        setCurrentTypingIndex(null);
+      }
+    }, 30);
+
+    return () => clearInterval(timer);
   }, []);
 
   const handleLogoError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -213,7 +308,10 @@ const ChatbotPage: React.FC = () => {
                 <div className={`inline-block max-w-[80%] p-3 rounded-lg ${
                   msg.isBot ? 'bg-blue-100 text-left' : 'bg-green-100 text-right'
                 }`}>
-                  <p className="whitespace-pre-line">{msg.text}</p>
+                  <p className="whitespace-pre-line">
+                    {msg.text}
+                    {currentTypingIndex === index && <span className="animate-pulse">|</span>}
+                  </p>
                   {msg.suggestions && (
                     <div className="mt-2 flex flex-wrap gap-2">
                       {msg.suggestions.map(suggestion => (
@@ -242,6 +340,7 @@ const ChatbotPage: React.FC = () => {
                 </div>
               </div>
             )}
+            <div ref={messagesEndRef} />
           </div>
           <form
             className="flex gap-2"
@@ -434,14 +533,6 @@ const ChatbotPage: React.FC = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="mt-4 flex justify-end">
-                        <button
-                          onClick={() => sendMessage('done')}
-                          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                        >
-                          Complete Profile
-                        </button>
-                      </div>
                     </>
                   )}
                 </div>
@@ -479,14 +570,6 @@ const ChatbotPage: React.FC = () => {
                       placeholder="Brief company description"
                       rows={3}
                     />
-                  </div>
-                  <div className="flex justify-end">
-                    <button
-                      onClick={() => sendMessage('yes')}
-                      className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    >
-                      Next: Add Products
-                    </button>
                   </div>
                 </form>
               )}
