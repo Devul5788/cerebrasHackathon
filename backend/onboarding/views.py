@@ -26,14 +26,13 @@ class ChatbotView(APIView):
                 "location": "headquarters location",
                 "employees": "approximate number",
                 "founded": "year",
-                "logo_url": "direct URL to the company's logo image (website favicon), scraped from their official website."
             }}
             If not found, return only: {{"found": false}}"""
             
             result = ask_perplexity(research_prompt, context="")
             try:
                 company_data = json.loads(result['choices'][0]['message']['content'])
-                
+                company_data['logo_url'] = f"http://www.google.com/s2/favicons?domain={company_data['website'].split('//')[-1].split('/')[0]}&sz=64"
                 if company_data.get('found'):
                     return Response({
                         'message': (
