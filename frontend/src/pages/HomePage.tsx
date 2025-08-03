@@ -2,8 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { testApi } from '../api/testApi';
 import { useApiState } from '../api/hooks';
 import { ApiStatusResponse, HelloWorldResponse, SampleDataResponse } from '../api/types';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
+  const navigate = useNavigate();
   const [connectionTest, setConnectionTest] = useState<{
     isConnected: boolean;
     status: string;
@@ -68,7 +70,10 @@ const HomePage: React.FC = () => {
 
           {/* Feature Cards */}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
-            <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+            <div 
+              className="bg-blue-50 p-6 rounded-lg border border-blue-200 cursor-pointer hover:shadow-lg transition-shadow"
+              onClick={() => navigate('/chatbot')}
+            >
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                 🤖
               </div>
