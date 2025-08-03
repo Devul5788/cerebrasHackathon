@@ -15,6 +15,7 @@ interface CompanyProfile {
   employees?: number;
   founded?: string;
   found?: boolean;
+  logo_url?: string;
 }
 
 const ChatbotPage: React.FC = () => {
@@ -47,10 +48,8 @@ const ChatbotPage: React.FC = () => {
           isBot: true
         }]);
 
-        // Optional: Redirect or close window after delay
         setTimeout(() => {
           window.close();
-          // or redirect: window.location.href = '/dashboard';
         }, 3000);
 
       } catch (error) {
@@ -122,12 +121,16 @@ const ChatbotPage: React.FC = () => {
   };
 
   useEffect(() => {
-    // Set initial welcome message
     setMessages([{
       text: "Welcome! I'll help you set up your company profile. What's your company's name?",
       isBot: true
     }]);
   }, []);
+
+  const handleLogoError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement;
+    target.style.display = 'none';
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -186,51 +189,97 @@ const ChatbotPage: React.FC = () => {
 
         {/* Company Profile section */}
         <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-xl font-bold mb-4">Company Profile</h2>
           {companyProfile ? (
-            <form
-              className="space-y-4"
-              onSubmit={e => e.preventDefault()}
-            >
-              <div>
-                <label className="block font-semibold mb-1" htmlFor="website">Website:</label>
-                <input
-                  id="website"
-                  type="url"
-                  className="w-full p-2 border rounded"
-                  value={companyProfile.website}
-                  onChange={e =>
-                    setCompanyProfile(profile =>
-                      profile ? { ...profile, website: e.target.value } : null
-                    )
-                  }
-                  placeholder="Company website"
-                />
+            <div>
+              <div className="flex items-center gap-4 mb-2">
+                {companyProfile.logo_url && (
+                  <div className="w-14 h-14 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
+                    <img 
+                      src={companyProfile.logo_url} 
+                      alt={`${companyProfile.name} logo`}
+                      className="w-full h-full object-contain"
+                      onError={handleLogoError}
+                    />
+                  </div>
+                )}
+                <div>
+                  <h2 className="text-2xl font-bold">{companyProfile.name}</h2>
+                </div>
               </div>
-              <div>
-                <label className="block font-semibold mb-1" htmlFor="description">Description:</label>
-                <textarea
-                  id="description"
-                  className="w-full p-2 border rounded"
-                  value={companyProfile.description}
-                  onChange={e =>
-                    setCompanyProfile(profile =>
-                      profile ? { ...profile, description: e.target.value } : null
-                    )
-                  }
-                  placeholder="Brief company description"
-                  rows={3}
-                />
+              <div className="mb-4">
+                <table className="min-w-full text-sm text-left border border-gray-200 rounded">
+                  <tbody>
+                    {companyProfile.industry && (
+                      <tr>
+                        <td className="py-1 px-2 font-semibold text-gray-600">Industry</td>
+                        <td className="py-1 px-2">{companyProfile.industry}</td>
+                      </tr>
+                    )}
+                    {companyProfile.location && (
+                      <tr>
+                        <td className="py-1 px-2 font-semibold text-gray-600">Location</td>
+                        <td className="py-1 px-2">{companyProfile.location}</td>
+                      </tr>
+                    )}
+                    {companyProfile.employees !== undefined && (
+                      <tr>
+                        <td className="py-1 px-2 font-semibold text-gray-600">Employees</td>
+                        <td className="py-1 px-2">{companyProfile.employees}</td>
+                      </tr>
+                    )}
+                    {companyProfile.founded && (
+                      <tr>
+                        <td className="py-1 px-2 font-semibold text-gray-600">Founded</td>
+                        <td className="py-1 px-2">{companyProfile.founded}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
-              <div className="flex justify-end">
-                <button
-                  onClick={() => sendMessage('done')}
-                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                >
-                  Done
-                </button>
-              </div>
-            </form>
+              <form
+                className="space-y-4"
+                onSubmit={e => e.preventDefault()}
+              >
+                <div>
+                  <label className="block font-semibold mb-1" htmlFor="website">Website:</label>
+                  <input
+                    id="website"
+                    type="url"
+                    className="w-full p-2 border rounded"
+                    value={companyProfile.website}
+                    onChange={e =>
+                      setCompanyProfile(profile =>
+                        profile ? { ...profile, website: e.target.value } : null
+                      )
+                    }
+                    placeholder="Company website"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold mb-1" htmlFor="description">Description:</label>
+                  <textarea
+                    id="description"
+                    className="w-full p-2 border rounded"
+                    value={companyProfile.description}
+                    onChange={e =>
+                      setCompanyProfile(profile =>
+                        profile ? { ...profile, description: e.target.value } : null
+                      )
+                    }
+                    placeholder="Brief company description"
+                    rows={3}
+                  />
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => sendMessage('done')}
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                  >
+                    Done
+                  </button>
+                </div>
+              </form>
+            </div>
           ) : (
             <p className="text-gray-500">No company profile yet. Please provide your company information in the chat.</p>
           )}

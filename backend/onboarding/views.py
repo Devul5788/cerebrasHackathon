@@ -19,13 +19,14 @@ class ChatbotView(APIView):
             research_prompt = f"""Research this company: {message}
             If found, return only this JSON: {{
                 "found": true,
-                "name": "{message}",
+                "name": "{message}, formatted correctly with correct suffixes (e.g., Inc., Ltd.)",
                 "website": "url",
                 "description": "brief description",
                 "industry": "industry type",
                 "location": "headquarters location",
                 "employees": "approximate number",
-                "founded": "year"
+                "founded": "year",
+                "logo_url": "direct URL to the company's logo image (website favicon), scraped from their official website."
             }}
             If not found, return only: {{"found": false}}"""
             
