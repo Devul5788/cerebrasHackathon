@@ -1,42 +1,121 @@
 {
-  "Rivian Automotive, Inc. - Rivian R1S": {
-    "Category": "Electric SUV",
-    "Description": "Fully-electric SUV designed for families and adventure, featuring spacious interior, advanced off-road abilities, and high safety standards.",
+  "Cerebras Systems Inc. - Cerebras CS-3 System": {
+    "Category": "AI Supercomputer System Sales",
+    "Description": "A third-generation wafer-scale AI accelerator, the CS-3 offers unmatched performance and efficiency for large-scale AI training and inference. It is designed to scale from single-device deployments to hyperscale supercomputers, supporting models up to 24 trillion parameters.",
     "Key Features": [
-      "Quad-Motor or Dual-Motor options",
-      "Three-row seating for up to 7 passengers",
-      "Long all-electric range",
-      "Advanced Driver-Assistance System (Driver+)"
+      "Wafer-Scale Engine 3 (WSE-3) processor with 900,000 AI-optimized cores",
+      "High scalability—up to 2048 CS-3 systems connected",
+      "Supports up to 24 trillion parameter models",
+      "Rapid deployment and seamless integration with existing infrastructure",
+      "Significantly lower latency and power consumption than traditional GPU clusters"
     ],
     "Usecase": [
-      "Family transportation",
-      "Off-road exploring and travel",
-      "Sustainable daily driving"
+      "Training and inference for extremely large language models and multi-modal AI",
+      "Private on-premise AI supercomputing for organizations needing data privacy and infrastructure control",
+      "High-performance scientific computation in verticals like drug discovery and energy"
     ],
     "Current Customers": [
-      "Families",
-      "Adventure travelers"
+      "GlaxoSmithKline",
+      "AstraZeneca",
+      "Argonne National Lab",
+      "National Center for Supercomputing Applications (NCSA)",
+      "TotalEnergies"
     ]
   },
-  "Rivian Automotive, Inc. - Rivian Commercial Van (EDV)": {
-    "Category": "Electric Delivery Van",
-    "Description": "Electric delivery van purpose-built for commercial logistics, featuring customizable storage, high safety, and lower total cost of ownership for fleets.",
+  "Cerebras Systems Inc. - Cerebras Condor Galaxy": {
+    "Category": "AI Supercomputer Cloud Service",
+    "Description": "A federated network of interconnected AI supercomputers, offering cloud-based access to Cerebras CS-3 clusters. Condor Galaxy enables organizations to train and deploy massive AI models without owning hardware.",
     "Key Features": [
-      "All-electric powertrain",
-      "Customizable cargo and shelving",
-      "Advanced safety technology",
-      "Designed for last-mile delivery efficiency",
-      "big dick energy"
+      "On-demand, pay-per-use access to exascale AI compute",
+      "Supports models with 600 billion+ parameters",
+      "Nine planned supercomputers with total 36 ExaFLOPs capacity",
+      "Reduces infrastructure complexity with managed cloud delivery"
     ],
     "Usecase": [
-      "Package and parcel delivery",
-      "Urban logistics",
-      "Commercial fleet operations",
-      "small dicks"
+      "Training, fine-tuning, and inference for state-of-the-art generative models",
+      "Ideal for AI startups, research labs, and enterprises avoiding hardware ownership",
+      "Rapid prototyping and scaling of AI applications"
     ],
     "Current Customers": [
-      "Amazon (notable launch partner)",
-      "Commercial delivery fleet operators"
+      "G42",
+      "Mayo Clinic",
+      "Cirrascale"
+    ]
+  },
+  "Cerebras Systems Inc. - Cerebras AI Inference Solution": {
+    "Category": "AI Inference Solution",
+    "Description": "A high-performance inference solution utilizing the CS-3 system’s wafer-scale architecture, enabling real-time, low-latency responses for demanding generative AI applications. It eliminates external memory bottlenecks and supports highly concurrent workloads.",
+    "Key Features": [
+      "Low-latency, high-throughput AI inference",
+      "Native hardware support for dynamic and sparse models",
+      "Handles entire large models on-chip",
+      "Enables interactive real-time applications"
+    ],
+    "Usecase": [
+      "Powering generative AI chatbots and live translation services",
+      "Enterprise-grade API endpoints for LLMs and co-pilots"
+    ],
+    "Current Customers": [
+      "Perplexity (Sonar search model)",
+      "LiveKit",
+      "Audivi AI",
+      "Tavus",
+      "Vellum"
+    ]
+  },
+  "Cerebras Systems Inc. - Cerebras Inference API": {
+    "Category": "Cloud-based Inference Access",
+    "Description": "A developer-friendly API providing high-speed, real-time AI inference using Cerebras hardware in the cloud. Compatible with OpenAI API standards for easy integration and migration.",
+    "Key Features": [
+      "OpenAI API compatibility",
+      "Direct access to leading open models",
+      "Ultra-high token generation rates",
+      "Seamless integration into apps, platforms, and services"
+    ],
+    "Usecase": [
+      "Integrating fast AI responses into chatbots, code generation tools, and summarization functionalities",
+      "Building multi-step, low-latency AI agents and co-pilots"
+    ],
+    "Current Customers": [
+      "Perplexity",
+      "Mistral AI (Le Chat)",
+      "Meta (Llama API)",
+      "Customers via AWS Marketplace"
+    ]
+  },
+  "Cerebras Systems Inc. - Cerebras AI Model Studio / Model Hosting": {
+    "Category": "Managed Model Training & Hosting Service",
+    "Description": "Fully managed service for training, fine-tuning, and hosting large-scale AI models on dedicated Cerebras clusters. Offered often in partnership with cloud providers for simplified, high-performance model development.",
+    "Key Features": [
+      "Pay-per-model or dedicated cluster options",
+      "Abstraction of distributed computing challenges",
+      "Rapid iteration for model development and tuning",
+      "Deterministic performance and secure, isolated compute environment"
+    ],
+    "Usecase": [
+      "Training proprietary or custom language models without managing infrastructure",
+      "Enterprise, research, or healthcare applications needing secure, scalable model hosting"
+    ],
+    "Current Customers": [
+      "Mayo Clinic (genomic AI)",
+      "Aleph Alpha (sovereign AI)",
+      "AlphaSense (financial/market insights)"
+    ]
+  },
+  "Cerebras Systems Inc. - Cerebras Datacenter Rental": {
+    "Category": "Dedicated AI Compute Infrastructure Rental",
+    "Description": "Rental service for private, high-performance AI compute in Cerebras-managed datacenters with CS-3 systems. Ideal for sustained, large-scale workloads requiring data privacy or sovereignty.",
+    "Key Features": [
+      "Dedicated, isolated cloud-like infrastructure",
+      "Full model and data ownership for the tenant",
+      "No up-front capital expense"
+    ],
+    "Usecase": [
+      "Organizations with continuous large AI workloads desiring private compute",
+      "Enterprises or agencies with strict privacy, regulatory, or sovereign computing requirements"
+    ],
+    "Current Customers": [
+      "Large enterprises, government agencies, research institutions (typically undisclosed)"
     ]
   }
 }

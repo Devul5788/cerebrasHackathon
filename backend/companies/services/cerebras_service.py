@@ -301,9 +301,7 @@ class AIResearchService:
         - Professional but approachable
         - Shows genuine interest in their business
         - Consultative, not sales-y
-        - Demonstrates technical understanding if contact is technical
-
-        Generate the email in this format:
+        - Demonstrates technical understanding if contact is technical        Generate the email in this format:
         Subject: [subject line]
 
         Hi [first name],
@@ -321,9 +319,9 @@ class AIResearchService:
                 model="deepseek-r1-distill-llama-70b",
                 temp=0.3
             )
-            
+
             return content
-            
+
         except Exception as e:
             logger.error(f"Failed to generate email content: {e}")
             return f"Error generating email content: {str(e)}"

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { HomePage } from '../pages';
+import { HomePage, EmailOutreachPage } from '../pages';
 import CompanyResearch from '../pages/company/CompanyResearch';
 import CompanyDashboard from '../pages/company/CompanyDashboard';
 import Layout from './Layout';
@@ -31,10 +31,13 @@ export const router = createBrowserRouter([
       {
         path: 'dashboard',
         element: <CompanyDashboard />
-      },
-      {
+      },      {
         path: 'chatbot',
         element: <ChatbotPage />
+      },
+      {
+        path: 'outreach',
+        element: <EmailOutreachPage />
       },
       {
         path: '*',
