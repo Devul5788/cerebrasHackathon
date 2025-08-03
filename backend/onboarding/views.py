@@ -16,12 +16,12 @@ def save_company_offerings(company_data):
         
         # Load existing data if file exists
         existing_data = {}
-        if os.path.exists(file_path):
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    existing_data = json.load(f)
-            except (json.JSONDecodeError, FileNotFoundError):
-                existing_data = {}
+        # if os.path.exists(file_path):
+        #     try:
+        #         with open(file_path, 'r', encoding='utf-8') as f:
+        #             existing_data = json.load(f)
+        #     except (json.JSONDecodeError, FileNotFoundError):
+        #         existing_data = {}
         
         # Format the new company data
         company_name = company_data.get('name', 'Unknown Company')

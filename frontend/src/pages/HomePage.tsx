@@ -68,62 +68,80 @@ const HomePage: React.FC = () => {
             find contacts, and generate personalized email campaigns using AI.
           </p>
 
-          {/* Feature Cards */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
+          {/* Getting Started Section */}
+          <div className="mb-12">
             <div 
-              className="bg-blue-50 p-6 rounded-lg border border-blue-200 cursor-pointer hover:shadow-lg transition-shadow"
+              className="bg-gradient-to-r from-blue-500 to-purple-600 p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
               onClick={() => navigate('/chatbot')}
             >
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                🤖
+              <div className="flex items-center justify-center mb-6">
+                <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-4">
+                  <span className="text-3xl">🚀</span>
+                </div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">AI Chatbot</h3>
-              <p className="text-gray-600">Interactive profile setup with AI-powered company discovery and product suggestions.</p>
+              <div className="text-center text-white">
+                <h2 className="text-2xl font-bold mb-3">Get Started</h2>
+                <p className="text-blue-100 text-lg">Begin your AI-powered sales journey with interactive profile setup and company discovery</p>
+              </div>
             </div>
+          </div>
 
-            <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                🏢
+          {/* Platform Features */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Platform Features</h2>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-200 shadow-sm">
+                <div className="w-14 h-14 bg-green-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
+                  <span className="text-2xl">🏢</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Company Research</h3>
+                <p className="text-gray-700 leading-relaxed">Automated market research, competitor analysis, and buying signal detection to identify the best prospects.</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Company Research</h3>
-              <p className="text-gray-600">Automated market research, competitor analysis, and buying signal detection.</p>
-            </div>
 
-            <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                👥
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border border-purple-200 shadow-sm">
+                <div className="w-14 h-14 bg-purple-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
+                  <span className="text-2xl">👥</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Contact Discovery</h3>
+                <p className="text-gray-700 leading-relaxed">Find decision-makers and key contacts with role detection and organizational chart building.</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Contact Discovery</h3>
-              <p className="text-gray-600">Find decision-makers and key contacts with role detection and org chart building.</p>
-            </div>
 
-            <div className="bg-orange-50 p-6 rounded-lg border border-orange-200">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                📧
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl border border-orange-200 shadow-sm">
+                <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
+                  <span className="text-2xl">📧</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Email Generation</h3>
+                <p className="text-gray-700 leading-relaxed">AI-powered personalized email campaigns with tone adaptation based on contact role and context.</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Email Generation</h3>
-              <p className="text-gray-600">AI-powered personalized email campaigns with tone adaptation by contact role.</p>
-            </div>
 
-            <div className="bg-indigo-50 p-6 rounded-lg border border-indigo-200">
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                📊
+              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl border border-indigo-200 shadow-sm">
+                <div className="w-14 h-14 bg-indigo-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
+                  <span className="text-2xl">📊</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Inbox Workspace</h3>
+                <p className="text-gray-700 leading-relaxed">Outlook/Gmail-like interface for managing prospects and tracking campaign performance.</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Inbox Workspace</h3>
-              <p className="text-gray-600">Outlook/Gmail-like interface for managing prospects and tracking campaigns.</p>
-            </div>
 
-            <div className="bg-red-50 p-6 rounded-lg border border-red-200">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                🔌
+              <div className="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border border-red-200 shadow-sm">
+                <div className="w-14 h-14 bg-red-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
+                  <span className="text-2xl">🔌</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Integrations</h3>
+                <p className="text-gray-700 leading-relaxed">Seamless connections with Clearbit, Crunchbase, LinkedIn, Outlook, and Gmail APIs.</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Integrations</h3>
-              <p className="text-gray-600">Connect with Clearbit, Crunchbase, LinkedIn, Outlook, and Gmail APIs.</p>
+
+              <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-6 rounded-xl border border-teal-200 shadow-sm">
+                <div className="w-14 h-14 bg-teal-500 rounded-xl flex items-center justify-center mb-4 shadow-md">
+                  <span className="text-2xl">🤖</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">AI Intelligence</h3>
+                <p className="text-gray-700 leading-relaxed">Advanced AI algorithms to optimize outreach strategies and maximize conversion rates.</p>
+              </div>
             </div>
           </div>
 
           {/* Technical Stack */}
-          <div className="bg-gray-50 p-6 rounded-lg mb-8">
+          {/* <div className="bg-gray-50 p-6 rounded-lg mb-8">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">🛠️ Technical Stack</h3>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
@@ -143,12 +161,12 @@ const HomePage: React.FC = () => {
                 </ul>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
       {/* Connection Status */}
-      <div className="mt-6 bg-white rounded-lg shadow-md p-6">
+      {/* <div className="mt-6 bg-white rounded-lg shadow-md p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">
             🔗 Backend Connection Test
@@ -179,9 +197,7 @@ const HomePage: React.FC = () => {
             Endpoint: http://localhost:8000/api/
           </div>
 
-          {/* API Test Results */}
           <div className="grid gap-4 md:grid-cols-3 mt-6">
-            {/* Hello World Test */}
             <div className="bg-gray-50 p-4 rounded-lg">
               <h4 className="font-medium text-gray-900 mb-2">Hello World Test</h4>
               {helloState.loading && <p className="text-sm text-blue-600">Loading...</p>}
@@ -194,7 +210,6 @@ const HomePage: React.FC = () => {
               )}
             </div>
 
-            {/* Status Test */}
             <div className="bg-gray-50 p-4 rounded-lg">
               <h4 className="font-medium text-gray-900 mb-2">Status Check</h4>
               {statusState.loading && <p className="text-sm text-blue-600">Loading...</p>}
@@ -207,7 +222,6 @@ const HomePage: React.FC = () => {
               )}
             </div>
 
-            {/* Data Test */}
             <div className="bg-gray-50 p-4 rounded-lg">
               <h4 className="font-medium text-gray-900 mb-2">Data Endpoint</h4>
               {dataState.loading && <p className="text-sm text-blue-600">Loading...</p>}
@@ -221,7 +235,6 @@ const HomePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Sample Data Display */}
           {dataState.data && dataState.data.data && (
             <div className="mt-6">
               <h4 className="font-medium text-gray-900 mb-3">Sample Data from Backend:</h4>
@@ -243,7 +256,7 @@ const HomePage: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
     </main>
   );
 };
