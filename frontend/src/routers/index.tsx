@@ -2,6 +2,7 @@ import React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { HomePage } from '../pages';
 import Layout from './Layout';
+import ChatbotPage from '../pages/onboarding/chatbot/ChatbotPage';
 
 // Define application routes
 export const router = createBrowserRouter([
@@ -12,9 +13,14 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Navigate to="/home" replace />
-      },      {
+      },
+      {
         path: 'home',
         element: <HomePage />
+      },
+      {
+        path: 'chatbot',
+        element: <ChatbotPage />
       },
       {
         path: '*',
