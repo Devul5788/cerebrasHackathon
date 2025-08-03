@@ -32,8 +32,20 @@ if ! command -v npm &> /dev/null; then
     exit 1
 fi
 
-echo "[1/4] Setting up Backend (Django)..."
+echo "[1/5] Clearing previous database context..."
 cd backend
+
+# Delete SQLite database file to clear context
+if [ -f "db.sqlite3" ]; then
+    echo "Removing existing SQLite database file..."
+    rm -f db.sqlite3
+    echo "Database file deleted successfully."
+else
+    echo "No existing database file found."
+fi
+
+echo ""
+echo "[2/5] Setting up Backend (Django)..."
 
 echo "Installing Python dependencies..."
 if command -v pip3 &> /dev/null; then
@@ -60,7 +72,7 @@ $PYTHON_CMD manage.py runserver 8000 &
 BACKEND_PID=$!
 
 echo ""
-echo "[2/4] Setting up Frontend (React + TypeScript + Tailwind)..."
+echo "[3/5] Setting up Frontend (React + TypeScript + Tailwind)..."
 cd ../frontend
 
 echo "Installing Node.js dependencies..."
@@ -73,13 +85,13 @@ if [ $? -ne 0 ]; then
 fi
 
 echo ""
-echo "[3/4] Starting React development server..."
+echo "[4/5] Starting React development server..."
 echo "Note: React server will start on port 3000 (or next available port)"
 npm start &
 FRONTEND_PID=$!
 
 echo ""
-echo "[4/4] Setup Complete!"
+echo "[5/5] Setup Complete!"
 echo "================================================"
 echo "    Both servers are now running!"
 echo "================================================"

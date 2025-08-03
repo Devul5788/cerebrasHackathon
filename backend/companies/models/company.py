@@ -47,7 +47,7 @@ class Company(models.Model):
     inference_pain_points = models.JSONField(default=list, blank=True)  # Performance bottlenecks, cost issues
     inference_budget = models.CharField(max_length=100, blank=True, null=True)  # Budget for inference infrastructure
     
-    # Cerebras Fit Analysis
+    # Product Fit Analysis
     recommended_cerebras_product = models.CharField(max_length=255, blank=True, null=True)
     cerebras_fit_score = models.IntegerField(blank=True, null=True)  # 1-10 scale
     cerebras_value_proposition = models.TextField(blank=True, null=True)
@@ -81,8 +81,8 @@ class Company(models.Model):
     def __str__(self):
         return self.name
         
-    def get_cerebras_product_match(self):
-        """Return the most suitable Cerebras product based on company profile"""
+    def get_product_match(self):
+        """Return the most suitable product based on company profile"""
         if self.recommended_cerebras_product:
             return self.recommended_cerebras_product
         return "Not Analyzed"

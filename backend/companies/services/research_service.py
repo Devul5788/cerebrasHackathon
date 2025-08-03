@@ -5,33 +5,107 @@ from datetime import datetime
 from typing import Dict, List, Optional, Any
 from companies.models import Company, Contact
 from companies.services.perplexity_service import PerplexityService
-from companies.services.cerebras_service import CerebrasService
+from .cerebras_service import AIResearchService
 
 logger = logging.getLogger(__name__)
 
 
 class CompanyResearchService:
     """
-    Main service orchestrating comprehensive company research using Perplexity and Cerebras
+    Main service orchestrating comprehensive company research using Perplexity and AI services
     """
     
     def __init__(self):
         self.perplexity = PerplexityService()
-        self.cerebras = CerebrasService()
+        self.ai_service = AIResearchService()
         
     def load_company_offerings(self) -> Dict[str, Any]:
-        """Load Cerebras offerings from JSON file"""
+        """Load company offerings from JSON file"""
         try:
-            with open('companies/company_offerings.json', 'r') as f:
-                return json.load(f)
+            # Try relative path first (for when running from backend directory)
+            try:
+                with open('companies/company_offerings.json', 'r') as f:
+                    data = json.load(f)
+            except FileNotFoundError:
+                # Try absolute path from project root
+                import os
+                # Get the directory containing this file
+                current_dir = os.path.dirname(os.path.abspath(__file__))
+                # Go up to backend/companies/services -> backend/companies -> backend
+                backend_dir = os.path.dirname(os.path.dirname(current_dir))
+                file_path = os.path.join(backend_dir, 'companies', 'company_offerings.json')
+                with open(file_path, 'r') as f:
+                    data = json.load(f)
+            
+            # Return the full data including metadata for internal use
+            return data
+            
         except Exception as e:
-            logger.error(f"Failed to load Cerebras offerings: {e}")
+            logger.error(f"Failed to load company offerings: {e}")
             return {}
+    
+    def get_product_offerings_only(self) -> Dict[str, Any]:
+        """Get only the product offerings, excluding company metadata"""
+        offerings = self.load_company_offerings()
+        # Return the products section only
+        return offerings.get('products', {})
+    
+    def get_selling_company_name(self) -> str:
+        """Determine the selling company name from the offerings file or configuration"""
+        offerings = self.load_company_offerings()
+        
+        # Check if there's company metadata in the offerings file
+        company_info = offerings.get('company', {})
+        if company_info and company_info.get('name'):
+            return company_info['name']
+        else:
+            return "Our Company"  # Default fallback if no metadata found
+    
+    def get_selling_company_info(self) -> Dict[str, Any]:
+        """Get complete selling company information including metadata and products"""
+        offerings = self.load_company_offerings()
+        return {
+            'company': offerings.get('company', {}),
+            'products': offerings.get('products', {})
+        }
+    
+    def _get_selling_context(self) -> str:
+        """Determine the selling context based on the offerings"""
+        offerings = self.load_company_offerings()
+        
+        # Check if there's company metadata in the offerings file
+        company_info = offerings.get('company', {})
+        if company_info and company_info.get('industry'):
+            industry = company_info['industry'].lower()
+            if "automotive" in industry or "audio" in industry:
+                return "automotive audio solutions"
+            elif "ai" in industry or "technology" in industry or "software" in industry:
+                return "AI infrastructure"
+            elif "audio" in industry or "sound" in industry or "entertainment" in industry:
+                return "audio solutions"
+            else:
+                return f"{company_info['industry']} solutions"
+        
+        # Fallback to the old text-based detection
+        if not offerings:
+            return "product solutions"
+        
+        # Look for context keywords in the offerings
+        all_text = json.dumps(offerings).lower()
+        
+        if "automotive" in all_text or "car audio" in all_text:
+            return "automotive audio solutions"
+        elif "ai" in all_text or "inference" in all_text or "training" in all_text:
+            return "AI infrastructure"
+        elif "audio" in all_text or "sound" in all_text:
+            return "audio solutions"
+        else:
+            return "technology solutions"
             
     def research_and_save_company(self, company_name: str) -> Company:
         """        Comprehensive company research pipeline:
         1. Research with Perplexity
-        2. Parse with Cerebras
+        2. Parse with AI service
         3. Save to database
         4. Research contacts
         5. Generate outreach materials
@@ -40,13 +114,21 @@ class CompanyResearchService:
         
         # Step 1: Comprehensive company research with Perplexity
         logger.info("Phase 1: Basic company research")
-        basic_research = self.perplexity.research_company_comprehensive(company_name)
+        selling_company = self.get_selling_company_name()
+        selling_context = self._get_selling_context()
+        selling_company_info = self.get_selling_company_info()
+        basic_research = self.perplexity.research_company_comprehensive(
+            company_name, 
+            selling_company, 
+            selling_context, 
+            selling_company_info
+        )
         
         logger.info("Phase 2: Contact research")
         contact_research = self.perplexity.research_specific_contacts(company_name)
         
         logger.info("Phase 3: Competitive analysis")
-        competitor_analysis = self.perplexity.analyze_competitor_landscape(company_name)
+        competitor_analysis = self.perplexity.analyze_competitor_landscape(company_name, selling_company)
         
         logger.info("Phase 4: Recent news research")
         recent_news = self.perplexity.research_recent_news_and_initiatives(company_name)
@@ -63,9 +145,16 @@ class CompanyResearchService:
         {recent_news}
         """
         
-        # Step 2: Parse with Cerebras
-        logger.info("Phase 5: Parsing research with Cerebras")
-        parsed_data = self.cerebras.parse_company_research(combined_research, company_name)
+        # Step 2: Parse with AI service
+        logger.info("Phase 5: Parsing research with AI service")
+        selling_company = self.get_selling_company_name()
+        selling_company_info = self.get_selling_company_info()
+        parsed_data = self.ai_service.parse_company_research(
+            combined_research, 
+            company_name, 
+            selling_company, 
+            selling_company_info
+        )
         
         # Step 3: Save company to database
         logger.info("Phase 6: Saving company data")
@@ -73,7 +162,7 @@ class CompanyResearchService:
         
         # Step 4: Parse and save contacts
         logger.info("Phase 7: Parsing and saving contacts")
-        parsed_contacts = self.cerebras.parse_contact_research(contact_research, company_name)
+        parsed_contacts = self.ai_service.parse_contact_research(contact_research, company_name)
         self._save_contact_data(company, parsed_contacts, contact_research)
         logger.info(f"Research completed for {company_name}")
         return company
@@ -140,7 +229,7 @@ class CompanyResearchService:
             financial_info = parsed_data.get('financial_info', {})
             business_info = parsed_data.get('business_intelligence', {})
             ai_info = parsed_data.get('ai_ml_info', {})
-            cerebras_analysis = parsed_data.get('cerebras_analysis', {})
+            cerebras_analysis = parsed_data.get('product_analysis', {})  # Updated to use generic field name
             research_metadata = parsed_data.get('research_metadata', {})
             
             company_name = basic_info.get('name', 'Unknown Company')
@@ -186,7 +275,7 @@ class CompanyResearchService:
                 'inference_pain_points': ai_info.get('inference_pain_points') or [],
                 'inference_budget': ai_info.get('inference_budget'),
                 
-                # Cerebras Analysis
+                # Product Analysis
                 'recommended_cerebras_product': cerebras_analysis.get('recommended_product'),
                 'cerebras_fit_score': cerebras_analysis.get('fit_score'),
                 'cerebras_value_proposition': cerebras_analysis.get('value_proposition'),
@@ -439,7 +528,7 @@ class CompanyResearchService:
         return f"{name}.com"
     
     def _calculate_outreach_priority(self, fit_score: Optional[int]) -> str:
-        """Calculate outreach priority based on Cerebras fit score"""
+        """Calculate outreach priority based on product fit score"""
         if not fit_score:
             return 'medium'
         
@@ -477,11 +566,11 @@ class CompanyResearchService:
                 'recent_achievements': contact.recent_achievements,
             }
             
-            # Load Cerebras offerings
-            company_offerings = self.load_company_offerings()
+            # Load company offerings
+            company_offerings = self.get_product_offerings_only()
             
-            return self.cerebras.generate_personalized_email_content(
-                company_data, contact_data, company_offerings
+            return self.ai_service.generate_personalized_email_content(
+                company_data, contact_data, company_offerings, self.get_selling_company_name()
             )
             
         except Exception as e:
@@ -561,39 +650,29 @@ class CompanyResearchService:
         Find potential customers using company_offerings.json
         Returns a list of company names to research
         """
-        offerings = self.load_company_offerings()
+        offerings = self.get_product_offerings_only()  # Only get product data for analysis
+        selling_company = self.get_selling_company_name()
+        selling_context = self._get_selling_context()
         
         # Use Perplexity to analyze offerings and suggest potential customers
         context = f"""
-        You are an expert sales analyst for Cerebras Systems. Based on the following Cerebras product offerings,
-        identify {max_customers} potential customer companies that would be excellent fits for these products. Make sure they are not competitors like TogetherAI, Nvidia, Etched, Grok, etc. I want companies who can use Cerebras not create competing products. 
+        You are an expert sales analyst for {selling_company}. Based on the following {selling_company} product offerings,
+        identify {max_customers} potential customer companies that would be excellent fits for these products. Make sure they are not direct competitors. I want companies who can use {selling_company} products, not create competing products. 
         
-        Cerebras Product Offerings:
+        {selling_company} Product Offerings:
         {json.dumps(offerings, indent=2)}
         
-        Consider companies across different industries and use cases that would benefit from:
-        - High-performance AI inference
-        - Large model training
-        - Real-time AI applications
-        - Enterprise AI infrastructure
+        Consider companies across different industries and use cases that would benefit from the offerings described above.
         
         Focus on companies that likely have:
-        - Significant AI/ML workloads
-        - Need for high-performance computing
-        - Budget for enterprise AI solutions
-        - Technical teams capable of implementing advanced AI systems
+        - Need for the types of solutions {selling_company} provides
+        - Budget for enterprise solutions
+        - Technical teams capable of implementing advanced systems
         """
         
         question = f"""
         Please provide exactly {max_customers} company names (one per line) that would be ideal potential customers
-        for Cerebras products. Include a mix of:
-        - Large tech companies
-        - AI startups
-        - Financial services firms
-        - Healthcare/biotech companies
-        - Research institutions
-        - E-commerce companies
-        - Automotive companies
+        for {selling_company} products. Include a mix of companies across relevant industries.
         
         Format: Just the company names, one per line, no numbering or bullets.
         """
@@ -638,9 +717,9 @@ class CompanyResearchService:
     
     def generate_customer_report(self, company: Company) -> Dict[str, Any]:
         """
-        Generate a comprehensive customer report for a single company using Cerebras inference
+        Generate a comprehensive customer report for a single company using AI inference
         """
-        offerings = self.load_company_offerings()
+        offerings = self.get_product_offerings_only()  # Only get product data for the report
         
         # Gather ALL company data - comprehensive profile
         company_data = {
@@ -720,11 +799,15 @@ class CompanyResearchService:
             'c_level_contacts': len([c for c in contact_data if c['seniority_level'] == 'c_level']),
             'high_influence_contacts': len([c for c in contact_data if c['influence_level'] == 'high'])
         }
+        
+        # Get the selling company name dynamically
+        selling_company = self.get_selling_company_name()
+        
         context = f"""
-        You are a senior sales analyst at Cerebras Systems creating a comprehensive customer analysis report.
+        You are a senior sales analyst at {selling_company} creating a comprehensive customer analysis report.
         Generate a detailed report that leverages all available data to provide actionable insights.
         
-        CEREBRAS PRODUCT OFFERINGS:
+        {selling_company.upper()} PRODUCT OFFERINGS:
         {json.dumps(offerings, indent=2)}
         
         COMPLETE COMPANY PROFILE:
@@ -774,7 +857,7 @@ class CompanyResearchService:
         
         # 6. COMPETITIVE LANDSCAPE & POSITIONING
            - Current vendor relationships and competitive threats
-           - Cerebras differentiation and value proposition
+           - {selling_company} differentiation and value proposition
            - Competitive displacement opportunities
            - Risk factors and mitigation strategies
         
@@ -808,7 +891,7 @@ class CompanyResearchService:
         Use professional business language suitable for C-level presentations.        """
         
         try:
-            report = self.cerebras.generate_text(question, context)
+            report = self.ai_service.generate_text(question, context)
             return {
                 'company_id': company.id,
                 'company_name': company.name,
@@ -867,7 +950,7 @@ class CompanyResearchService:
         """
         Generate a comprehensive report across all companies using Cerebras inference
         """
-        offerings = self.load_company_offerings()
+        offerings = self.get_product_offerings_only()  # Only get product data for the report
         
         # Aggregate data across all companies
         total_companies = len(companies)
@@ -985,10 +1068,13 @@ class CompanyResearchService:
             'ready_for_outreach': companies.filter(outreach_priority='high', cerebras_fit_score__gte=7).count()
         }
         
-        context = f"""
-        You are the VP of Sales at Cerebras Systems analyzing the entire customer pipeline.
+        # Get the selling company name dynamically
+        selling_company = self.get_selling_company_name()
         
-        Cerebras Product Offerings:
+        context = f"""
+        You are the VP of Sales at {selling_company} analyzing the entire customer pipeline.
+        
+        {selling_company} Product Offerings:
         {json.dumps(offerings, indent=2)}
         
         Pipeline Overview:
@@ -1044,7 +1130,7 @@ class CompanyResearchService:
         """
         
         try:
-            report = self.cerebras.generate_text(question, context)
+            report = self.ai_service.generate_text(question, context)
             return {
                 'generated_at': json.dumps(datetime.now().isoformat()),
                 'pipeline_metrics': {

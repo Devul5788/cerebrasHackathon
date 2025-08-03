@@ -27,6 +27,20 @@ def save_company_offerings(company_data):
         company_name = company_data.get('name', 'Unknown Company')
         products = company_data.get('products', [])
         
+        # Add company metadata to the file
+        company_metadata = {
+            "company": {
+                "name": company_name,
+                "website": company_data.get('website', ''),
+                "description": company_data.get('description', ''),
+                "industry": company_data.get('industry', ''),
+                "location": company_data.get('location', ''),
+                "employees": company_data.get('employees', ''),
+                "founded": company_data.get('founded', ''),
+                "updated_at": datetime.now().isoformat()
+            }
+        }
+        
         # Convert products to the format matching chatbot_output.json
         formatted_products = {}
         for product in products:
@@ -39,21 +53,22 @@ def save_company_offerings(company_data):
                 "Current Customers": product.get('current_customers', [])
             }
         
-        # Add company metadata if we have products
+        # Combine company metadata with products
+        existing_data = company_metadata
+        
+        # Add products section
         if formatted_products:
-            # Use company name as the main key, or if products exist, use individual product names
-            for product_key, product_data in formatted_products.items():
-                # Add company context to each product
-                full_product_name = f"{company_name} - {product_key}" if len(formatted_products) > 1 else product_key
-                existing_data[full_product_name] = product_data
+            existing_data["products"] = formatted_products
         else:
             # If no products, create a basic company entry
-            existing_data[company_name] = {
-                "Category": company_data.get('industry', 'General Business'),
-                "Description": company_data.get('description', ''),
-                "Key Features": [],
-                "Usecase": [],
-                "Current Customers": []
+            existing_data["products"] = {
+                company_name: {
+                    "Category": company_data.get('industry', 'General Business'),
+                    "Description": company_data.get('description', ''),
+                    "Key Features": [],
+                    "Usecase": [],
+                    "Current Customers": []
+                }
             }
         
         # Save the updated data back to the file
