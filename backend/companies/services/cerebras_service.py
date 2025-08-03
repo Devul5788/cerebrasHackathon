@@ -36,9 +36,9 @@ def clean_json_response(content: str) -> str:
     return content.strip()
 
 
-class CerebrasService:
+class AIResearchService:
     """
-    Service to interact with Cerebras API for parsing and structuring research data
+    Service to interact with AI API for parsing and structuring research data
     """
     
     def __init__(self):
@@ -46,7 +46,7 @@ class CerebrasService:
     
     def generate_text(self, question: str, context: str, model: str = "deepseek-r1-distill-llama-70b", temp: float = 0.3) -> str:
         """
-        Generate text using Cerebras API - generic text generation method
+        Generate text using AI API - generic text generation method
         """
         try:
             content = ask_cerebras(
@@ -57,16 +57,34 @@ class CerebrasService:
             )
             return content
         except Exception as e:
-            logger.error(f"Failed to generate text with Cerebras: {e}")
+            logger.error(f"Failed to generate text with AI service: {e}")
             return f"Error generating text: {str(e)}"
         
-    def parse_company_research(self, research_text: str, company_name: str) -> Dict[str, Any]:
+    def parse_company_research(self, research_text: str, company_name: str, selling_company: str = "Cerebras", selling_company_info: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Parse unstructured company research into structured JSON format
         """
+        # Format selling company context
+        selling_context = ""
+        if selling_company_info:
+            company_details = selling_company_info.get('company', {})
+            products = selling_company_info.get('products', {})
+            
+            selling_context = f"""
+            
+            SELLING COMPANY CONTEXT:
+            Company: {company_details.get('name', selling_company)}
+            Industry: {company_details.get('industry', 'Technology')}
+            Description: {company_details.get('description', '')}
+            
+            Our Products/Services:
+            {json.dumps(products, indent=2) if products else 'No specific products listed'}
+            """
+        
         prompt = f"""
         Parse the following research about "{company_name}" into a structured JSON format. 
         Extract all available information and organize it according to this schema:
+        {selling_context}
 
         {{
             "basic_info": {{
@@ -105,11 +123,11 @@ class CerebrasService:
                 "ml_use_cases": ["array of ML use cases"],
                 "data_science_team_size": "string or null"
             }},
-            "cerebras_analysis": {{
-                "recommended_product": "string (name of most suitable Cerebras product)",
+            "product_analysis": {{
+                "recommended_product": "string (name of most suitable {selling_company} product based on our offerings above)",
                 "fit_score": "integer (1-10 scale)",
-                "value_proposition": "string explaining why Cerebras would be valuable",
-                "potential_use_cases": ["array of specific use cases"],
+                "value_proposition": "string explaining why {selling_company} would be valuable based on our specific products/services",
+                "potential_use_cases": ["array of specific use cases matching our offerings"],
                 "implementation_timeline": "string (e.g., '3-6 months')",
                 "estimated_budget_range": "string or null"
             }},
@@ -125,13 +143,8 @@ class CerebrasService:
 
         Please extract all available information and fill in the JSON structure. 
         Use null for missing information. Be precise with data types.
-        For the Cerebras analysis, match the company's needs to the most appropriate Cerebras offering from:
-        - Cerebras AI Inference (for real-time, low-latency AI applications)
-        - Cerebras Condor Galaxy (for large-scale model training)
-        - Cerebras Inference API (for developers integrating AI)
-        - Cerebras Model Hosting (for managed training/hosting)
-        - Cerebras Datacenter Rental (for dedicated compute)
-        - Cerebras Hardware Sales (for on-premises deployment)
+        For the product analysis, match the company's needs to the most appropriate {selling_company} offering from our product lineup above.
+        Consider how our specific products/services could solve their business challenges.
 
         Return only valid JSON, no additional text.
         """
@@ -147,7 +160,7 @@ class CerebrasService:
             cleaned_content = clean_json_response(content)
             return json.loads(cleaned_content)
         except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse Cerebras response as JSON: {e}")
+            logger.error(f"Failed to parse AI service response as JSON: {e}")
             logger.error(f"Response content: {content}")
             # Return a basic structure with the raw content
             return {
@@ -156,7 +169,7 @@ class CerebrasService:
                 "raw_content": content
             }
         except Exception as e:
-            logger.error(f"Failed to parse company research with Cerebras: {e}")
+            logger.error(f"Failed to parse company research with AI service: {e}")
             return {
                 "basic_info": {"name": company_name},
                 "error": str(e)
@@ -251,19 +264,19 @@ class CerebrasService:
                 return []
             
         except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse Cerebras contact response as JSON: {e}")
+            logger.error(f"Failed to parse AI service contact response as JSON: {e}")
             logger.error(f"Content that failed to parse: {content[:500]}...")
             return []
         except Exception as e:
-            logger.error(f"Failed to parse contact research with Cerebras: {e}")
+            logger.error(f"Failed to parse contact research with AI service: {e}")
             return []
             
-    def generate_personalized_email_content(self, company_data: Dict[str, Any], contact_data: Dict[str, Any], company_offerings: Dict[str, Any]) -> str:
+    def generate_personalized_email_content(self, company_data: Dict[str, Any], contact_data: Dict[str, Any], company_offerings: Dict[str, Any], selling_company: str = "Cerebras") -> str:
         """
         Generate personalized email content for outreach
         """
         prompt = f"""
-        Generate a highly personalized cold outreach email for a Cerebras sales representative to send to a potential customer.
+        Generate a highly personalized cold outreach email for a {selling_company} sales representative to send to a potential customer.
 
         COMPANY INFORMATION:
         {json.dumps(company_data, indent=2)}
@@ -271,7 +284,7 @@ class CerebrasService:
         CONTACT INFORMATION:
         {json.dumps(contact_data, indent=2)}
 
-        CEREBRAS OFFERINGS:
+        {selling_company.upper()} OFFERINGS:
         {json.dumps(company_offerings, indent=2)}
 
         REQUIREMENTS:
@@ -279,7 +292,7 @@ class CerebrasService:
         2. Opening that shows you've done your research
         3. Value proposition specific to their company's needs
         4. Reference to recent company news/initiatives if available
-        5. Specific Cerebras product recommendation with benefits
+        5. Specific {selling_company} product recommendation with benefits
         6. Soft call-to-action (not pushy)
         7. Professional but conversational tone
         8. Keep to 150-200 words maximum
@@ -299,7 +312,7 @@ class CerebrasService:
 
         Best regards,
         [Sales Rep Name]
-        Cerebras Systems
+        {selling_company}
         """
         try:
             content = ask_cerebras(

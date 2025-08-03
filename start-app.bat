@@ -4,8 +4,20 @@ echo    NexLead - Full Stack Application Setup
 echo ================================================
 echo.
 
-echo [1/4] Setting up Backend (Django)...
+echo [1/5] Clearing previous database context...
 cd backend
+
+REM Delete SQLite database file to clear context
+if exist "db.sqlite3" (
+    echo Removing existing SQLite database file...
+    del "db.sqlite3"
+    echo Database file deleted successfully.
+) else (
+    echo No existing database file found.
+)
+
+echo.
+echo [2/5] Setting up Backend (Django)...
 echo Installing Python dependencies...
 pip install -r requirements.txt
 if %ERRORLEVEL% NEQ 0 (
@@ -26,7 +38,7 @@ echo Starting Django server on port 8000...
 start "Django Backend" cmd /k "python manage.py runserver 8000"
 
 echo.
-echo [2/4] Setting up Frontend (React + TypeScript + Tailwind)...
+echo [3/5] Setting up Frontend (React + TypeScript + Tailwind)...
 cd ..\frontend
 echo Installing Node.js dependencies...
 npm install
@@ -37,12 +49,12 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo.
-echo [3/4] Starting React development server...
+echo [4/5] Starting React development server...
 echo Note: React server will start on port 3000 (or next available port)
 start "React Frontend" cmd /k "npm start"
 
 echo.
-echo [4/4] Setup Complete!
+echo [5/5] Setup Complete!
 echo ================================================
 echo    Both servers are starting up...
 echo ================================================
