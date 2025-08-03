@@ -2,6 +2,70 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from common.utils import ask_perplexity
 import json
+import os
+from datetime import datetime
+
+def save_company_offerings(company_data):
+    """
+    Save company and product data to company_offerings.json in the format similar to chatbot_output.json
+    """
+    try:
+        # Define the path for the company offerings file (relative to backend directory)
+        backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        file_path = os.path.join(backend_dir, 'companies', 'company_offerings.json')
+        
+        # Load existing data if file exists
+        existing_data = {}
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    existing_data = json.load(f)
+            except (json.JSONDecodeError, FileNotFoundError):
+                existing_data = {}
+        
+        # Format the new company data
+        company_name = company_data.get('name', 'Unknown Company')
+        products = company_data.get('products', [])
+        
+        # Convert products to the format matching chatbot_output.json
+        formatted_products = {}
+        for product in products:
+            product_name = product.get('name', 'Unknown Product')
+            formatted_products[product_name] = {
+                "Category": product.get('category', ''),
+                "Description": product.get('description', ''),
+                "Key Features": product.get('key_features', []),
+                "Usecase": product.get('use_cases', []),
+                "Current Customers": product.get('current_customers', [])
+            }
+        
+        # Add company metadata if we have products
+        if formatted_products:
+            # Use company name as the main key, or if products exist, use individual product names
+            for product_key, product_data in formatted_products.items():
+                # Add company context to each product
+                full_product_name = f"{company_name} - {product_key}" if len(formatted_products) > 1 else product_key
+                existing_data[full_product_name] = product_data
+        else:
+            # If no products, create a basic company entry
+            existing_data[company_name] = {
+                "Category": company_data.get('industry', 'General Business'),
+                "Description": company_data.get('description', ''),
+                "Key Features": [],
+                "Usecase": [],
+                "Current Customers": []
+            }
+        
+        # Save the updated data back to the file
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(existing_data, f, indent=2, ensure_ascii=False)
+        
+        print(f"Company offerings saved to {file_path}")
+        return True
+        
+    except Exception as e:
+        print(f"Error saving company offerings: {str(e)}")
+        return False
 
 class ChatbotView(APIView):
     def post(self, request):
@@ -77,9 +141,20 @@ class ChatbotView(APIView):
                 ]
             }}"""
             
-            result = ask_perplexity(research_prompt, context=open('samples/chatbot_output.json').read())
+            result = ask_perplexity(research_prompt, context=open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'samples', 'chatbot_output.json')).read())
             try:
-                product_suggestions = json.loads(result['choices'][0]['message']['content'])
+                # Handle both possible response formats from ask_perplexity
+                if isinstance(result, dict):
+                    if 'content' in result:
+                        content = result['content']
+                    elif 'choices' in result:
+                        content = result['choices'][0]['message']['content']
+                    else:
+                        raise Exception("Unexpected response format")
+                else:
+                    content = result
+                
+                product_suggestions = json.loads(content)
                 return Response({
                     'message': "I found these products/services. Please select which ones apply to your company:",
                     'suggestions': [],
@@ -96,16 +171,20 @@ class ChatbotView(APIView):
         elif step == 'done':
             # Update to include products
             company_data = request.data.get('company_data')
-            selected_products = request.data.get('selected_products', [])
             
             # Store both company and product data
-            print("DEBUG: Company profile and products submitted:", {
-                **company_data,
-                'products': selected_products
-            })
+            print("DEBUG: Company profile and products submitted:", company_data)
+            
+            # Save to company_offerings.json file
+            save_success = save_company_offerings(company_data)
+            
+            if save_success:
+                message = "Great! Your company and product profiles have been saved to the database. You can now close this window."
+            else:
+                message = "Your company profile has been processed, but there was an issue saving to the database. Please contact support."
             
             return Response({
-                'message': "Great! Your company and product profiles have been saved. You can now close this window.",
+                'message': message,
                 'suggestions': [],
                 'step': 'complete'
             })
