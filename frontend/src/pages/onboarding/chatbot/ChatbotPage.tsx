@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import LoadingSpinner from '../../../components/ui/LoadingSpinner';
 
 interface ProductProfile {
   name: string;
@@ -37,12 +38,35 @@ const ChatbotPage: React.FC = () => {
   const [showProductSelection, setShowProductSelection] = useState(false);
   const [productSuggestions, setProductSuggestions] = useState<ProductProfile[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<ProductProfile[]>([]);
+  const [editingProduct, setEditingProduct] = useState<number | null>(null);
+
+  const handleProductEdit = (index: number, field: keyof ProductProfile, value: string | string[]) => {
+    const updatedProducts = [...productSuggestions];
+    const product = { ...updatedProducts[index] };
+
+    if (field === 'key_features' || field === 'use_cases') {
+      (product[field] as string[]) = (typeof value === 'string' ? value.split('\n') : value).filter(f => f.trim());
+    } else {
+      (product[field] as string) = value as string;
+    }
+
+    updatedProducts[index] = product;
+    setProductSuggestions(updatedProducts);
+
+    // Update selected products if this product was selected
+    if (selectedProducts.some(p => p.name === product.name)) {
+      setSelectedProducts(prev => 
+        prev.map(p => p.name === product.name ? product : p)
+      );
+    }
+  };
 
   const sendMessage = async (text: string) => {
     if (!text.trim()) return;
 
     if (text.toLowerCase() === 'yes' && companyProfile) {
       // Move to product selection after company profile confirmation
+      setLoading(true);
       try {
         const response = await fetch('http://localhost:8000/api/onboarding/chat/', {
           method: 'POST',
@@ -62,6 +86,12 @@ const ChatbotPage: React.FC = () => {
         }]);
       } catch (error) {
         console.error('Error:', error);
+        setMessages(prev => [...prev, {
+          text: "Sorry, I encountered an error. Please try again.",
+          isBot: true
+        }]);
+      } finally {
+        setLoading(false);
       }
       return;
     }
@@ -200,6 +230,18 @@ const ChatbotPage: React.FC = () => {
                 </div>
               </div>
             ))}
+            {loading && (
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="inline-block p-3 bg-blue-100 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                    <span className="text-sm text-gray-600 ml-2">Searching...</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           <form
             className="flex gap-2"
@@ -280,46 +322,128 @@ const ChatbotPage: React.FC = () => {
               {showProductSelection ? (
                 <div className="mt-6">
                   <h3 className="text-xl font-semibold mb-4">Products & Services</h3>
-                  <div className="space-y-4">
-                    {productSuggestions.map((product, index) => (
-                      <div key={index} className="p-4 border rounded">
-                        <div className="flex items-start gap-2">
-                          <input
-                            type="checkbox"
-                            id={`product-${index}`}
-                            checked={selectedProducts.some(p => p.name === product.name)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedProducts([...selectedProducts, product]);
-                              } else {
-                                setSelectedProducts(selectedProducts.filter(p => p.name !== product.name));
-                              }
-                            }}
-                          />
-                          <div>
-                            <label htmlFor={`product-${index}`} className="font-semibold">{product.name}</label>
-                            <p className="text-sm text-gray-600">{product.description}</p>
-                            <div className="mt-2">
-                              <div className="text-sm font-medium">Key Features:</div>
-                              <ul className="list-disc list-inside text-sm text-gray-600">
-                                {product.key_features.map((feature, i) => (
-                                  <li key={i}>{feature}</li>
-                                ))}
-                              </ul>
+                  {loading ? (
+                    <LoadingSpinner message="Finding products and services..." />
+                  ) : (
+                    <>
+                      <div className="space-y-4">
+                        {productSuggestions.map((product, index) => (
+                          <div key={index} className="p-4 border rounded">
+                            <div className="flex items-start gap-2">
+                              <input
+                                type="checkbox"
+                                id={`product-${index}`}
+                                checked={selectedProducts.some(p => p.name === product.name)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedProducts([...selectedProducts, product]);
+                                  } else {
+                                    setSelectedProducts(selectedProducts.filter(p => p.name !== product.name));
+                                  }
+                                }}
+                              />
+                              <div className="flex-1">
+                                {editingProduct === index ? (
+                                  <div className="space-y-3">
+                                    <div>
+                                      <label className="block text-sm font-medium mb-1">Name:</label>
+                                      <input
+                                        type="text"
+                                        value={product.name}
+                                        onChange={e => handleProductEdit(index, 'name', e.target.value)}
+                                        className="w-full p-1 text-sm border rounded"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium mb-1">Category:</label>
+                                      <input
+                                        type="text"
+                                        value={product.category}
+                                        onChange={e => handleProductEdit(index, 'category', e.target.value)}
+                                        className="w-full p-1 text-sm border rounded"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium mb-1">Description:</label>
+                                      <textarea
+                                        value={product.description}
+                                        onChange={e => handleProductEdit(index, 'description', e.target.value)}
+                                        className="w-full p-1 text-sm border rounded"
+                                        rows={2}
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium mb-1">Key Features (one per line):</label>
+                                      <textarea
+                                        value={product.key_features.join('\n')}
+                                        onChange={e => handleProductEdit(index, 'key_features', e.target.value)}
+                                        className="w-full p-1 text-sm border rounded"
+                                        rows={3}
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium mb-1">Use Cases (one per line):</label>
+                                      <textarea
+                                        value={product.use_cases.join('\n')}
+                                        onChange={e => handleProductEdit(index, 'use_cases', e.target.value)}
+                                        className="w-full p-1 text-sm border rounded"
+                                        rows={3}
+                                      />
+                                    </div>
+                                    <div className="flex justify-end">
+                                      <button
+                                        onClick={() => setEditingProduct(null)}
+                                        className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+                                      >
+                                        Done Editing
+                                      </button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <div className="flex items-center justify-between">
+                                      <label htmlFor={`product-${index}`} className="font-semibold">{product.name}</label>
+                                      <button
+                                        onClick={() => setEditingProduct(index)}
+                                        className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200"
+                                      >
+                                        Edit
+                                      </button>
+                                    </div>
+                                    <p className="text-sm text-gray-600 mt-1">{product.description}</p>
+                                    <div className="mt-2">
+                                      <div className="text-sm font-medium">Key Features:</div>
+                                      <ul className="list-disc list-inside text-sm text-gray-600">
+                                        {product.key_features.map((feature, i) => (
+                                          <li key={i}>{feature}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                    <div className="mt-2">
+                                      <div className="text-sm font-medium">Use Cases:</div>
+                                      <ul className="list-disc list-inside text-sm text-gray-600">
+                                        {product.use_cases.map((useCase, i) => (
+                                          <li key={i}>{useCase}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 flex justify-end">
-                    <button
-                      onClick={() => sendMessage('done')}
-                      className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    >
-                      Complete Profile
-                    </button>
-                  </div>
+                      <div className="mt-4 flex justify-end">
+                        <button
+                          onClick={() => sendMessage('done')}
+                          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                        >
+                          Complete Profile
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               ) : (
                 <form
@@ -332,7 +456,7 @@ const ChatbotPage: React.FC = () => {
                       id="website"
                       type="url"
                       className="w-full p-2 border rounded"
-                      value={companyProfile.website}
+                      value={companyProfile?.website || ''}
                       onChange={e =>
                         setCompanyProfile(profile =>
                           profile ? { ...profile, website: e.target.value } : null
@@ -346,7 +470,7 @@ const ChatbotPage: React.FC = () => {
                     <textarea
                       id="description"
                       className="w-full p-2 border rounded"
-                      value={companyProfile.description}
+                      value={companyProfile?.description || ''}
                       onChange={e =>
                         setCompanyProfile(profile =>
                           profile ? { ...profile, description: e.target.value } : null
