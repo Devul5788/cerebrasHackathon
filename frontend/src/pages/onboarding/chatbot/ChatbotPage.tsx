@@ -488,7 +488,7 @@ const ChatbotPage: React.FC = () => {
             <div>
               <div className="flex items-center gap-4 mb-2">
                 {companyProfile.logo_url && (
-                  <div className="w-14 h-14 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
+                  <div className="w-14 h-14 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 flex-shrink-0">
                     <img 
                       src={companyProfile.logo_url} 
                       alt={`${companyProfile.name} logo`}
@@ -498,34 +498,34 @@ const ChatbotPage: React.FC = () => {
                   </div>
                 )}
                 <div>
-                  <h2 className="text-2xl font-bold">{companyProfile.name}</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{companyProfile.name}</h2>
                 </div>
               </div>
               <div className="mb-4">
-                <table className="min-w-full text-sm text-left border border-gray-200 rounded">
+                <table className="min-w-full text-sm text-left border border-gray-200 dark:border-gray-600 rounded">
                   <tbody>
                     {companyProfile.industry && (
                       <tr>
-                        <td className="py-1 px-2 font-semibold text-gray-600">Industry</td>
-                        <td className="py-1 px-2">{companyProfile.industry}</td>
+                        <td className="py-1 px-2 font-semibold text-gray-600 dark:text-gray-300">Industry</td>
+                        <td className="py-1 px-2 text-gray-900 dark:text-gray-100">{companyProfile.industry}</td>
                       </tr>
                     )}
                     {companyProfile.location && (
                       <tr>
-                        <td className="py-1 px-2 font-semibold text-gray-600">Location</td>
-                        <td className="py-1 px-2">{companyProfile.location}</td>
+                        <td className="py-1 px-2 font-semibold text-gray-600 dark:text-gray-300">Location</td>
+                        <td className="py-1 px-2 text-gray-900 dark:text-gray-100">{companyProfile.location}</td>
                       </tr>
                     )}
                     {companyProfile.employees !== undefined && (
                       <tr>
-                        <td className="py-1 px-2 font-semibold text-gray-600">Employees</td>
-                        <td className="py-1 px-2">{companyProfile.employees}</td>
+                        <td className="py-1 px-2 font-semibold text-gray-600 dark:text-gray-300">Employees</td>
+                        <td className="py-1 px-2 text-gray-900 dark:text-gray-100">{companyProfile.employees}</td>
                       </tr>
                     )}
                     {companyProfile.founded && (
                       <tr>
-                        <td className="py-1 px-2 font-semibold text-gray-600">Founded</td>
-                        <td className="py-1 px-2">{companyProfile.founded}</td>
+                        <td className="py-1 px-2 font-semibold text-gray-600 dark:text-gray-300">Founded</td>
+                        <td className="py-1 px-2 text-gray-900 dark:text-gray-100">{companyProfile.founded}</td>
                       </tr>
                     )}
                   </tbody>
@@ -534,7 +534,7 @@ const ChatbotPage: React.FC = () => {
 
               {showProductSelection ? (
                 <div className="mt-6">
-                  <h3 className="text-xl font-semibold mb-4">Products & Services</h3>
+                  <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Products & Services</h3>
                   {loading ? (
                     <LoadingSpinner message="Finding products and services..." />
                   ) : (
@@ -546,53 +546,53 @@ const ChatbotPage: React.FC = () => {
                             <div 
                               key={index} 
                               className={`p-4 border rounded transition-all ${
-                                isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                                isSelected ? 'border-blue-500 bg-blue-50 dark:bg-blue-900' : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                               } ${editingProduct === index ? 'ring-2 ring-blue-300' : ''}`}
                             >
                               <div className="flex items-start gap-3">
                                 <div className="flex-1">
                                 {editingProduct === index ? (
                                   <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
-                                    <div className="text-xs text-gray-500 mb-2">
+                                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
                                       💡 Tip: Press Ctrl+Enter to save quickly, or Escape to cancel
                                     </div>
                                     <div>
-                                      <label className="block text-sm font-medium mb-1">Name:</label>
+                                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Name:</label>
                                       <input
                                         type="text"
                                         value={product.name}
                                         onChange={e => handleProductEdit(index, 'name', e.target.value)}
-                                        className="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                         placeholder="Enter product name"
                                         autoFocus={product.name === ''}
                                       />
                                     </div>
                                     <div>
-                                      <label className="block text-sm font-medium mb-1">Category:</label>
+                                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Category:</label>
                                       <input
                                         type="text"
                                         value={product.category}
                                         onChange={e => handleProductEdit(index, 'category', e.target.value)}
-                                        className="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                         placeholder="Enter category"
                                       />
                                     </div>
                                     <div>
-                                      <label className="block text-sm font-medium mb-1">Description:</label>
+                                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Description:</label>
                                       <textarea
                                         value={product.description}
                                         onChange={e => handleProductEdit(index, 'description', e.target.value)}
-                                        className="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none resize-vertical"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none resize-vertical bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                         rows={2}
                                         placeholder="Enter product description"
                                       />
                                     </div>
                                     <div>
-                                      <label className="block text-sm font-medium mb-1">Key Features (one per line):</label>
+                                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Key Features (one per line):</label>
                                       <textarea
                                         value={product.key_features.join('\n')}
                                         onChange={e => handleProductEdit(index, 'key_features', e.target.value)}
-                                        className="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none resize-vertical"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none resize-vertical bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                         rows={4}
                                         placeholder="Enter each feature on a new line&#10;Feature 1&#10;Feature 2&#10;Feature 3"
                                         onKeyDown={(e) => {
@@ -604,11 +604,11 @@ const ChatbotPage: React.FC = () => {
                                       />
                                     </div>
                                     <div>
-                                      <label className="block text-sm font-medium mb-1">Use Cases (one per line):</label>
+                                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Use Cases (one per line):</label>
                                       <textarea
                                         value={product.use_cases.join('\n')}
                                         onChange={e => handleProductEdit(index, 'use_cases', e.target.value)}
-                                        className="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none resize-vertical"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none resize-vertical bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                         rows={4}
                                         placeholder="Enter each use case on a new line&#10;Use case 1&#10;Use case 2&#10;Use case 3"
                                         onKeyDown={(e) => {
@@ -714,18 +714,18 @@ const ChatbotPage: React.FC = () => {
                                     </div>
                                     {product.category && (
                                       <div className="mb-2">
-                                        <span className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                                        <span className="inline-block bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded text-xs">
                                           {product.category}
                                         </span>
                                       </div>
                                     )}
                                     {product.description && (
-                                      <p className="text-sm text-gray-600 mb-3">{product.description}</p>
+                                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{product.description}</p>
                                     )}
                                     {product.key_features && product.key_features.length > 0 && (
                                       <div className="mb-3">
-                                        <div className="text-sm font-medium text-gray-700 mb-1">Key Features:</div>
-                                        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                        <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Key Features:</div>
+                                        <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
                                           {product.key_features.map((feature, i) => (
                                             <li key={i}>{feature}</li>
                                           ))}
@@ -734,8 +734,8 @@ const ChatbotPage: React.FC = () => {
                                     )}
                                     {product.use_cases && product.use_cases.length > 0 && (
                                       <div className="mb-2">
-                                        <div className="text-sm font-medium text-gray-700 mb-1">Use Cases:</div>
-                                        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                        <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Use Cases:</div>
+                                        <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
                                           {product.use_cases.map((useCase, i) => (
                                             <li key={i}>{useCase}</li>
                                           ))}
@@ -765,7 +765,7 @@ const ChatbotPage: React.FC = () => {
                       </div>
                       
                       {/* Control buttons */}
-                      <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
+                      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600 space-y-3">
                         <button
                           onClick={addNewProduct}
                           className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center gap-2 transition-colors"
@@ -776,7 +776,7 @@ const ChatbotPage: React.FC = () => {
                         
                         {selectedProducts.length > 0 && (
                           <div className="flex gap-2">
-                            <div className="flex-1 text-sm text-gray-600 py-2">
+                            <div className="flex-1 text-sm text-gray-600 dark:text-gray-300 py-2">
                               {selectedProducts.length} product{selectedProducts.length !== 1 ? 's' : ''} selected
                             </div>
                             <button
@@ -801,11 +801,11 @@ const ChatbotPage: React.FC = () => {
                   onSubmit={e => e.preventDefault()}
                 >
                   <div>
-                    <label className="block font-semibold mb-1" htmlFor="website">Website:</label>
+                    <label className="block font-semibold mb-1 text-gray-700 dark:text-gray-300" htmlFor="website">Website:</label>
                     <input
                       id="website"
                       type="url"
-                      className="w-full p-2 border rounded"
+                      className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       value={companyProfile?.website || ''}
                       onChange={e =>
                         setCompanyProfile(profile =>
@@ -816,10 +816,10 @@ const ChatbotPage: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <label className="block font-semibold mb-1" htmlFor="description">Description:</label>
+                    <label className="block font-semibold mb-1 text-gray-700 dark:text-gray-300" htmlFor="description">Description:</label>
                     <textarea
                       id="description"
-                      className="w-full p-2 border rounded"
+                      className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       value={companyProfile?.description || ''}
                       onChange={e =>
                         setCompanyProfile(profile =>
@@ -834,7 +834,7 @@ const ChatbotPage: React.FC = () => {
               )}
             </div>
           ) : (
-            <p className="text-gray-500">No company profile yet. Please provide your company information in the chat.</p>
+            <p className="text-gray-500 dark:text-gray-400">No company profile yet. Please provide your company information in the chat.</p>
           )}
         </div>
       </div>
