@@ -32,6 +32,7 @@ interface CompanyProfile {
 
 const ChatbotPage: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -63,12 +64,28 @@ const ChatbotPage: React.FC = () => {
     setEditingProduct(null);
   };
 
+  const cleanupProduct = (product: ProductProfile): ProductProfile => {
+    return {
+      ...product,
+      key_features: product.key_features.filter(f => f.trim() !== ''),
+      use_cases: product.use_cases.filter(f => f.trim() !== ''),
+      current_customers: product.current_customers?.filter(f => f.trim() !== '') || []
+    };
+  };
+
   const handleProductEdit = (index: number, field: keyof ProductProfile, value: string | string[]) => {
     const updatedProducts = [...productSuggestions];
     const product = { ...updatedProducts[index] };
+    const oldProductName = product.name;
 
     if (field === 'key_features' || field === 'use_cases') {
-      (product[field] as string[]) = (typeof value === 'string' ? value.split('\n') : value).filter(f => f.trim());
+      // Handle array fields - split by newlines but preserve empty lines for editing
+      // Only filter out empty lines when saving/completing the edit
+      if (typeof value === 'string') {
+        (product[field] as string[]) = value.split('\n');
+      } else {
+        (product[field] as string[]) = value;
+      }
     } else {
       (product[field] as string) = value as string;
     }
@@ -76,16 +93,19 @@ const ChatbotPage: React.FC = () => {
     updatedProducts[index] = product;
     setProductSuggestions(updatedProducts);
 
-    // Update selected products if this product was selected
-    if (selectedProducts.some(p => p.name === product.name)) {
+    // Update selected products if this product was selected (handle name changes)
+    if (selectedProducts.some(p => p.name === oldProductName)) {
       setSelectedProducts(prev => 
-        prev.map(p => p.name === product.name ? product : p)
+        prev.map(p => p.name === oldProductName ? product : p)
       );
     }
   };
 
   const sendMessage = async (text: string) => {
     if (!text.trim()) return;
+
+    // Store the current focus before clearing input
+    const shouldRefocus = document.activeElement === inputRef.current;
 
     if (text.toLowerCase() === 'yes' && companyProfile) {
       // Add user's "Yes" message first
@@ -137,6 +157,10 @@ const ChatbotPage: React.FC = () => {
         }]);
       } finally {
         setLoading(false);
+        // Refocus input after operation completes
+        if (shouldRefocus) {
+          setTimeout(() => inputRef.current?.focus(), 100);
+        }
       }
       return;
     }
@@ -154,7 +178,7 @@ const ChatbotPage: React.FC = () => {
             step: 'done',
             company_data: {
               ...companyProfile,
-              products: selectedProducts
+              products: selectedProducts.map(cleanupProduct)
             }
           }),
         });
@@ -204,6 +228,10 @@ const ChatbotPage: React.FC = () => {
         isBot: true 
       }]);
       setLoading(false);
+      // Refocus input
+      if (shouldRefocus) {
+        setTimeout(() => inputRef.current?.focus(), 100);
+      }
       return;
     }
 
@@ -214,6 +242,10 @@ const ChatbotPage: React.FC = () => {
         isBot: true 
       }]);
       setLoading(false);
+      // Refocus input
+      if (shouldRefocus) {
+        setTimeout(() => inputRef.current?.focus(), 100);
+      }
       return;
     }
 
@@ -275,6 +307,10 @@ const ChatbotPage: React.FC = () => {
       }]);
     } finally {
       setLoading(false);
+      // Refocus input after operation completes
+      if (shouldRefocus) {
+        setTimeout(() => inputRef.current?.focus(), 100);
+      }
     }
   };
 
@@ -285,6 +321,59 @@ const ChatbotPage: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Focus management - keep input focused unless editing a product
+  useEffect(() => {
+    if (editingProduct === null && !loading) {
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [editingProduct, loading, messages]);
+
+  // Handle keyboard shortcuts for editing
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Escape key to cancel editing
+      if (e.key === 'Escape' && editingProduct !== null) {
+        setEditingProduct(null);
+        return;
+      }
+      // Ctrl/Cmd + Enter to save and continue
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && editingProduct !== null) {
+        e.preventDefault();
+        const product = productSuggestions[editingProduct];
+        const cleanProduct = cleanupProduct(product);
+        
+        // Update the product in suggestions with cleaned version
+        const updatedProducts = [...productSuggestions];
+        updatedProducts[editingProduct] = cleanProduct;
+        setProductSuggestions(updatedProducts);
+        
+        if (cleanProduct.name && !selectedProducts.some(p => p.name === cleanProduct.name)) {
+          setSelectedProducts([...selectedProducts, cleanProduct]);
+        }
+        setEditingProduct(null);
+        return;
+      }
+
+      // Auto-focus input when typing (unless we're editing a product or in a form field)
+      if (editingProduct === null && !loading) {
+        const activeElement = document.activeElement;
+        const isInInput = activeElement === inputRef.current;
+        const isInFormField = activeElement?.tagName === 'INPUT' || activeElement?.tagName === 'TEXTAREA';
+        
+        // Only refocus if we're not already in the input and not in another form field
+        if (!isInInput && !isInFormField && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          inputRef.current?.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [editingProduct, productSuggestions, selectedProducts, loading]);
 
   // Initial welcome message
   useEffect(() => {
@@ -337,7 +426,11 @@ const ChatbotPage: React.FC = () => {
                       {msg.suggestions.map(suggestion => (
                         <button
                           key={suggestion}
-                          onClick={() => sendMessage(suggestion)}
+                          onClick={() => {
+                            sendMessage(suggestion);
+                            // Refocus input after clicking suggestion
+                            setTimeout(() => inputRef.current?.focus(), 150);
+                          }}
                           className="px-3 py-1 text-sm bg-white rounded-full border border-gray-200 hover:bg-gray-100"
                         >
                           {suggestion}
@@ -370,6 +463,7 @@ const ChatbotPage: React.FC = () => {
             }}
           >
             <input
+              ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -451,29 +545,26 @@ const ChatbotPage: React.FC = () => {
                           return (
                             <div 
                               key={index} 
-                              className={`p-4 border rounded cursor-pointer transition-all ${
+                              className={`p-4 border rounded transition-all ${
                                 isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                              }`}
-                              onClick={() => {
-                                if (editingProduct === index) return; // Don't toggle when editing
-                                if (isSelected) {
-                                  setSelectedProducts(selectedProducts.filter(p => p.name !== product.name));
-                                } else {
-                                  setSelectedProducts([...selectedProducts, product]);
-                                }
-                              }}
+                              } ${editingProduct === index ? 'ring-2 ring-blue-300' : ''}`}
                             >
                               <div className="flex items-start gap-3">
                                 <div className="flex-1">
                                 {editingProduct === index ? (
-                                  <div className="space-y-3">
+                                  <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
+                                    <div className="text-xs text-gray-500 mb-2">
+                                      💡 Tip: Press Ctrl+Enter to save quickly, or Escape to cancel
+                                    </div>
                                     <div>
                                       <label className="block text-sm font-medium mb-1">Name:</label>
                                       <input
                                         type="text"
                                         value={product.name}
                                         onChange={e => handleProductEdit(index, 'name', e.target.value)}
-                                        className="w-full p-1 text-sm border rounded"
+                                        className="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none"
+                                        placeholder="Enter product name"
+                                        autoFocus={product.name === ''}
                                       />
                                     </div>
                                     <div>
@@ -482,7 +573,8 @@ const ChatbotPage: React.FC = () => {
                                         type="text"
                                         value={product.category}
                                         onChange={e => handleProductEdit(index, 'category', e.target.value)}
-                                        className="w-full p-1 text-sm border rounded"
+                                        className="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none"
+                                        placeholder="Enter category"
                                       />
                                     </div>
                                     <div>
@@ -490,8 +582,9 @@ const ChatbotPage: React.FC = () => {
                                       <textarea
                                         value={product.description}
                                         onChange={e => handleProductEdit(index, 'description', e.target.value)}
-                                        className="w-full p-1 text-sm border rounded"
+                                        className="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none resize-vertical"
                                         rows={2}
+                                        placeholder="Enter product description"
                                       />
                                     </div>
                                     <div>
@@ -499,8 +592,15 @@ const ChatbotPage: React.FC = () => {
                                       <textarea
                                         value={product.key_features.join('\n')}
                                         onChange={e => handleProductEdit(index, 'key_features', e.target.value)}
-                                        className="w-full p-1 text-sm border rounded"
-                                        rows={3}
+                                        className="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none resize-vertical"
+                                        rows={4}
+                                        placeholder="Enter each feature on a new line&#10;Feature 1&#10;Feature 2&#10;Feature 3"
+                                        onKeyDown={(e) => {
+                                          // Allow Enter key to create new lines
+                                          if (e.key === 'Enter') {
+                                            e.stopPropagation();
+                                          }
+                                        }}
                                       />
                                     </div>
                                     <div>
@@ -508,33 +608,96 @@ const ChatbotPage: React.FC = () => {
                                       <textarea
                                         value={product.use_cases.join('\n')}
                                         onChange={e => handleProductEdit(index, 'use_cases', e.target.value)}
-                                        className="w-full p-1 text-sm border rounded"
-                                        rows={3}
+                                        className="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-300 focus:border-blue-500 outline-none resize-vertical"
+                                        rows={4}
+                                        placeholder="Enter each use case on a new line&#10;Use case 1&#10;Use case 2&#10;Use case 3"
+                                        onKeyDown={(e) => {
+                                          // Allow Enter key to create new lines
+                                          if (e.key === 'Enter') {
+                                            e.stopPropagation();
+                                          }
+                                        }}
                                       />
                                     </div>
-                                    <div className="flex justify-end">
+                                    <div className="flex justify-between items-center pt-2">
                                       <button
                                         onClick={(e) => {
                                           e.stopPropagation();
-                                          setEditingProduct(null);
+                                          removeProduct(index);
                                         }}
-                                        className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+                                        className="px-3 py-1 text-sm bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors"
                                       >
-                                        Done Editing
+                                        Delete Product
                                       </button>
+                                      <div className="flex gap-2">
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setEditingProduct(null);
+                                          }}
+                                          className="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors"
+                                        >
+                                          Cancel
+                                        </button>
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            // Clean up the product before saving/selecting
+                                            const cleanProduct = cleanupProduct(product);
+                                            
+                                            // Update the product in suggestions with cleaned version
+                                            const updatedProducts = [...productSuggestions];
+                                            updatedProducts[index] = cleanProduct;
+                                            setProductSuggestions(updatedProducts);
+                                            
+                                            // Auto-select the product if it has a name and isn't already selected
+                                            if (cleanProduct.name.trim() && !isSelected) {
+                                              setSelectedProducts(prev => {
+                                                // Remove any existing version with old name first
+                                                const filtered = prev.filter(p => p.name !== product.name);
+                                                return [...filtered, cleanProduct];
+                                              });
+                                            } else if (isSelected) {
+                                              // Update the selected product with cleaned version
+                                              setSelectedProducts(prev =>
+                                                prev.map(p => p.name === product.name ? cleanProduct : p)
+                                              );
+                                            }
+                                            setEditingProduct(null);
+                                          }}
+                                          disabled={!product.name.trim()}
+                                          className={`px-3 py-1 text-sm rounded transition-colors ${
+                                            product.name.trim() 
+                                              ? 'bg-blue-500 text-white hover:bg-blue-600' 
+                                              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                          }`}
+                                          title={!product.name.trim() ? 'Product name is required' : ''}
+                                        >
+                                          Save & {isSelected ? 'Keep Selected' : 'Select'}
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
                                 ) : (
-                                  <div>
-                                    <div className="flex items-center justify-between">
-                                      <label htmlFor={`product-${index}`} className="font-semibold">{product.name}</label>
+                                  <div 
+                                    className="cursor-pointer"
+                                    onClick={() => {
+                                      if (isSelected) {
+                                        setSelectedProducts(selectedProducts.filter(p => p.name !== product.name));
+                                      } else {
+                                        setSelectedProducts([...selectedProducts, product]);
+                                      }
+                                    }}
+                                  >
+                                    <div className="flex items-center justify-between mb-2">
+                                      <h4 className="font-semibold text-lg">{product.name || 'Unnamed Product'}</h4>
                                       <div className="flex gap-2">
                                         <button
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             setEditingProduct(index);
                                           }}
-                                          className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200"
+                                          className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors"
                                         >
                                           Edit
                                         </button>
@@ -543,58 +706,91 @@ const ChatbotPage: React.FC = () => {
                                             e.stopPropagation();
                                             removeProduct(index);
                                           }}
-                                          className="px-2 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200"
+                                          className="px-2 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors"
                                         >
                                           Remove
                                         </button>
                                       </div>
                                     </div>
-                                    <p className="text-sm text-gray-600 mt-1">{product.description}</p>
-                                    <div className="mt-2">
-                                      <div className="text-sm font-medium">Key Features:</div>
-                                      <ul className="list-disc list-inside text-sm text-gray-600">
-                                        {product.key_features.map((feature, i) => (
-                                          <li key={i}>{feature}</li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                    <div className="mt-2">
-                                      <div className="text-sm font-medium">Use Cases:</div>
-                                      <ul className="list-disc list-inside text-sm text-gray-600">
-                                        {product.use_cases.map((useCase, i) => (
-                                          <li key={i}>{useCase}</li>
-                                        ))}
-                                      </ul>
-                                    </div>
+                                    {product.category && (
+                                      <div className="mb-2">
+                                        <span className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                                          {product.category}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {product.description && (
+                                      <p className="text-sm text-gray-600 mb-3">{product.description}</p>
+                                    )}
+                                    {product.key_features && product.key_features.length > 0 && (
+                                      <div className="mb-3">
+                                        <div className="text-sm font-medium text-gray-700 mb-1">Key Features:</div>
+                                        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                          {product.key_features.map((feature, i) => (
+                                            <li key={i}>{feature}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+                                    {product.use_cases && product.use_cases.length > 0 && (
+                                      <div className="mb-2">
+                                        <div className="text-sm font-medium text-gray-700 mb-1">Use Cases:</div>
+                                        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                          {product.use_cases.map((useCase, i) => (
+                                            <li key={i}>{useCase}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
                                   </div>
                                 )}
                               </div>
                               
-                              {/* Checkmark indicator */}
-                              <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                                isSelected ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
-                              }`}>
-                                {isSelected && (
-                                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                  </svg>
-                                )}
-                              </div>
+                              {/* Checkmark indicator - only show when not editing */}
+                              {editingProduct !== index && (
+                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                                  isSelected ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
+                                }`}>
+                                  {isSelected && (
+                                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    </svg>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           </div>
                         );
                         })}
                       </div>
                       
-                      {/* Add New Product Button */}
-                      <div className="mt-4 pt-4 border-t border-gray-200">
+                      {/* Control buttons */}
+                      <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
                         <button
                           onClick={addNewProduct}
-                          className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center gap-2"
+                          className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center gap-2 transition-colors"
                         >
                           <span className="text-lg">+</span>
                           Add New Product
                         </button>
+                        
+                        {selectedProducts.length > 0 && (
+                          <div className="flex gap-2">
+                            <div className="flex-1 text-sm text-gray-600 py-2">
+                              {selectedProducts.length} product{selectedProducts.length !== 1 ? 's' : ''} selected
+                            </div>
+                            <button
+                              onClick={() => {
+                                sendMessage('done');
+                                // Refocus input after clicking done
+                                setTimeout(() => inputRef.current?.focus(), 150);
+                              }}
+                              className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                            >
+                              Done with Products
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </>
                   )}
