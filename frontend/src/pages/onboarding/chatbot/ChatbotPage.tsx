@@ -690,14 +690,14 @@ const ChatbotPage: React.FC = () => {
                                     }}
                                   >
                                     <div className="flex items-center justify-between mb-2">
-                                      <h4 className="font-semibold text-lg">{product.name || 'Unnamed Product'}</h4>
+                                      <h4 className="font-semibold text-lg text-gray-900 dark:text-white">{product.name || 'Unnamed Product'}</h4>
                                       <div className="flex gap-2">
                                         <button
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             setEditingProduct(index);
                                           }}
-                                          className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-colors"
+                                          className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                                         >
                                           Edit
                                         </button>
@@ -706,7 +706,7 @@ const ChatbotPage: React.FC = () => {
                                             e.stopPropagation();
                                             removeProduct(index);
                                           }}
-                                          className="px-2 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors"
+                                          className="px-2 py-1 text-xs bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
                                         >
                                           Remove
                                         </button>
@@ -749,7 +749,7 @@ const ChatbotPage: React.FC = () => {
                               {/* Checkmark indicator - only show when not editing */}
                               {editingProduct !== index && (
                                 <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                                  isSelected ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
+                                  isSelected ? 'bg-blue-500 border-blue-500' : 'border-gray-300 dark:border-gray-600'
                                 }`}>
                                   {isSelected && (
                                     <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
